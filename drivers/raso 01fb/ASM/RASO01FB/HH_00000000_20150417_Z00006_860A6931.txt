@@ -1,0 +1,77 @@
+----------------------------------------------
+          DIENOS FISKALINË ATASKAITA          
+Z ataskaita  Z-00005                          
+                                              
+PARDAVIMØ SUMA                           24.00
+GRYNØJØ KASOJE                           24.00
+GRYNAISIAIS                              24.00
+KLAIDOS TAISYMAI                       0  0.00
+PANAIKINTA                             0  0.00
+STALÈIAUS ATID.                              0
+1SUMA SU PVM:                            24.00
+1SUMA BE PVM:                            19.83
+PVM1(21.00%)                              4.17
+----------------------------------------------
+GT                                       24.00
+----------------------------------------------
+Fiskaliniø kvitø                             1
+Nulinimai                                   00
+Mokesèiø keitimai                           00
+----------------------------------------------
+Kontrolinë suma (CRC32): E78E1903             
+            Treniravimosi reþimas             
+2015-04-17 18:31                              
+@ HH 00000000  01                        00088
+                                              
+                                              
+*                                             
+   ** UAB RASO **                             
+POS SISTEMA RASO-01                           
+Header4                                       
+Header5                                       
+Header6                                       
+            PVM kodas 000000000000            
+----------------------------------------------
+#                                             
+#Renginys:  RESTA 2015                        
+#                                             
+#         Jûsø bilieto barkodas               
+#                                             
+[BK pradþia]----------------------------------
+1D6B490C7B4231323334353637383930
+[BK pabaiga]----------------------------------
+#                                             
+#Nr. Prekë                                    
+1. Bilietas                            20.00M1
+#---------------------------------------------
+Mokestis                                3.00M1
+Kasos extra                             1.00M1
+#---------------------------------------------
+TARPINË SUMA                          24.00EUR
+----------------------------------------------
+1SUMA BE PVM:                          19.83  
+PVM1(21.00%)                            4.17  
+----------------------------------------------
+SUMA                                  24.00EUR
+GRYNIEJI                             200.00EUR
+GRÀÞA                                176.00EUR
+TAI JÛSØ BILITEAS                             
+NEPAMESKITE BEI SAUGOKITE                     
+Iðankstiniai bilietai: www.bilietai.lt        
+            Treniravimosi reþimas             
+2015-04-17 18:34                              
+@ HH 00000000  01                        00089
+                                              
+                                              
+UAB "NACIONALINIS BILIETØ PLATINTOJAS"        
+                Mobili kasa                   
+              J. Jasinskio g. 12              
+            PVM kodas 000000000000            
+#EKJ IÐSAUGOJIMAS...                          
+TAI JÛSØ BILITEAS                             
+NEPAMESKITE BEI SAUGOKITE                     
+Iðankstiniai bilietai: www.bilietai.lt        
+             NEFISKALINIS KVITAS              
+            Treniravimosi reþimas             
+2015-04-17 18:34                              
+@ HH 00000000  01                        00090

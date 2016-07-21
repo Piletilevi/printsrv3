@@ -1,0 +1,1262 @@
+------------------------------------
+     DIENOS FISKALINË ATASKAITA     
+Z ataskaita  Z-00001                
+                                    
+PARDAVIMØ SUMA                  0.00
+GRYNØJØ KASOJE                  0.00
+GRYNAISIAIS                     0.00
+KLAIDOS TAISYMAI             0  0.00
+PANAIKINTA                   0  0.00
+STALÈIAUS ATID.                    0
+------------------------------------
+GT                              0.00
+------------------------------------
+Fiskaliniø kvitø                   0
+Nulinimai                         00
+Mokesèiø keitimai                 00
+------------------------------------
+Kontrolinë suma (CRC32): CD62F5A1   
+       Treniravimosi reþimas        
+2015-09-18 10:44                    
+@ HH 00000000  01              00006
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+      DIENOS TARPINË ATASKAITA      
+X ataskaita  X-00002                
+                                    
+PARDAVIMØ SUMA                  0.00
+GRYNØJØ KASOJE                  0.00
+GRYNAISIAIS                     0.00
+KLAIDOS TAISYMAI             0  0.00
+PANAIKINTA                   0  0.00
+STALÈIAUS ATID.                    0
+------------------------------------
+GT                              0.00
+------------------------------------
+Fiskaliniø kvitø                   0
+Nulinimai                         00
+Mokesèiø keitimai                 00
+------------------------------------
+Kontrolinë suma (CRC32): E48A0C9B   
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-18 10:45                    
+@ HH 00000000  01              00007
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+      DIENOS TARPINË ATASKAITA      
+X ataskaita  X-00002                
+                                    
+PARDAVIMØ SUMA                  0.00
+GRYNØJØ KASOJE                  0.00
+GRYNAISIAIS                     0.00
+KLAIDOS TAISYMAI             0  0.00
+PANAIKINTA                   0  0.00
+STALÈIAUS ATID.                    0
+------------------------------------
+GT                              0.00
+------------------------------------
+Fiskaliniø kvitø                   0
+Nulinimai                         00
+Mokesèiø keitimai                 00
+------------------------------------
+Kontrolinë suma (CRC32): BE7D7A3E   
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-18 10:46                    
+@ HH 00000000  01              00008
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+      DIENOS TARPINË ATASKAITA      
+X ataskaita  X-00002                
+                                    
+PARDAVIMØ SUMA                  0.00
+GRYNØJØ KASOJE                  0.00
+GRYNAISIAIS                     0.00
+KLAIDOS TAISYMAI             0  0.00
+PANAIKINTA                   0  0.00
+STALÈIAUS ATID.                    0
+------------------------------------
+GT                              0.00
+------------------------------------
+Fiskaliniø kvitø                   0
+Nulinimai                         00
+Mokesèiø keitimai                 00
+------------------------------------
+Kontrolinë suma (CRC32): E44E8A72   
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-29 13:20                    
+@ HH 00000000  01              00009
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+      DIENOS TARPINË ATASKAITA      
+X ataskaita  X-00002                
+                                    
+PARDAVIMØ SUMA                  0.00
+GRYNØJØ KASOJE                  0.00
+GRYNAISIAIS                     0.00
+KLAIDOS TAISYMAI             0  0.00
+PANAIKINTA                   0  0.00
+STALÈIAUS ATID.                    0
+------------------------------------
+GT                              0.00
+------------------------------------
+Fiskaliniø kvitø                   0
+Nulinimai                         00
+Mokesèiø keitimai                 00
+------------------------------------
+Kontrolinë suma (CRC32): 2A9F673C   
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-29 13:56                    
+@ HH 00000000  01              00010
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+`KARMEN: jei Dievas bûtø        mot#
+                                   #
+-----------------------------------#
+#ticket_sector #ticket_row       #t#
+Þiûrovø salë   5                   #
+[BK pradþia]------------------------
+1D6B490C7B4233343936323431333830
+[BK pabaiga]------------------------
+1.  Bilietas                 12.50M4
+-----------------------------------#
+Mokestis                      1.00M4
+-----------------------------------#
+TARPINË SUMA                13.50EUR
+------------------------------------
+------------------------------------
+SUMA                        13.50EUR
+Grynieji                    13.50EUR
+       Treniravimosi reþimas        
+2015-09-29 14:12                    
+@ HH 00000000  01              00011
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+[BK pradþia]------------------------
+1D6B490C7B4233343936323431333830
+[BK pabaiga]------------------------
+------------------------------------
+        *** KVITO KOPIJA ***        
+------------------------------------
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+`KARMEN: jei Dievas bûtø        mot#
+                                   #
+-----------------------------------#
+#ticket_sector #ticket_row       #t#
+Þiûrovø salë   5                   #
+[BK pradþia]------------------------
+1D6B490C7B4233343936323431333830
+  
+[BK pabaiga]------------------------
+1.  Bilietas                 12.50M4
+-----------------------------------#
+Mokestis                      1.00M4
+-----------------------------------#
+TARPINË SUMA                13.50EUR
+------------------------------------
+------------------------------------
+SUMA                        13.50EUR
+Grynieji                    13.50EUR
+       Treniravimosi reþimas        
+2015-09-29 14:12                    
+_ HH 00000000  01              00011
+------------------------------------
+        *** KVITO KOPIJA ***        
+------------------------------------
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-29 14:16                    
+@ HH 00000000  01              00012
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   9330181767    12.50M4
+-----------------------------------#
+Mokestis                      1.00M4
+-----------------------------------#
+TARPINË SUMA                13.50EUR
+------------------------------------
+------------------------------------
+SUMA                        13.50EUR
+Grynieji                    13.50EUR
+       Treniravimosi reþimas        
+2015-09-29 14:26                    
+@ HH 00000000  01              00013
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+*** PANAIKINTA ***          -0.00EUR
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-29 15:27                    
+@ HH 00000000  01              00014
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   4540506291    13.42M4
+-----------------------------------#
+Mokestis                      0.58M4
+-----------------------------------#
+TARPINË SUMA                14.00EUR
+------------------------------------
+------------------------------------
+SUMA                        14.00EUR
+Kred. kortele               14.00EUR
+       Treniravimosi reþimas        
+2015-09-29 15:27                    
+@ HH 00000000  01              00015
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   8642735601    15.66M4
+Nuolaida                    -2.76EUR
+-----------------------------------#
+Mokestis                      0.58M4
+-----------------------------------#
+*** PANAIKINTA ***         -13.48EUR
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-29 15:30                    
+@ HH 00000000  01              00016
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   2375334818    15.66M4
+Nuolaida                    -2.76EUR
+-----------------------------------#
+Mokestis                      0.58M4
+-----------------------------------#
+TARPINË SUMA                13.48EUR
+------------------------------------
+------------------------------------
+SUMA                        13.48EUR
+Grynieji                    16.24EUR
+GRÀÞA                        2.76EUR
+       Treniravimosi reþimas        
+2015-09-29 15:31                    
+@ HH 00000000  01              00017
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   3387152099    15.66M4
+Nuolaida                    -2.76EUR
+-----------------------------------#
+Mokestis                      0.58M4
+-----------------------------------#
+*** PANAIKINTA ***         -13.48EUR
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-29 15:32                    
+@ HH 00000000  01              00018
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   7593163636    12.26M4
+Nuolaida                    -2.16EUR
+-----------------------------------#
+Mokestis                      0.58M4
+-----------------------------------#
+*** PANAIKINTA ***         -10.68EUR
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-29 15:40                    
+@ HH 00000000  01              00019
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+PRIIMTA                      1000.00
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-29 15:43                    
+@ HH 00000000  01              00020
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   758858346489  15.00M4
+TARPINË SUMA                15.00EUR
+------------------------------------
+------------------------------------
+SUMA                        15.00EUR
+Grynieji                    15.00EUR
+       Treniravimosi reþimas        
+2015-09-29 15:44                    
+@ HH 00000000  01              00021
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   7564342413    16.42M4
+-----------------------------------#
+Mokestis                      0.58M4
+-----------------------------------#
+TARPINË SUMA                17.00EUR
+------------------------------------
+------------------------------------
+SUMA                        17.00EUR
+Dovanø èekiu                15.00EUR
+Grynieji                     2.00EUR
+       Treniravimosi reþimas        
+2015-09-29 15:45                    
+@ HH 00000000  01              00022
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+BILIETAI LT Dovanø èekis           #
+Dovanø èekis galioja iki          2#
+-----------------------------------#
+Dovanø èekio nr.:               759#
+-----------------------------------#
+1.  Bilietas                 20.00M4
+TARPINË SUMA                20.00EUR
+------------------------------------
+------------------------------------
+SUMA                        20.00EUR
+Kred. kortele               20.00EUR
+       Treniravimosi reþimas        
+2015-09-29 17:52                    
+@ HH 00000000  01              00023
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+Devynbëdþiai                       #
+                                   #
+-----------------------------------#
+#ticket_sector #ticket_row       #t#
+Parteris       8                   #
+[BK pradþia]------------------------
+1D6B490C7B4232313737343039343133
+[BK pabaiga]------------------------
+1.  Bilietas                 11.13M4
+-----------------------------------#
+Mokestis                      0.87M4
+-----------------------------------#
+TARPINË SUMA                12.00EUR
+------------------------------------
+------------------------------------
+SUMA                        12.00EUR
+Grynieji                    12.00EUR
+       Treniravimosi reþimas        
+2015-09-29 17:54                    
+@ HH 00000000  01              00024
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+Devynbëdþiai                       #
+                                   #
+-----------------------------------#
+#ticket_sector #ticket_row       #t#
+Parteris       8                   #
+[BK pradþia]------------------------
+1D6B490C7B4236393236323731353937
+[BK pabaiga]------------------------
+1.  Bilietas                 11.13M4
+-----------------------------------#
+Mokestis                      0.87M4
+-----------------------------------#
+TARPINË SUMA                12.00EUR
+------------------------------------
+------------------------------------
+SUMA                        12.00EUR
+Grynieji                    12.00EUR
+       Treniravimosi reþimas        
+2015-09-29 17:54                    
+@ HH 00000000  01              00025
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+Programos versija: 4                
+Fiskalinë atmintis: 4MB [8061x2]    
+Liko Z ataskaitø: 8061              
+Unikalus numeris: HH 00000000       
+RS232 greitis: 57600 Bod            
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-30 12:04                    
+@ HH 00000000  01              00026
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+Programos versija: 4                
+Fiskalinë atmintis: 4MB [8061x2]    
+Liko Z ataskaitø: 8061              
+Unikalus numeris: HH 00000000       
+RS232 greitis: 57600 Bod            
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-30 12:12                    
+@ HH 00000000  01              00027
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+Programos versija: 4                
+Fiskalinë atmintis: 4MB [8061x2]    
+Liko Z ataskaitø: 8061              
+Unikalus numeris: HH 00000000       
+RS232 greitis: 57600 Bod            
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-30 12:14                    
+@ HH 00000000  01              00028
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+Programos versija: 4                
+Fiskalinë atmintis: 4MB [8061x2]    
+Liko Z ataskaitø: 8061              
+Unikalus numeris: HH 00000000       
+RS232 greitis: 57600 Bod            
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-30 12:19                    
+@ HH 00000000  01              00029
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+Programos versija: 4                
+Fiskalinë atmintis: 4MB [8061x2]    
+Liko Z ataskaitø: 8061              
+Unikalus numeris: HH 00000000       
+RS232 greitis: 57600 Bod            
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-30 12:29                    
+@ HH 00000000  01              00030
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+Programos versija: 4                
+Fiskalinë atmintis: 4MB [8061x2]    
+Liko Z ataskaitø: 8061              
+Unikalus numeris: HH 00000000       
+RS232 greitis: 57600 Bod            
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-30 12:34                    
+@ HH 00000000  01              00031
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+Programos versija: 4                
+Fiskalinë atmintis: 4MB [8061x2]    
+Liko Z ataskaitø: 8061              
+Unikalus numeris: HH 00000000       
+RS232 greitis: 57600 Bod            
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-30 12:35                    
+@ HH 00000000  01              00032
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+Programos versija: 4                
+Fiskalinë atmintis: 4MB [8061x2]    
+Liko Z ataskaitø: 8061              
+Unikalus numeris: HH 00000000       
+RS232 greitis: 57600 Bod            
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-30 12:40                    
+@ HH 00000000  01              00033
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+Programos versija: 4                
+Fiskalinë atmintis: 4MB [8061x2]    
+Liko Z ataskaitø: 8061              
+Unikalus numeris: HH 00000000       
+RS232 greitis: 57600 Bod            
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-30 12:44                    
+@ HH 00000000  01              00034
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+Programos versija: 4                
+Fiskalinë atmintis: 4MB [8061x2]    
+Liko Z ataskaitø: 8061              
+Unikalus numeris: HH 00000000       
+RS232 greitis: 57600 Bod            
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-30 12:50                    
+@ HH 00000000  01              00035
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+Programos versija: 4                
+Fiskalinë atmintis: 4MB [8061x2]    
+Liko Z ataskaitø: 8061              
+Unikalus numeris: HH 00000000       
+RS232 greitis: 57600 Bod            
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-30 13:03                    
+@ HH 00000000  01              00036
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+Programos versija: 4                
+Fiskalinë atmintis: 4MB [8061x2]    
+Liko Z ataskaitø: 8061              
+Unikalus numeris: HH 00000000       
+RS232 greitis: 57600 Bod            
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-30 13:04                    
+@ HH 00000000  01              00037
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+Programos versija: 4                
+Fiskalinë atmintis: 4MB [8061x2]    
+Liko Z ataskaitø: 8061              
+Unikalus numeris: HH 00000000       
+RS232 greitis: 57600 Bod            
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-30 13:04                    
+@ HH 00000000  01              00038
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+      DIENOS TARPINË ATASKAITA      
+X ataskaita  X-00001                
+                                    
+PARDAVIMØ SUMA                130.48
+PRIIMTA                   1  1000.00
+GRYNØJØ KASOJE               1081.48
+GRYNAISIAIS                    81.48
+Kredîtkarte                    34.00
+Dâvanu kartes                  15.00
+NUOLAIDA KVITUI                 0.00
+NUOLAIDA PREKEI                10.44
+NUOLAIDA KARTAI                    4
+KLAIDOS TAISYMAI             0  0.00
+PANAIKINTA                  4  37.64
+STALÈIAUS ATID.                    0
+4SUMA SU PVM:                 130.48
+4SUMA BE PVM:                 130.48
+PVM4(0.00%)                     0.00
+------------------------------------
+NEFISKALINË INFORMACIJA             
+Departaments 01                34.00
+Departaments 04                15.00
+------------------------------------
+GT                            130.48
+------------------------------------
+Fiskaliniø kvitø                   9
+Nulinimai                         00
+Mokesèiø keitimai                 00
+------------------------------------
+Kontrolinë suma (CRC32): FCF565E4   
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-09-30 13:17                    
+@ HH 00000000  01              00039
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   1273909786    14.42M4
+-----------------------------------#
+Mokestis                      0.58M4
+-----------------------------------#
+TARPINË SUMA                15.00EUR
+------------------------------------
+------------------------------------
+SUMA                        15.00EUR
+Grynieji                    15.00EUR
+       Treniravimosi reþimas        
+2015-09-30 13:38                    
+@ HH 00000000  01              00040
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   3651866397    16.42M4
+-----------------------------------#
+Mokestis                      0.58M4
+-----------------------------------#
+TARPINË SUMA                17.00EUR
+------------------------------------
+------------------------------------
+SUMA                        17.00EUR
+Grynieji                    17.00EUR
+       Treniravimosi reþimas        
+2015-09-30 15:20                    
+@ HH 00000000  01              00041
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   0388219731    16.42M4
+-----------------------------------#
+Mokestis                      0.58M4
+-----------------------------------#
+TARPINË SUMA                17.00EUR
+------------------------------------
+------------------------------------
+SUMA                        17.00EUR
+Kred. kortele               17.00EUR
+       Treniravimosi reþimas        
+2015-09-30 15:20                    
+@ HH 00000000  01              00042
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   7909567404    10.42M4
+-----------------------------------#
+Mokestis                      0.58M4
+-----------------------------------#
+TARPINË SUMA                11.00EUR
+------------------------------------
+------------------------------------
+SUMA                        11.00EUR
+Grynieji                    11.00EUR
+       Treniravimosi reþimas        
+2015-09-30 17:48                    
+@ HH 00000000  01              00043
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   1413043947    10.42M4
+-----------------------------------#
+Mokestis                      0.58M4
+-----------------------------------#
+TARPINË SUMA                11.00EUR
+------------------------------------
+------------------------------------
+SUMA                        11.00EUR
+Kred. kortele               11.00EUR
+       Treniravimosi reþimas        
+2015-09-30 17:54                    
+@ HH 00000000  01              00044
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+      DIENOS TARPINË ATASKAITA      
+X ataskaita  X-00001                
+                                    
+PARDAVIMØ SUMA                201.48
+PRIIMTA                   1  1000.00
+GRYNØJØ KASOJE               1124.48
+GRYNAISIAIS                   124.48
+Kredîtkarte                    62.00
+Dâvanu kartes                  15.00
+NUOLAIDA KVITUI                 0.00
+NUOLAIDA PREKEI                10.44
+NUOLAIDA KARTAI                    4
+KLAIDOS TAISYMAI             0  0.00
+PANAIKINTA                  4  37.64
+STALÈIAUS ATID.                    0
+4SUMA SU PVM:                 201.48
+4SUMA BE PVM:                 201.48
+PVM4(0.00%)                     0.00
+------------------------------------
+NEFISKALINË INFORMACIJA             
+Departaments 01                62.00
+Departaments 04                15.00
+------------------------------------
+GT                            201.48
+------------------------------------
+Fiskaliniø kvitø                  14
+Nulinimai                         00
+Mokesèiø keitimai                 00
+------------------------------------
+Kontrolinë suma (CRC32): 188F5365   
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-10-01 14:27                    
+@ HH 00000000  01              00045
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+Programos versija: 4                
+Fiskalinë atmintis: 4MB [8061x2]    
+Liko Z ataskaitø: 8061              
+Unikalus numeris: HH 00000000       
+RS232 greitis: 57600 Bod            
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-10-21 13:17                    
+@ HH 00000000  01              00046
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+Programos versija: 4                
+Fiskalinë atmintis: 4MB [8061x2]    
+Liko Z ataskaitø: 8061              
+Unikalus numeris: HH 00000000       
+RS232 greitis: 57600 Bod            
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-10-21 13:20                    
+@ HH 00000000  01              00047
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+Programos versija: 4                
+Fiskalinë atmintis: 4MB [8061x2]    
+Liko Z ataskaitø: 8061              
+Unikalus numeris: HH 00000000       
+RS232 greitis: 57600 Bod            
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-10-26 11:38                    
+@ HH 00000000  01              00048
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+      DIENOS TARPINË ATASKAITA      
+X ataskaita  X-00001                
+                                    
+PARDAVIMØ SUMA                201.48
+PRIIMTA                   1  1000.00
+GRYNØJØ KASOJE               1124.48
+GRYNAISIAIS                   124.48
+Kredîtkarte                    62.00
+Dâvanu kartes                  15.00
+NUOLAIDA KVITUI                 0.00
+NUOLAIDA PREKEI                10.44
+NUOLAIDA KARTAI                    4
+KLAIDOS TAISYMAI             0  0.00
+PANAIKINTA                  4  37.64
+STALÈIAUS ATID.                    0
+4SUMA SU PVM:                 201.48
+4SUMA BE PVM:                 201.48
+PVM4(0.00%)                     0.00
+------------------------------------
+NEFISKALINË INFORMACIJA             
+Departaments 01                62.00
+Departaments 04                15.00
+------------------------------------
+GT                            201.48
+------------------------------------
+Fiskaliniø kvitø                  14
+Nulinimai                         00
+Mokesèiø keitimai                 00
+------------------------------------
+Kontrolinë suma (CRC32): 275F3BF4   
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-10-26 11:46                    
+@ HH 00000000  01              00049
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   1480080099    13.42M4
+-----------------------------------#
+Mokestis                      0.58M4
+-----------------------------------#
+TARPINË SUMA                14.00EUR
+------------------------------------
+------------------------------------
+SUMA                        14.00EUR
+Grynieji                    14.00EUR
+       Treniravimosi reþimas        
+2015-10-26 11:47                    
+@ HH 00000000  01              00050
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   8988575874    16.42M4
+-----------------------------------#
+Mokestis                      0.58M4
+-----------------------------------#
+TARPINË SUMA                17.00EUR
+------------------------------------
+------------------------------------
+SUMA                        17.00EUR
+Grynieji                    17.00EUR
+       Treniravimosi reþimas        
+2015-10-26 11:48                    
+@ HH 00000000  01              00051
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   3469886720    16.42M4
+-----------------------------------#
+Mokestis                      0.58M4
+-----------------------------------#
+TARPINË SUMA                17.00EUR
+------------------------------------
+------------------------------------
+SUMA                        17.00EUR
+Grynieji                    17.00EUR
+       Treniravimosi reþimas        
+2015-10-26 12:06                    
+@ HH 00000000  01              00052
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   2064375330     9.42M4
+-----------------------------------#
+Mokestis                      0.58M4
+-----------------------------------#
+TARPINË SUMA                10.00EUR
+------------------------------------
+------------------------------------
+SUMA                        10.00EUR
+Grynieji                    10.00EUR
+       Treniravimosi reþimas        
+2015-10-26 12:09                    
+@ HH 00000000  01              00053
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+Programos versija: 4                
+Fiskalinë atmintis: 4MB [8061x2]    
+Liko Z ataskaitø: 8061              
+Unikalus numeris: HH 00000000       
+RS232 greitis: 57600 Bod            
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-10-27 14:07                    
+@ HH 00000000  01              00054
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+      DIENOS TARPINË ATASKAITA      
+X ataskaita  X-00001                
+                                    
+PARDAVIMØ SUMA                259.48
+PRIIMTA                   1  1000.00
+GRYNØJØ KASOJE               1182.48
+GRYNAISIAIS                   182.48
+Kredîtkarte                    62.00
+Dâvanu kartes                  15.00
+NUOLAIDA KVITUI                 0.00
+NUOLAIDA PREKEI                10.44
+NUOLAIDA KARTAI                    4
+KLAIDOS TAISYMAI             0  0.00
+PANAIKINTA                  4  37.64
+STALÈIAUS ATID.                    0
+4SUMA SU PVM:                 259.48
+4SUMA BE PVM:                 259.48
+PVM4(0.00%)                     0.00
+------------------------------------
+NEFISKALINË INFORMACIJA             
+Departaments 01                62.00
+Departaments 04                15.00
+------------------------------------
+GT                            259.48
+------------------------------------
+Fiskaliniø kvitø                  18
+Nulinimai                         00
+Mokesèiø keitimai                 00
+------------------------------------
+Kontrolinë suma (CRC32): E0031CB4   
+        NEFISKALINIS KVITAS         
+       Treniravimosi reþimas        
+2015-10-27 14:07                    
+@ HH 00000000  01              00055
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   1771487165    16.42M4
+-----------------------------------#
+Mokestis                      0.58M4
+-----------------------------------#
+TARPINË SUMA                17.00EUR
+------------------------------------
+------------------------------------
+SUMA                        17.00EUR
+Grynieji                    17.00EUR
+       Treniravimosi reþimas        
+2015-10-27 14:09                    
+@ HH 00000000  01              00056
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   5245070785    16.42M4
+-----------------------------------#
+Mokestis                      0.58M4
+-----------------------------------#
+TARPINË SUMA                17.00EUR
+------------------------------------
+------------------------------------
+SUMA                        17.00EUR
+Grynieji                    17.00EUR
+       Treniravimosi reþimas        
+2015-10-27 14:10                    
+@ HH 00000000  01              00057
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   3290179118    16.42M4
+-----------------------------------#
+Mokestis                      0.58M4
+-----------------------------------#
+TARPINË SUMA                17.00EUR
+------------------------------------
+------------------------------------
+SUMA                        17.00EUR
+Grynieji                    17.00EUR
+       Treniravimosi reþimas        
+2015-10-27 14:16                    
+@ HH 00000000  01              00058
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+POS SISTEMA RASO-01                 
+*                                   
+*                                   
+       PVM kodas 000000000000       
+------------------------------------
+1.  Bilietas   7129307939    39.00M4
+-----------------------------------#
+Mokestis                      1.00M4
+-----------------------------------#
+Arenos mokestis               1.00M4
+-----------------------------------#
+TARPINË SUMA                41.00EUR
+------------------------------------
+------------------------------------
+SUMA                        41.00EUR
+Grynieji                    41.00EUR
+       Treniravimosi reþimas        
+2015-10-27 15:13                    
+@ HH 00000000  01              00059
+                                    
+                                    
+*                                   
+   ** UAB RASO **                   
+                                             
+                                             
+*                                            
+   ** UAB RASO **                            
+POS SISTEMA RASO-01                          
+*                                            
+*                                            
+           PVM kodas 000000000000            
+EKJ IÐSAUGOJIMAS...                         #
+             NEFISKALINIS KVITAS             
+            Treniravimosi reþimas            
+2015-10-29 14:48                             
+@ HH 00000000  01                       00065

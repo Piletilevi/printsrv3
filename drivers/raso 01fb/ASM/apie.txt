@@ -1,0 +1,45 @@
+========================================================================
+       TRUMPAS "SA97.DLL" INSTALIAVIMO APRASYMAS
+   (Pilnas DLL'o aprasymas yra faile "posdll_lt.doc")
+========================================================================
+1.  Jei reikalinga instaliuokite USB draiveri del fiskalinio bloko. Kaip
+    instaliuoti ziurekite kataloge "..\USB\".
+2.  Viskas turi buti perkopijuota i kompiuterio "C:\ASM\" kataloga.
+    P.S. Katalogas "C:\ASM\" turi buti prieinamas skaitymui ir rasymui.
+3.  Elektronine kontroline juosta bus dedama "C:\ASM\RASO1FB\ kataloga
+    P.S. Antroji elektronines kontrolines juostos kopija talpinama i 
+         microSD fiskaliniame bloke "RASO-01FB".
+    P.S. "C:\ASM\" katalogas turi buti prieinamas skaitymui ir rasymui.
+4.  Faile "C:\ASM\posdx.cfg" gali buti papildomai nurodomi komunikacijos
+    parametrai su fiskaliniu bloku, jei tokiu parametru neturi taikomoji
+    programa arba juos reikia pakeisti (pavyzdziui):
+    [INTERFACE]
+    COM=COM2
+    SPEED=57600
+    IGNOREINIT=YES
+    P.S. Pavyzdys yra kataloge "\EXAMPLE\".
+5.  Toliau uzregistruokite DLL'a:
+    a) Jei buvo instaliuotas, isregistruokite sena "sa97.dll". Tam per 
+    meniu "Start=>Run" paleiskite komanda "regsvr32.exe /u C:\ASM\sa97.dll".
+    P.S. Senas DLL'as gali buti ir kitame kataloge.
+    b) Nauja "sa97.dll" perkopijuokite i "C:\ASM\" kataloga.
+    c) Uzregistruokite nauja "sa97.dll". Tam per meniu "Start=>Run" 
+       paleiskite komanda "regsvr32.exe C:\ASM\sa97.dll".
+    P.S. Instaliuojant i Windows Vista gali maisyti "Microsoft" ivairios 
+         apsaugos, todel butina, kad vartotojas butu administratorius. 
+         Tam reikia:
+         a) Mouse left click: "Start" => "Programs" => "Accessories" =>;
+            Mouse right click: "Command Prompt" => "Run as administrator".
+		   b) [Run...] => "msconfig" => [OK] => [Continue] => Tab"Tools" =>
+            Select"Disable UAC" => [Launch];
+            C:\WINDOWS\SYSTEM32\regsvr32.exe C:\ASM\sa97.dll => [Enter].
+6.  DLL'as darbo metu sukuria "C:\ASM\sa97.log" faila, kuriame galima 
+    pamatyti "sa97.dll" veikimo istorija.
+    P.S. Pastebetas atvejis, kad didejant LOG failui suleteja kasos 
+         darbas ir to priezastis yra antivirusine programa. 
+    P.S. Kartais taikomosios programos "nesutaria" su DLL'u. Tokiu
+         atveju DLL'a galima uzregistruoti kaip COM+ objekta. Tam reikia
+         pradziai isregistruoti DLL'a ir paleisti instaliacinis faila
+         "sa97.msi".
+========================================================================
+
