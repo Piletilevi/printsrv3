@@ -26,7 +26,7 @@ https://pypi.python.org/packages/any/W/WMI/WMI-1.4.9.win32.exe#md5=31ef47dc10ff1
 - uninstale FontName
 
 -----------------------
-- run compile.bat or compile\_console\_esky.bat
-- run make\_nsis\_esky.bat
+- to build run compile.bat or compile\_console\_esky.bat
+- to package run make\_nsis\_esky.bat
 
 deprecated. does not set VER variable. - right click on printsrv.nsi and choose "Compile NSIS script"
