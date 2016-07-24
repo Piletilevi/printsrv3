@@ -871,41 +871,41 @@ def read_plp_file(cfg, filename, skip_file_delete):
                 param_name_from_file = value[0]
                 param_value = value[1]
                 for postfix in ['', '_1', '_2', '_3']: # this makes it possible to print out several types for one value
-					param_name = param_name_from_file + postfix
-					if layout_cfg.has_section(param_name):
-					   if (layout_cfg.get(param_name, 'type') == 'text'):
-						   print_text_value(dict(layout_cfg.items(param_name)), param_value)
-					   if (layout_cfg.get(param_name, 'type') == 'qmatrix'):
-						   print_qmatrix_value(dict(layout_cfg.items(param_name)), param_value)
+                    param_name = param_name_from_file + postfix
+                    if layout_cfg.has_section(param_name):
+                        if (layout_cfg.get(param_name, 'type') == 'text'):
+                            print_text_value(dict(layout_cfg.items(param_name)), param_value)
+                            if (layout_cfg.get(param_name, 'type') == 'qmatrix'):
+                                print_qmatrix_value(dict(layout_cfg.items(param_name)), param_value)
 
-					   if (layout_cfg.get(param_name, 'type') == 'image_url'):
-						   print_image_url_value(dict(layout_cfg.items(param_name)), param_value)
-					   else:
-						   if(layout_cfg.get(param_name, 'type') == 'image_xml'):
-							   if(param_value!=''):
-								   print_image_xml_value(dict(layout_cfg.items(param_name)), param_value)
-						   else:
-							   if (layout_cfg.get(param_name, 'type') == 'bar_2_of_5'):
-								   print_bar_2_of_5_value(dict(layout_cfg.items(param_name)), param_value)
-								   if layout_cfg.has_section('%s_text' % param_name):
-									   print_text_value(dict(layout_cfg.items('%s_text' % param_name)), param_value)
-							   else:
-								   if (layout_cfg.get(param_name, 'type') == 'bar_3_of_9'):
-									   print_bar_3_of_9_value(dict(layout_cfg.items(param_name)), param_value)
-									   if layout_cfg.has_section('%s_text' % param_name):
-										   print_text_value(dict(layout_cfg.items('%s_text' % param_name)), param_value)
-								   else:
-										   if (layout_cfg.get(param_name, 'type') == 'bar_code128'):
-											   print_code128_value(dict(layout_cfg.items(param_name)), param_value)
-											   if layout_cfg.has_section('%s_text' % param_name):
-												   print_text_value(dict(layout_cfg.items('%s_text' % param_name)), param_value)
-										   else:
-											   print ('WARNING: unknown type for section:%s\n', param_name)
-											   set_exit_status(UNKNOWN_TYPE_FOR_SECTION)
-					else:
-					   pass
-					   #print ('WARNING: no section:%s\n',param_name) # it is cluttering error log.
-					   #set_exit_status(NO_SUCH_SECTION)
+                                if (layout_cfg.get(param_name, 'type') == 'image_url'):
+                                    print_image_url_value(dict(layout_cfg.items(param_name)), param_value)
+                                else:
+                                    if(layout_cfg.get(param_name, 'type') == 'image_xml'):
+                                        if(param_value!=''):
+                                            print_image_xml_value(dict(layout_cfg.items(param_name)), param_value)
+                                        else:
+                                            if (layout_cfg.get(param_name, 'type') == 'bar_2_of_5'):
+                                                print_bar_2_of_5_value(dict(layout_cfg.items(param_name)), param_value)
+                                                if layout_cfg.has_section('%s_text' % param_name):
+                                                    print_text_value(dict(layout_cfg.items('%s_text' % param_name)), param_value)
+                                                else:
+                                                    if (layout_cfg.get(param_name, 'type') == 'bar_3_of_9'):
+                                                        print_bar_3_of_9_value(dict(layout_cfg.items(param_name)), param_value)
+                                                        if layout_cfg.has_section('%s_text' % param_name):
+                                                            print_text_value(dict(layout_cfg.items('%s_text' % param_name)), param_value)
+                                                        else:
+                                                            if (layout_cfg.get(param_name, 'type') == 'bar_code128'):
+                                                                print_code128_value(dict(layout_cfg.items(param_name)), param_value)
+                                                                if layout_cfg.has_section('%s_text' % param_name):
+                                                                    print_text_value(dict(layout_cfg.items('%s_text' % param_name)), param_value)
+                                                                else:
+                                                                    print ('WARNING: unknown type for section:%s\n', param_name)
+                                                                    set_exit_status(UNKNOWN_TYPE_FOR_SECTION)
+                    else:
+                        pass
+                        # print ('WARNING: no section:%s\n',param_name) # it is cluttering error log.
+                        # set_exit_status(NO_SUCH_SECTION)
 
 #    continue
     infile.close()
