@@ -614,7 +614,7 @@ def print_image_xml_value(section_cfg, value):
     This function prints image specified. if it is not available locally it downloads it from web.
     """
     #local_image_filename = section_cfg["local_image_folder"] + value
-    local_image_filename = get_main_dir() + "/img/" + value
+    local_image_filename = os.path.join(get_main_dir(), "img", value)
 
     if not os.path.isfile(local_image_filename):
         try:
@@ -665,7 +665,7 @@ def print_image_url_value(section_cfg, value):
                 image_url_parts = urlparse.urlsplit(image_url)
                 if (len(image_url_parts) == 5):
                     #local_image_filename = section_cfg["local_image_folder"] + image_url_parts[2].replace("/", "_")
-                    local_image_filename = get_main_dir() + "/img/" + image_url_parts[2].replace("/", "_")
+                    local_image_filename = os.path.join(get_main_dir(), "img", image_url_parts[2].replace("/", "_"))
 
                     if not os.path.isfile(local_image_filename):
                         try:
@@ -951,7 +951,7 @@ def get_layout_cfg(file_url):
     file_url_parts = urlparse.urlsplit(file_url)
     if (len(file_url_parts) == 5):
 
-        local_file_filename = get_main_dir()+"/layouts/" + file_url_parts[2].replace("/", "_")
+        local_file_filename = os.path.join(get_main_dir(), "layouts", file_url_parts[2].replace("/", "_"))
         logger.info("layouts file:%s"%local_file_filename)
 
         # check to see if we have the file available localy
