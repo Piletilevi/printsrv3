@@ -769,7 +769,6 @@ def print_static_text_value(cfg):
                 print_image_value(dict(cfg.items(section)), cfg.get(section, "value"))
         except:
             logger.info("no section type")
-            pass
 
 def read_param(line):
     message = "Cannot parse parameter from line [%s]" % line
@@ -1135,16 +1134,12 @@ def get_ready_for_update_msg_text(cfg, v1, v2):
     lang = get_lang(cfg)
     if(lang == "lv"):
         return (u"Gatavi veikt printera programmas atjaunināšanu no %s uz %s?"%(v1,v2), u"Atjauninājums!")
-        pass
     elif(lang == "ee"):
         return (u"Ready for ticket printer update from %s to %s?"%(v1,v2), u"Update!")
-        pass
     elif(lang == "by"):
         return (u"Готовы для обновления принтера билет от %s к %s?"%(v1,v2), u"Oбновления!")
-        pass
     else:
         return (u"Ready for ticket printer update from %s to %s?"%(v1,v2), u"Update!")
-        pass
 
 #################################################################
 # This function gets used for both: update and rollback downgrade in case tickets did not print OK
