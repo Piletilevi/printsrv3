@@ -795,13 +795,13 @@ def print_static_text_value(cfg):
             pass
 
 #################################################################
-def read_plp_file(cfg, filename, skip_file_delete):
+def read_plp_file(cfg, plp_filename, skip_file_delete):
     global dc
     global hdc
     global proxy
 
     document_open = 0
-    infile = open(filename, 'rb')
+    infile = open(plp_filename, 'rb')
     param_dict = {}
     while infile:
         line = infile.readline()
@@ -909,7 +909,7 @@ def read_plp_file(cfg, filename, skip_file_delete):
     # if(skip_file_delete==0):
     #     try:
     #         pass
-    #         os.remove(filename)
+    #         os.remove(plp_filename)
     #     except:
     #         set_exit_status(COULD_NOT_DELETE_PLP)
     #         pass
@@ -1463,7 +1463,7 @@ for o, a in opts:
     else:
         assert False, "unhandled option"
 if(len(args)==1):
-    filename = args[0].strip('"')
+    plp_filename = args[0].strip('"')
 else:
     logger.error('ERROR: File not specified as first argument\n')
     set_exit_status(PLP_FILE_NOT_SPECIFIED)
@@ -1492,9 +1492,9 @@ cfg_setup = read_ini_config(ini_filename)
 # setup.ini overrides persistent.ini values if there are any
 cfg = override_cfg_values(cfg_persistent, cfg_setup)
 
-logger.info("INFO: plp filename:[%s]"%filename)
+logger.info("INFO: plp filename:[%s]"%plp_filename)
 
-cfg_plp = read_plp_in_cfg(filename)
+cfg_plp = read_plp_in_cfg(plp_filename)
 # plp overrides persistent.ini and setup.ini values if there are any
 logger.debug("Print cfqg DEFAULT after read_plp_in_cfg")
 logger.debug(cfg_plp.defaults())
@@ -1523,7 +1523,7 @@ if(cfg_plp.has_option('DEFAULT', 'info') and cfg_plp.get('DEFAULT', 'info')=="fi
    del shtrih_fp_f
    pass
 else:
-   read_plp_file(cfg, filename, skip_file_delete)
+   read_plp_file(cfg, plp_filename, skip_file_delete)
 
 if(prev_version!=False):
     # this is first run after update
@@ -1532,15 +1532,15 @@ if(prev_version!=False):
 
 if(skip_file_delete==False):
     try:
-        logger.info("INFO: doing file delete for file:[%s]"%filename)
-        os.remove(filename)
-        #shutil.rmtree(filename, ignore_errors=False, onerror=handleRemoveReadonly)
+        logger.info("INFO: doing file delete for file:[%s]"%plp_filename)
+        os.remove(plp_filename)
+        #shutil.rmtree(plp_filename, ignore_errors=False, onerror=handleRemoveReadonly)
         pass
     except:
         logger.debug("WARNING: Exception when doing file delete. Will retry with chmod 777")
         logger.debug(traceback.format_exc())
-        os.chmod(filename, stat.S_IRWXU| stat.S_IRWXG| stat.S_IRWXO) # 0777
-        os.remove(filename)
+        os.chmod(plp_filename, stat.S_IRWXU| stat.S_IRWXG| stat.S_IRWXO) # 0777
+        os.remove(plp_filename)
         pass
 logger.info("INFO: exit status:%d"%EXIT_STATUS)
 sys.exit(EXIT_STATUS)
