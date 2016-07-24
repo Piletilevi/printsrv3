@@ -122,31 +122,31 @@ def translate_to_code128(chaine):
     i=0
     while i<len(chaine):
         if tableB==True:
-            #print "B==1a"
+            #"B==1a"
             if (i<len(chaine)-4):
                 if testnum(chaine[i:4]):
                     if i==0:
-                        #print "START_C"
+                        #"START_C"
                         Code128=chr(210) #f
                     else:
-                        #print "CODE_C"
+                        #"CODE_C"
                         Code128=Code128+chr(204) #f
                     tableB=False
                 else:
                     if i==0:
-                        #print "START_B"
+                        #"START_B"
                         Code128=chr(209) #f
                         tableB=True
             else:
                 if i==0:
-                    #print "START_B"
+                    #"START_B"
                     Code128=chr(209) #f
                     tableB=True
         if tableB==False:
-            #print "B==0"
+            #"B==0"
             if testnum(chaine[i:i+2]) and i<=(len(chaine)-2):
                 dummy=int(chaine[i:i+2])
-                #print "TABLE_C processing 2:%s"%chaine[i:i+2]
+                #"TABLE_C processing 2:%s"%chaine[i:i+2]
                 if dummy<95:
                     dummy+=32
                 else:
@@ -154,11 +154,11 @@ def translate_to_code128(chaine):
                 Code128=Code128+chr(dummy)
                 i=i+2
             else:
-                #print "TABLE_C->CODE_B"
+                #"TABLE_C->CODE_B"
                 Code128=Code128+chr(205) #f
                 tableB=True
         if tableB==True:
-            #print "B==1b"
+            #"B==1b"
             Code128=Code128+chaine[i]
             i=i+1
     for i,dum in enumerate(Code128):
@@ -169,19 +169,16 @@ def translate_to_code128(chaine):
             dummy-=105 #f
         if i==0:
             checksum=dummy
-            #print "init:%d"%checksum
+            #"init:%d"%checksum
         checksum=(checksum + i*dummy)
         while checksum>=103: # mod 103
             checksum-=103
-        #print "iter:%d"%checksum
+        #"iter:%d"%checksum
     if checksum<95:
         checksum+=32
     else:
         checksum+=105 #f
-    Code128=Code128+chr(checksum)+chr(211) #f
-#    for i,dum in enumerate(Code128):
-#        print "%d"%ord(dum)
-#    print Code128
+    Code128=Code128+chr(checksum)+chr(211)
     return Code128
 
 #################################################################
@@ -209,13 +206,6 @@ def is_printer_online(printer_name):
     c = wmi.WMI()
     for s in c.Win32_Printer ():
         if(printer_name == s.caption):
-            try:
-                print s
-            except:
-                print "WARNING: exception while printing printer name"
-                #return False # don't fail as printing printer name is not critical
-                print traceback.format_exc()
-
             if(s.WorkOffline):
                 logger.info("Printer is offline")
                 return False
@@ -264,8 +254,7 @@ def start_new_document(cfg, is_first_document = False):
     devmode = win32print.GetPrinter(hprinter, 2)['pDevMode']
     logger.info("win32print.EnumJobs ...")
     printjobs = win32print.EnumJobs(hprinter, 0, 999)
-    logger.info("Jobs:")
-    print printjobs
+    logger.info("Jobs: {0}".format(printjobs))
 
     # if this is first document then there should be no documents in printer queue
     if(is_first_document):
@@ -335,14 +324,13 @@ def set_section_font_indirect(section_cfg,postfix=""):
     def callback(font, tm, fonttype, fonts):
         if(font.lfFaceName == fonts[0]):
             fonts.append(font)
-        # print font.lfFaceName
         return True
     win32gui.EnumFontFamilies(hdc, None, callback,fonts)
     # lf = win32gui.LOGFONT()
     try:
         lf = fonts[1]
     except:
-        print "No such font available:%s"%section_cfg['font_name'+postfix]
+        logger.warning("No such font available:%s" % section_cfg['font_name'+postfix])
         set_exit_status(NO_SUCH_FONT_AVAILABLE)
         lf = win32gui.LOGFONT()
     try:
@@ -378,7 +366,6 @@ def set_section_font_indirect(section_cfg,postfix=""):
 def set_section_font(section_cfg,postfix=""):
     global dc
     global hdc
-    # print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     font_params = {}
     font_params['name'] = section_cfg['font_name'+postfix]
     font_params['height'] = int(section_cfg['font_height'+postfix])
@@ -410,11 +397,10 @@ def print_text_value(section_cfg, value):
     try:
         value = unicode( value, "utf-8" )
     except:
-        print "can't decode:",value
+        logger.warning("can't decode:%s" % value)
         set_exit_status(CANT_DECODE_AS_UTF8)
     # # value = value.encode('utf-8')
     # value = value.encode('windows-1257')
-    # print "ord:%s"%value
     # from Tkinter import *
     # from collections import deque
     # root = Tk()
@@ -470,7 +456,7 @@ def print_text_value(section_cfg, value):
 
     try:
         space2 = value2.rfind(u" ",0,int(section_cfg['font_wrap2']))
-        print " wrap %d found at:%d"%(int(section_cfg['font_wrap2']),space2)
+        logger.info(" wrap %d found at:%d" % (int(section_cfg['font_wrap2']),space2))
         if(space2!=-1):
             value_w2 = value2[space2+1:]
             value2 = value2[0:space2]
@@ -483,7 +469,7 @@ def print_text_value(section_cfg, value):
 
     try:
         space3 = value3.rfind(u" ",0,int(section_cfg['font_wrap3']))
-        print " wrap %d found at:%d"%(int(section_cfg['font_wrap3']),space3)
+        logger.info(" wrap %d found at:%d" % (int(section_cfg['font_wrap3']),space3))
         if(space3!=-1):
             value_w3 = value3[space3+1:]
             value3 = value3[0:space3]
@@ -547,7 +533,7 @@ def print_image(x, y, value, rotate=0):
         set_exit_status(NO_IMAGE_BY_THAT_NAME)
         return None
     rotate = int(rotate)
-    print "rotate=%d"%rotate
+    logger.info(" rotate=%d" % rotate)
     if(rotate==90):
         bmp = bmp.transpose(Image.ROTATE_90)
     if(rotate==180):
@@ -641,7 +627,7 @@ def print_image_xml_value(section_cfg, value):
     if not os.path.isfile(local_image_filename):
         try:
             image_url=section_cfg['remote_image_url_folder'] + urllib.quote(value)
-            print image_url
+            logger.info(" %s" % image_url)
 
             # this gives error if value has non ascii chars.
             # I guess this is trying to double encode to utf-8
@@ -895,11 +881,10 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
                                                                 if layout_cfg.has_section('%s_text' % param_name):
                                                                     print_text_value(dict(layout_cfg.items('%s_text' % param_name)), param_value)
                                                                 else:
-                                                                    print ('WARNING: unknown type for section:%s\n', param_name)
+                                                                    logger.warning("unknown type for section:%s" % param_name)
                                                                     set_exit_status(UNKNOWN_TYPE_FOR_SECTION)
                     else:
                         pass
-                        # print ('WARNING: no section:%s\n',param_name) # it is cluttering error log.
                         # set_exit_status(NO_SUCH_SECTION)
 
     # continue
@@ -917,27 +902,19 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
     #         os.close(infile.fileno())
 
 #################################################################
-# print available printer name on the system
+# Log available printer name on the system
 #################################################################
 def print_available_printers():
-    return
-    print 'local printers:'
-    for p in win32print.EnumPrinters(win32print.PRINTER_ENUM_LOCAL):
-        #print p[2]
-        print p
-    print 'network printers:'
-    for p in win32print.EnumPrinters(win32print.PRINTER_ENUM_CONNECTIONS):
-        #print p[2]
-        print p
-    print 'INFO: default printer:'
-    print win32print.GetDefaultPrinter()
+    # return
+    logger.info('local printers: {0}'.format(win32print.EnumPrinters(win32print.PRINTER_ENUM_LOCAL)))
+    logger.info('network printers:{0}'.format(win32print.EnumPrinters(win32print.PRINTER_ENUM_CONNECTIONS)))
+    logger.info('default printer:{0}'.format(win32print.GetDefaultPrinter()))
 
 #################################################################
 # Read ini filename into cfg structure
 #################################################################
 def read_ini_config(ini_file):
     cfg = ConfigParser.ConfigParser()
-    # print "sys.argv:%s"%os.path.dirname(sys.argv[0])
     ini_file_full_path = ini_file
     logger.info("trying to read ini file from file:[%s] ..."%ini_file_full_path)
     ret = cfg.read(ini_file_full_path)
@@ -983,7 +960,7 @@ def get_layout_cfg(file_url):
     if (len(file_url_parts) == 5):
 
         local_file_filename = get_main_dir()+'/layouts/' + file_url_parts[2].replace('/', '_')
-        print "layouts file:%s"%local_file_filename
+        logger.info(" layouts file:%s"%local_file_filename)
 
         # check to see if we have the file available localy
         if not os.path.isfile(local_file_filename):
@@ -997,7 +974,7 @@ def get_layout_cfg(file_url):
                 else:
                     urlprx = UrllibProxy(proxy)
                     ret = urlprx.urlretrieve(file_url, local_file_filename)
-                print 'INFO: layouts file download successful:', local_file_filename
+                print 'INFO: layouts file download successful:%s' % local_file_filename
                 strip_file_null_chars(local_file_filename)
                 return read_ini_config(local_file_filename) # reading freshly downloaded copy
             except urllib2.HTTPError, e:
@@ -1006,7 +983,7 @@ def get_layout_cfg(file_url):
             except:
                 print 'ERROR: got exception while getting or parsing ini file'
         else:
-            print 'INFO: found layouts file %s local copy'%local_file_filename
+            print 'INFO: found layouts file %s local copy' % local_file_filename
             strip_file_null_chars(local_file_filename)
             return read_ini_config(local_file_filename) # reading local copy
     else:
@@ -1071,7 +1048,7 @@ def setup_proxy(cfg):
 
 #################################################################
 def auto_update_callback(data):
-    #print "auto_update_callback:", data['status']
+    #"auto_update_callback:", data['status']
     print data
 
 #################################################################
@@ -1094,7 +1071,7 @@ def override_cfg_values(cfg_1, cfg_2):
 
     cfg_2_sections = cfg_2.sections()
     cfg_2_sections.extend(['DEFAULT'])
-    print "cfg_2_sections: ", cfg_2_sections
+    print "cfg_2_sections: %s" % cfg_2_sections
     for section in cfg_2_sections:
         # each section can have disable_override value that lists parameters not to be overriden
         if(cfg_1.has_option(section, 'disable_override')):
@@ -1113,7 +1090,7 @@ def override_cfg_values(cfg_1, cfg_2):
         else:
             option_list = cfg_2.options(section)
         for option in option_list:
-            #print "[%s](%s)"%(section,option)
+            #"[%s](%s)"%(section,option)
             if(cfg_1.has_option(section, option)):
 
                 old_value = cfg_1.get(section, option)
@@ -1345,7 +1322,7 @@ def get_post_update_msg_text(cfg):
 def do_post_update_check(cfg, current_version, prev_version):
     #msg_box_text = u"Did the tickets print OK?\n Biļetes izprintējās labi?\n Билеты напечатаны в порядке?"
     msg, title = get_post_update_msg_text(cfg)
-    #print "MessageBoxW text:[%s]"%msg_box_text
+    #"MessageBoxW text:[%s]"%msg_box_text
     # YESNO = 4
     ret = windll.user32.MessageBoxW(0, msg, title, 4)
     if ret == 6:
@@ -1371,7 +1348,7 @@ def get_lang(cfg):
 def font_list_callback(font, tm, fonttype, fonts):
     # if(font.lfFaceName == fonts[0]):
     #     fonts.append(font)
-    print font.lfFaceName
+    logger.info(" %s" % font.lfFaceName)
     return True
 
 #################################################################
@@ -1413,7 +1390,7 @@ print_available_printers()
 try:
     opts, args = getopt.gnu_getopt(sys.argv[1:], "hvV", ["help", "verbose", "skip_file_delete", "ini_file=", "prev_version=", "downgrade_version=", "list_printer_fonts="])
 except getopt.GetoptError as err:
-    # print help information and exit:
+    # Output help information and exit:
     logger.error(str(err)) # will print something like "option -a not recognized"
     usage()
     set_exit_status(HELP_MESSAGE)
