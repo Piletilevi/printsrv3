@@ -918,8 +918,8 @@ def read_plp_file(cfg, filename, skip_file_delete):
 #        except:
 #            set_exit_status(COULD_NOT_DELETE_PLP)
 #            pass
-#	f.fileno ()
-#	os.close(infile.fileno())
+#    f.fileno ()
+#    os.close(infile.fileno())
 
 
 #################################################################
