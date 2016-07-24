@@ -902,20 +902,19 @@ def read_plp_file(cfg, filename, skip_file_delete):
                         # print ('WARNING: no section:%s\n',param_name) # it is cluttering error log.
                         # set_exit_status(NO_SUCH_SECTION)
 
-#    continue
+    # continue
     infile.close()
 
-# do not delete file as this might be bad version right after upgrade
-#    if(skip_file_delete==0):
-#        try:
-#            pass
-#            os.remove(filename)
-#        except:
-#            set_exit_status(COULD_NOT_DELETE_PLP)
-#            pass
-#    f.fileno ()
-#    os.close(infile.fileno())
-
+    # do not delete file as this might be bad version right after upgrade
+    # if(skip_file_delete==0):
+    #     try:
+    #         pass
+    #         os.remove(filename)
+    #     except:
+    #         set_exit_status(COULD_NOT_DELETE_PLP)
+    #         pass
+    #         f.fileno ()
+    #         os.close(infile.fileno())
 
 #################################################################
 # print available printer name on the system
@@ -950,8 +949,8 @@ def read_ini_config(ini_file):
 # important for installation file????
 #################################################################
 def main_is_frozen():
-    return (hasattr(sys, "frozen") or # new py2exe
-    hasattr(sys, "importers") # old py2exe
+    return (hasattr(sys, "frozen") # new py2exe
+    or hasattr(sys, "importers") # old py2exe
     or imp.is_frozen("__main__")) # tools/freeze
 
 #################################################################
@@ -971,8 +970,6 @@ def strip_file_null_chars(fname):
 
     with open(fname, 'w') as out_f:
         out_f.write(content)
-
-
 
 #################################################################
 # Layout url may be speciffied in plp file right after BEGIN line
