@@ -771,6 +771,28 @@ def print_static_text_value(cfg):
             logger.info("no section type")
             pass
 
+def read_param(line):
+    message = "Cannot parse parameter from line [%s]" % line
+    line = line[3:] if line.startswith(codecs.BOM_UTF8)
+    line = line.strip()
+    if (len(line) == 0):
+        logging.warning(message)
+        return False
+
+    if (line[:6] == "BEGIN "):
+        return ("BEGIN", line)
+    elif (line[:4] == "END "):
+        return ("END", line)
+
+    param = line.split("=")
+    if (len(param) != 2):
+        logging.warning(message)
+        return False
+    if (len(param[0]) == 0):
+        logging.warning(message)
+        return False
+    return param
+
 #################################################################
 def read_plp_file(cfg, plp_filename, skip_file_delete):
     global dc
@@ -854,7 +876,7 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
                                     print_image_url_value(dict(layout_cfg.items(param_name)), param_value)
                                 else:
                                     if(layout_cfg.get(param_name, "type") == "image_xml"):
-                                        if(param_value!=""):
+                                        if(param_value != ""):
                                             print_image_xml_value(dict(layout_cfg.items(param_name)), param_value)
                                         else:
                                             if (layout_cfg.get(param_name, "type") == "bar_2_of_5"):
@@ -904,10 +926,9 @@ def print_available_printers():
 #################################################################
 # Read ini filename into cfg structure
 #################################################################
-def read_ini_config(ini_file):
+def read_ini_config(ini_file_full_path):
     cfg = ConfigParser.ConfigParser()
-    ini_file_full_path = ini_file
-    logger.info("trying to read ini file from file:[%s] ..."%ini_file_full_path)
+    logger.info("Read configuration from: [%s]" % ini_file_full_path)
     ret = cfg.read(ini_file_full_path)
     if(len(ret)==0):
         return None
@@ -1410,10 +1431,10 @@ if not os.path.isfile(persistent_ini_path):
 if not os.path.isfile(persistent_ini_path):
     logger.error("ERROR: persistent.ini could not be found")
     sys.exit(EXIT_STATUS)
-cfg_persistent = read_ini_config(persistent_ini_path) # when running from first install
+cfg_persistent = read_ini_config(persistent_ini_path)
 
 if(ini_filename==False):
-    ini_filename = get_main_dir() + "\\setup_%s.ini"%get_lang(cfg_persistent)
+    ini_filename = os.path.join(get_main_dir(), "\\setup_%s.ini" % get_lang(cfg_persistent))
     logger.info("setting ini filename to:%s"%ini_filename)
 
 # default layout
