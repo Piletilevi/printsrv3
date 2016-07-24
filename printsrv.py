@@ -776,7 +776,7 @@ def read_param(line):
     line = line[3:] if line.startswith(codecs.BOM_UTF8)
     line = line.strip()
     if (len(line) == 0):
-        logging.warning(message)
+        logger.warning(message)
         return False
 
     if (line[:6] == "BEGIN "):
@@ -786,10 +786,10 @@ def read_param(line):
 
     param = line.split("=")
     if (len(param) != 2):
-        logging.warning(message)
+        logger.warning(message)
         return False
     if (len(param[0]) == 0):
-        logging.warning(message)
+        logger.warning(message)
         return False
     return param
 
@@ -1208,11 +1208,11 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
                 else:
                     msg, title = get_ready_for_update_msg_text(cfg, app.active_version, planned_update_version)
                     ret = windll.user32.MessageBoxW(0, msg, title, 1)
-                print "MessageBoxA ret:", ret
+                logger.info("MessageBoxA ret: %s" % ret)
                 if ret == 1:
                     # OK response
                     logger.info("doing auto_update ...")
-                    if cfg.get("DEFAULT", "driver_version")=="auto":
+                    if cfg.get("DEFAULT", "driver_version") == "auto":
                         #app.auto_update(auto_update_callback)
                         #version = app.find_update() # this needs to be called before "app._do_auto_update"
                         app.fetch_version(planned_update_version,auto_update_callback)
@@ -1241,8 +1241,8 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
                             except:
                                 logger.info(traceback.format_exc())
                                 logger.info("exception while doing uninstall_version. Will try to fool the bootstrap ...")
-                                directory = "%s/esky-files/bootstrap"%get_main_dir()
-                                logger.info("creating directory:",directory)
+                                directory = "%s/esky-files/bootstrap" % get_main_dir()
+                                logger.info("creating directory: %s" % directory)
                                 if not os.path.exists(directory):
                                     os.makedirs(directory)
                             pass
@@ -1271,15 +1271,15 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
                             # we don't want to do downgrade from the downgrade we just did
                             if(not argv.startswith("--prev_version=")):
                                 argv_to_pass.extend([argv])
-                            argv_to_pass.extend(["--downgrade_version=%s"%current_version])
-                        logger.info("downgrade finished. Will do restart with args:",argv_to_pass)
+                            argv_to_pass.extend(["--downgrade_version=%s" % current_version])
+                        logger.info("downgrade finished. Will do restart with args: %s" % argv_to_pass)
                         ret_do_not_delete_plp_file = True
                         os.execv(appexe,[appexe] + argv_to_pass)
                         pass
                     else:
-                        logger.info("update finished. Will do restart with args:",sys.argv[1:],["--prev_version=%s"%current_version])
+                        logger.info("update finished. Will do restart with args:%s. --prev_version=%s" % sys.argv[1:], current_version])
                         ret_do_not_delete_plp_file = True
-                        os.execv(appexe,[appexe] + sys.argv[1:] + ["--prev_version=%s"%current_version])
+                        os.execv(appexe,[appexe] + sys.argv[1:] + ["--prev_version=%s" % current_version])
                     logger.info("after updater os.execv call")
                 elif ret == 2:
                     # CANCEL response
@@ -1290,7 +1290,7 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
 
         #except Exception, e:
         except KeyError:
-            logger.error("KeyError while updating app ", e)
+            logger.error("KeyError while updating app %s" % e)
             logger.debug(traceback.format_exc())
         except Exception, e:
             logger.error("exception when updating app")
@@ -1371,7 +1371,7 @@ except getopt.GetoptError as err:
 
 verbose = False
 ini_filename = False
-skip_file_delete = False
+skip_file_delete = True
 prev_version = False
 downgrade_version = False
 
