@@ -24,7 +24,7 @@ from UrllibProxy import UrllibProxy
 
 # to get file from url for layouts parameter
 import posixpath
-import urlparse 
+import urlparse
 
 import email
 import email.mime.text
@@ -98,7 +98,7 @@ class StreamToLogger(object):
       self.logger = logger
       self.log_level = log_level
       #self.linebuf = u''
- 
+
    def write(self, buf):
       for line in buf.rstrip().splitlines():
          self.logger.log(self.log_level, line.rstrip())
@@ -128,7 +128,7 @@ def translate_to_code128(chaine):
                     if i==0:
                         #print "START_C"
                         Code128=chr(210) #f
-                    else: 
+                    else:
                         #print "CODE_C"
                         Code128=Code128+chr(204) #f
                     tableB=False
@@ -215,7 +215,7 @@ def is_printer_online(printer_name):
                 print "WARNING: exception while printing printer name"
                 #return False # don't fail as printing printer name is not critical
                 print traceback.format_exc()
-                
+
             if(s.WorkOffline):
                 print "INFO: Printer is offline"
                 return False
@@ -280,9 +280,9 @@ def start_new_document(cfg, is_first_document = False):
             retry_times_left -= 1
             if(retry_times_left<=0):
                 print "ERROR: Printer has old jobs in queue. Exiting"
-                #set_exit_status(PRINTER_IS_OFFLINE)
-                sys.exit(EXIT_STATUS)      
-        
+                # set_exit_status(PRINTER_IS_OFFLINE)
+                sys.exit(EXIT_STATUS)
+
 
     try:
         print("INFO: Setting orientation ...")
@@ -307,7 +307,7 @@ def start_new_document(cfg, is_first_document = False):
         set_exit_status(HDC_NOT_CREATED)
         sys.exit(EXIT_STATUS)
 
-#dc.SetMapMode(win32con.MM_TWIPS)
+    # dc.SetMapMode(win32con.MM_TWIPS)
 
     print("INFO: dc.SetMapMode ...")
     dc.SetMapMode(int(cfg.get('DEFAULT', 'map_mode')))
@@ -339,10 +339,10 @@ def set_section_font_indirect(section_cfg,postfix=""):
     def callback(font, tm, fonttype, fonts):
         if(font.lfFaceName == fonts[0]):
             fonts.append(font)
-#        print font.lfFaceName
+        # print font.lfFaceName
         return True
     win32gui.EnumFontFamilies(hdc, None, callback,fonts)
-#    lf = win32gui.LOGFONT()
+    # lf = win32gui.LOGFONT()
     try:
         lf = fonts[1]
     except:
@@ -364,7 +364,7 @@ def set_section_font_indirect(section_cfg,postfix=""):
         pass
     try:
         #lf.lfOrientation = int(90)*10
-        #lf.lfEscapement = int(90)*10        
+        #lf.lfEscapement = int(90)*10
         lf.lfOrientation = int(section_cfg['font_orientation'+postfix])*10
         lf.lfEscapement = int(section_cfg['font_orientation'+postfix])*10
     except:
@@ -383,7 +383,7 @@ def set_section_font_indirect(section_cfg,postfix=""):
 def set_section_font(section_cfg,postfix=""):
     global dc
     global hdc
-#    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    # print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     font_params = {}
     font_params['name'] = section_cfg['font_name'+postfix]
     font_params['height'] = int(section_cfg['font_height'+postfix])
@@ -406,33 +406,33 @@ def set_section_font(section_cfg,postfix=""):
 def print_text_value(section_cfg, value):
     global dc
     global hdc
-    
+
     try:
         value = value.replace(section_cfg['replace_from'],section_cfg['replace_to'])
     except:
         pass
-#   value = value.decode('utf-8')
+    # value = value.decode('utf-8')
     try:
         value = unicode( value, "utf-8" )
     except:
         print "can't decode:",value
         set_exit_status(CANT_DECODE_AS_UTF8)
-#    #value = value.encode('utf-8')
-#   value = value.encode('windows-1257')
-#    print "ord:%s"%value
-#    from Tkinter import *
-#    from collections import deque
-#    root = Tk() 
-#    w = Label(root, text=value,font = ("freemono","80"))
-#    w.pack()
-#    root.mainloop()
-#    value = value.encode('mbcs')
+    # # value = value.encode('utf-8')
+    # value = value.encode('windows-1257')
+    # print "ord:%s"%value
+    # from Tkinter import *
+    # from collections import deque
+    # root = Tk()
+    # w = Label(root, text=value,font = ("freemono","80"))
+    # w.pack()
+    # root.mainloop()
+    # value = value.encode('mbcs')
 
-#    for v in value :
-#        print "%d,"%ord(v)
-#    set_section_font(section_cfg,"")
-#    windll.gdi32.TextOutW(hdc,int(section_cfg['x']),int(section_cfg['y']),value,len(value))
-#    value="te"+u"\u2424"+value
+    # for v in value :
+    #     print "%d,"%ord(v)
+    # set_section_font(section_cfg,"")
+    # windll.gdi32.TextOutW(hdc,int(section_cfg['x']),int(section_cfg['y']),value,len(value))
+    # value="te"+u"\u2424"+value
     value_w = ''
     value_w1 = ''
     value_w2 = ''
@@ -460,7 +460,6 @@ def print_text_value(section_cfg, value):
     except:
         pass
 
-
     try:
         space1 = value1.rfind(u" ",0,int(section_cfg['font_wrap1']))
         print "INFO: wrap %d found at:%d"%(int(section_cfg['font_wrap1']),space1)
@@ -473,6 +472,7 @@ def print_text_value(section_cfg, value):
                 value_w1 = value_w1[0:space1]
     except:
         pass
+
     try:
         space2 = value2.rfind(u" ",0,int(section_cfg['font_wrap2']))
         print " wrap %d found at:%d"%(int(section_cfg['font_wrap2']),space2)
@@ -485,6 +485,7 @@ def print_text_value(section_cfg, value):
                 value_w2 = value_w2[0:space2]
     except:
         pass
+
     try:
         space3 = value3.rfind(u" ",0,int(section_cfg['font_wrap3']))
         print " wrap %d found at:%d"%(int(section_cfg['font_wrap3']),space3)
@@ -497,8 +498,7 @@ def print_text_value(section_cfg, value):
                 value_w3 = value_w3[0:space3]
     except:
         pass
-	
-	
+
     try:
         set_section_font_indirect(section_cfg,"")
         windll.gdi32.TextOutW(hdc,int(section_cfg['x']),int(section_cfg['y']),value,len(value))
@@ -507,7 +507,6 @@ def print_text_value(section_cfg, value):
             windll.gdi32.TextOutW(hdc,int(section_cfg['x']),int(section_cfg['y'])+int(section_cfg['font_height']),value_w,len(value_w))
             set_section_font_indirect(section_cfg,"")
             windll.gdi32.TextOutW(hdc,int(section_cfg['x']),int(section_cfg['y'])+2*int(section_cfg['font_height']),value_ww,len(value_ww))
-
         except:
             pass
         set_section_font_indirect(section_cfg,"1")
@@ -568,6 +567,7 @@ def print_image(x, y, value, rotate=0):
         set_exit_status(UNSUPPORTED_IMAGE_FORMAT)
         return None
     dib.draw(dc.GetHandleOutput(), (int(x), int(y), int(x) + bmp.size[0], int(y) + bmp.size[1]))
+
 #################################################################
 def print_qmatrix(x, y, size, value):
     global dc
@@ -576,17 +576,16 @@ def print_qmatrix(x, y, size, value):
     factory = qrcode.image.pil.PilImage
 
     qr = qrcode.QRCode(
-#        version=1,
+        # version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_H,
-#        box_size=10,
-#        border=4,
+        # box_size=10,
+        # border=4,
     )
     qr.add_data(value)
     qr.make(fit=True)
     im = qr.make_image(image_factory=factory)
 
-    
-#    im = qrcode.make(value, image_factory=factory)
+    # im = qrcode.make(value, image_factory=factory)
     try:
         dib = ImageWin.Dib(im)
     except:
@@ -594,22 +593,21 @@ def print_qmatrix(x, y, size, value):
         set_exit_status(UNSUPPORTED_IMAGE_FORMAT)
         return None
     dib.draw(dc.GetHandleOutput(), (int(x), int(y), int(x) + int(size), int(y) + int(size)))
+
 #################################################################
 def print_qmatrix_value(section_cfg, value):
     global dc
     global hdc
-    #try:
+    # try:
     print_qmatrix(section_cfg['x'], section_cfg['y'], section_cfg['size'], value)
-    #except:
-    #    print "exception while printing qmatrix"
+    # except:
+    #     print "exception while printing qmatrix"
+
 #################################################################
 def print_image_value(section_cfg, value):
     global dc
     global hdc
-    """
-\tThis function prints image specified in ini file
-\tvalues are x position, y position and value which is full path to the jpg/bmp file
-\t"""
+    """\n\tThis function prints image specified in ini file\n\tvalues are x position, y position and value which is full path to the jpg/bmp file\n\t"""
     try:
         try:
             print_image(section_cfg['x'], section_cfg['y'], value, section_cfg['orientation'])
@@ -619,12 +617,12 @@ def print_image_value(section_cfg, value):
             print_image(section_cfg['x1'], section_cfg['y1'], value, section_cfg['orientation1'])
         except:
             print_image(section_cfg['x1'], section_cfg['y1'], value)
-		
+
         try:
             print_image(section_cfg['x2'], section_cfg['y2'], value, section_cfg['orientation2'])
         except:
             print_image(section_cfg['x2'], section_cfg['y2'], value)
-			
+
         try:
             print_image(section_cfg['x3'], section_cfg['y3'], value, section_cfg['orientation3'])
         except:
@@ -644,7 +642,7 @@ def print_image_xml_value(section_cfg, value):
     """
     #local_image_filename = section_cfg['local_image_folder'] + value
     local_image_filename = get_main_dir() + '/img/' + value
-    
+
     if not os.path.isfile(local_image_filename):
         try:
             image_url=section_cfg['remote_image_url_folder'] + urllib.quote(value)
@@ -655,16 +653,16 @@ def print_image_xml_value(section_cfg, value):
             #image_url = image_url.encode('utf-8')
             #image_url = urllib.quote(image_url)
             #local_image_filename = local_image_filename.encode('utf-8')
-            
-            
+
+
             # use proxy class wrap to urllib to download image if proxy is set
             if(proxy == None):
                 ret = urllib.urlretrieve(image_url, local_image_filename)
             else:
                 urlprx = UrllibProxy(proxy)
                 urlprx.urlretrieve(image_url, local_image_filename)
-            
-            try:			
+
+            try:
                 print_image(section_cfg['x'], section_cfg['y'], local_image_filename, section_cfg['orientation'])
             except:
                 print_image(section_cfg['x'], section_cfg['y'], local_image_filename)
@@ -695,7 +693,7 @@ def print_image_url_value(section_cfg, value):
                 if (len(image_url_parts) == 5):
                     #local_image_filename = section_cfg['local_image_folder'] + image_url_parts[2].replace('/', '_')
                     local_image_filename = get_main_dir() + '/img/' + image_url_parts[2].replace('/', '_')
-                    
+
                     if not os.path.isfile(local_image_filename):
                         try:
                             image_url = image_url.encode('utf-8')
@@ -750,7 +748,7 @@ def print_bar_3_of_9_value(section_cfg, value):
     except:
         set_exit_status(EXCEPTION_IN_3_OF_9)
         raise
-    
+
 #################################################################
 def print_code128_value(section_cfg, value):
     global dc
@@ -814,7 +812,7 @@ def read_plp_file(cfg, filename, skip_file_delete):
         line = infile.readline()
         if line.startswith(codecs.BOM_UTF8):
             line = line[3:]
-            
+
         if (len(line) == 0):
             break
         line = line.strip()
@@ -824,7 +822,7 @@ def read_plp_file(cfg, filename, skip_file_delete):
         #################################################################
         if (line[:6] == 'BEGIN '):
             begin_section_name = line
-            #attempt to check if there is a layouts definition
+            # attempt to check if there is a layouts definition
             file_read_pos = infile.tell()
             line = infile.readline()
             params = line.split('=')
@@ -833,7 +831,7 @@ def read_plp_file(cfg, filename, skip_file_delete):
                 value = params[1].strip()
                 if(key == 'layout'):
                     # is this going to work?
-                    if(cfg.has_option('DEFAULT', 'layout')): 
+                    if(cfg.has_option('DEFAULT', 'layout')):
                         if(cfg.get('DEFAULT', 'layout')=='none'):
                             layout_cfg = cfg
                         else:
@@ -846,7 +844,7 @@ def read_plp_file(cfg, filename, skip_file_delete):
             else:
                 infile.seek(file_read_pos) # undo up one line. it was not layout directive
                 layout_cfg = cfg # use original ini file for cfg.
-            
+
             print "INFO: start new document"
             printer_cfg = cfg
 
@@ -856,7 +854,7 @@ def read_plp_file(cfg, filename, skip_file_delete):
             else:
                 start_new_document(printer_cfg, is_first_document=False)
             document_open=1
-            
+
         #################################################################
         # End document
         #################################################################
@@ -864,7 +862,7 @@ def read_plp_file(cfg, filename, skip_file_delete):
             print_static_text_value(layout_cfg)
             print_document()
             document_open=0
-            
+
         #################################################################
         # parse every parameter if file is open
         #################################################################
@@ -879,7 +877,7 @@ def read_plp_file(cfg, filename, skip_file_delete):
 						   print_text_value(dict(layout_cfg.items(param_name)), param_value)
 					   if (layout_cfg.get(param_name, 'type') == 'qmatrix'):
 						   print_qmatrix_value(dict(layout_cfg.items(param_name)), param_value)
-						   
+
 					   if (layout_cfg.get(param_name, 'type') == 'image_url'):
 						   print_image_url_value(dict(layout_cfg.items(param_name)), param_value)
 					   else:
@@ -906,12 +904,12 @@ def read_plp_file(cfg, filename, skip_file_delete):
 											   set_exit_status(UNKNOWN_TYPE_FOR_SECTION)
 					else:
 					   pass
-					   #print ('WARNING: no section:%s\n',param_name) # it is cluttering error log. 
+					   #print ('WARNING: no section:%s\n',param_name) # it is cluttering error log.
 					   #set_exit_status(NO_SUCH_SECTION)
 
 #    continue
     infile.close()
-    
+
 # do not delete file as this might be bad version right after upgrade
 #    if(skip_file_delete==0):
 #        try:
@@ -952,7 +950,7 @@ def read_ini_config(ini_file):
         return None
     else:
         return cfg
-    
+
 #################################################################
 # important for installation file????
 #################################################################
@@ -978,8 +976,8 @@ def strip_file_null_chars(fname):
 
     with open(fname, 'w') as out_f:
         out_f.write(content)
-        
-        
+
+
 
 #################################################################
 # Layout url may be speciffied in plp file right after BEGIN line
@@ -987,10 +985,10 @@ def strip_file_null_chars(fname):
 def get_layout_cfg(file_url):
     global proxy
     print 'INFO: getting layout file:%s'%file_url
-    
+
     file_url_parts = urlparse.urlsplit(file_url)
     if (len(file_url_parts) == 5):
-    
+
         local_file_filename = get_main_dir()+'/layouts/' + file_url_parts[2].replace('/', '_')
         print "layouts file:%s"%local_file_filename
 
@@ -1021,6 +1019,7 @@ def get_layout_cfg(file_url):
     else:
         print 'ERROR: len(file_url_parts)!=5. Exiting ...'
     return None
+
 #################################################################
 def read_plp_in_array(fname):
     ret = {}
@@ -1033,13 +1032,14 @@ def read_plp_in_array(fname):
             val = params[1].strip("\n\r ")
             ret[key] = val
     return ret
+
 #################################################################
 def read_plp_in_cfg(fname):
     ret = {}
     section='DEFAULT'
     cfg = ConfigParser.ConfigParser()
     with open(fname) as f:
-        
+
         content = f.readlines()
     for line in content:
         if line.startswith(codecs.BOM_UTF8):
@@ -1098,7 +1098,7 @@ def override_cfg_values(cfg_1, cfg_2):
     print "INFO: cfg_1 defaults",cfg_1_defaults
     cfg_2_defaults = cfg_2.defaults()
     print "INFO: cfg_2 defaults",cfg_2_defaults
-    
+
     cfg_2_sections = cfg_2.sections()
     cfg_2_sections.extend(['DEFAULT'])
     print "cfg_2_sections: ", cfg_2_sections
@@ -1110,7 +1110,7 @@ def override_cfg_values(cfg_1, cfg_2):
             disable_override_list = []
         print "disable_override_list:",disable_override_list
 
-        
+
         if((not cfg_1.has_section(section))and section!='DEFAULT'):
             cfg_1.add_section(section)
 
@@ -1122,11 +1122,11 @@ def override_cfg_values(cfg_1, cfg_2):
         for option in option_list:
             #print "[%s](%s)"%(section,option)
             if(cfg_1.has_option(section, option)):
-                
+
                 old_value = cfg_1.get(section, option)
                 new_value = cfg_2.get(section, option)
                 if(old_value!=new_value):
-                    
+
                     if(option not in disable_override_list):
                         print "INFO: overriding [%s](%s) from '%s' to '%s'"%(section,option,old_value,new_value)
                         if(option=='disable_override'):
@@ -1145,8 +1145,9 @@ def override_cfg_values(cfg_1, cfg_2):
                 cfg_1.set(section, option, cfg_2.get(section, option))
                 pass
 
-            
+
     return cfg_1
+
 #################################################################
 def get_ready_for_update_msg_text(cfg, v1, v2):
     lang = get_lang(cfg)
@@ -1162,6 +1163,7 @@ def get_ready_for_update_msg_text(cfg, v1, v2):
     else:
         return (u'Ready for ticket printer update from %s to %s?'%(v1,v2), u'Update!')
         pass
+
 #################################################################
 # This function gets used for both: update and rollback downgrade in case tickets did not print OK
 #################################################################
@@ -1174,7 +1176,7 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
     except:
         my_id = 'MY_ID_NOT_SET'
         print "INFO: my_id not set. using default: ", my_id
-        
+
     # Set updates_base_url where we will look for updates
     try:
         updates_base_url = cfg.get('DEFAULT', 'updates_base_url').strip('"')
@@ -1183,10 +1185,10 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
         print "WARNING: updates_base_url not set. using default"
 
     ret_do_not_delete_plp_file = False
-    
+
     # ESKY
     if getattr(sys,"frozen",False):
-        
+
         url_args = {'my_id':my_id, 'my_version':current_version, 'getnode':hex(getnode())}
         if(downgrade_version!=False):
             # we inform server and server should take care of not showing the bad version to us ever again.
@@ -1216,7 +1218,7 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
                 planned_update_version = cfg.get('DEFAULT', 'driver_version').strip('"\r\n ')
                 if(app.active_version != planned_update_version):
                     need_update = True
-                     
+
             if(need_update==True):
                 # plp file can override update choice
                 if(cfg.get('DEFAULT', 'driver_force_upgrade') == 'yes'):
@@ -1242,8 +1244,8 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
                         #######
                         if(downgrade):
                             #we are downgrading. should be enaugh to just uninstall the current version
-                            
-                            
+
+
                             print "INFO: downgrading. fetch_version()"
                             app.fetch_version(planned_update_version,auto_update_callback)
                             print "INFO: downgrading. do install_version"
@@ -1279,7 +1281,7 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
                             app.reinitialize()
                             ret_do_not_delete_plp_file = True
                         #######
-                    
+
                     appexe = esky.util.appexe_from_executable(sys.executable)
                     if(downgrade):
                         argv_to_pass = []
@@ -1313,6 +1315,7 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
             logger.debug(traceback.format_exc())
         #app.cleanup()
         return ret_do_not_delete_plp_file
+
 #################################################################
 def usage():
     print ''
@@ -1327,7 +1330,7 @@ def usage():
     print '   --prev_version=<version>      if printsrv is run for the first time with new version'
     print '   --downgrade_version=<version> we have just started after downgrade'
     print '   --list_printer_fonts=<printer> list all fonts'
-    print ''    
+    print ''
 
 #################################################################
 def get_post_update_msg_text(cfg):
@@ -1344,6 +1347,7 @@ def get_post_update_msg_text(cfg):
     else:
         return (u'Did the tickets print OK?', u'Check tickets!')
         pass
+
 #################################################################
 def do_post_update_check(cfg, current_version, prev_version):
     #msg_box_text = u"Did the tickets print OK?\n Biļetes izprintējās labi?\n Билеты напечатаны в порядке?"
@@ -1361,7 +1365,7 @@ def do_post_update_check(cfg, current_version, prev_version):
         cfg.set('DEFAULT', 'driver_force_upgrade', 'yes')
         cfg.set('DEFAULT', 'driver_version', prev_version)
         do_auto_update(cfg, current_version, prev_version=prev_version, downgrade = True)
-        
+
     else:
         # ??
         print "ERROR: unknown response from MessageBoxW:%s, expecting 6[YES] or 7[NO]"%ret
@@ -1383,6 +1387,8 @@ def handleRemoveReadonly(func, path, exc):
         func(path)
     else:
         raise
+
+
 #########################################################################################################
 # MAIN STARTS HERE
 #########################################################################################################
@@ -1416,7 +1422,7 @@ except getopt.GetoptError as err:
     usage()
     set_exit_status(HELP_MESSAGE)
     sys.exit(EXIT_STATUS)
-    
+
 verbose = False
 ini_filename = False
 skip_file_delete = False
