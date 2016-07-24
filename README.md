@@ -37,19 +37,19 @@ Ticket printer driver
   > currently **5.3**
 
 
-Pip packages should look like
-> pip list
-esky (0.9.9)
-fontname (0.2.0)
-freetype-py (1.0.2)
-PIL (1.1.7)
-pip (8.1.2)
-py2exe (0.6.9)
-pywin32 (220)
-qrcode (5.3)
-setuptools (20.10.1)
-six (1.10.0)
-WMI (1.4.9)
+Pip packages should now look like  
+`pip list`
+> esky (0.9.9)  
+fontname (0.2.0)  
+freetype-py (1.0.2)  
+PIL (1.1.7)  
+pip (8.1.2)  
+py2exe (0.6.9)  
+pywin32 (220)  
+qrcode (5.3)  
+setuptools (20.10.1)  
+six (1.10.0)  
+WMI (1.4.9)  
 
 ---
 
