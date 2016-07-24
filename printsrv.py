@@ -942,7 +942,7 @@ def print_available_printers():
 #################################################################
 def read_ini_config(ini_file):
     cfg = ConfigParser.ConfigParser()
-#    print "sys.argv:%s"%os.path.dirname(sys.argv[0])
+    # print "sys.argv:%s"%os.path.dirname(sys.argv[0])
     ini_file_full_path = ini_file
     print "INFO: trying to read ini file from file:[%s] ..."%ini_file_full_path
     ret = cfg.read(ini_file_full_path)
@@ -1370,15 +1370,18 @@ def do_post_update_check(cfg, current_version, prev_version):
         # ??
         print "ERROR: unknown response from MessageBoxW:%s, expecting 6[YES] or 7[NO]"%ret
         pass
+
+#################################################################
 def get_lang(cfg):
     return cfg.get('DEFAULT','my_id')[0:2].lower()
 
 def font_list_callback(font, tm, fonttype, fonts):
-#        if(font.lfFaceName == fonts[0]):
-#            fonts.append(font)
+    # if(font.lfFaceName == fonts[0]):
+    #     fonts.append(font)
     print font.lfFaceName
     return True
 
+#################################################################
 # try to force file removal
 def handleRemoveReadonly(func, path, exc):
     excvalue = exc[1]
@@ -1389,9 +1392,9 @@ def handleRemoveReadonly(func, path, exc):
         raise
 
 
-#########################################################################################################
+################################################################################
 # MAIN STARTS HERE
-#########################################################################################################
+################################################################################
 
 logging.config.fileConfig(get_main_dir() + '//logger.ini')
 
