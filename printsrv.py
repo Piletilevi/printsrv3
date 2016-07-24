@@ -305,7 +305,6 @@ def RGB(R, G, B):
 
 #################################################################
 def print_document():
-    return # temporary
     dc.EndPage()
     dc.EndDoc()
 
@@ -1390,7 +1389,7 @@ except getopt.GetoptError as err:
 
 verbose = False
 ini_filename = False
-skip_file_delete = True
+skip_file_delete = False
 prev_version = False
 downgrade_version = False
 
