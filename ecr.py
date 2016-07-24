@@ -17,7 +17,7 @@ class ECR_Object:
         self.m_Device = win32com.client.Dispatch("AddIn.Drvfr")
 
 
-            
+
         #self.m_Device = win32com.client.dynamic.Dispatch("AddIn.Drvfr")
         #self.m_Device = win32com.client.gencache.EnsureDispatch("AddIn.Drvfr")
     ##################################################################
@@ -34,7 +34,7 @@ class ECR_Object:
             print " Connected:%s"%self.m_Device.Connected
         except:
             print "exception while printing self.m_Device.Connected. Probably version 4.9?"
-        
+
         print "Setting Connected=True"
         try:
             self.m_Device.Connected = True
@@ -49,11 +49,11 @@ class ECR_Object:
         if cfg.has_option('DEFAULT', 'kkm_port_no'):
             # COM1 = 1, COM2 = 2, etc. Documentation is wrong. It says COM1=0, COM2=1, etc
             self.m_Device.ComNumber = int(cfg.get('DEFAULT', 'kkm_port_no'))# 2 # com2
-            
+
         if cfg.has_option('DEFAULT', 'kkm_port_baudrate'):
-            # 2400=0, 4800=1, 9600=2, 19200=3, 38400=4, 57600=5, 115200=6 
+            # 2400=0, 4800=1, 9600=2, 19200=3, 38400=4, 57600=5, 115200=6
             self.m_Device.BaudRate = int(cfg.get('DEFAULT', 'kkm_port_baudrate')) #6 # 115200
-            
+
         #self.m_Device.Timeout = 1000
         #self.m_Device.ComputerName = "Local"
         try:
@@ -79,7 +79,7 @@ class ECR_Object:
     ##################################################################
     def EndShift(self):
     ##################################################################
-        
+
         #if(self.DeviceIsReadyForPrinting()): # PrintZReportInBuffer fails with Attribute error
         if(True):
             self.m_Device.Password = self.Password
@@ -87,7 +87,7 @@ class ECR_Object:
             print "PrintReportWithCleaning(): %s,%s"%(ret , self.m_Device.ResultCodeDescription)
             return ret == 0
         return False
-    
+
     ##################################################################
     def PrintStatus(self, verbose=True):
     ##################################################################
@@ -100,7 +100,7 @@ class ECR_Object:
             #self.m_Device.Password = self.Password
             print "            ECRAdvancedMode = %s,%s"%(self.m_Device.ECRAdvancedMode, self.m_Device.ECRAdvancedModeDescription)
         return ret == 0
-    
+
     ##################################################################
     def WaitWhilePrinting(self):
     ##################################################################
@@ -128,7 +128,7 @@ class ECR_Object:
     def Poll(self):
     ##################################################################
         self.PrintStatus(verbose=False) # just update status variables
-        
+
         #смотрим, если подрежим 3 (не было бумаги), надо попробовать вызвать продолжение печати
         if (self.m_Device.ECRAdvancedMode == 3):
 
@@ -144,7 +144,7 @@ class ECR_Object:
 
             #logger.Info("Продолжение печати выполнено успешно");
             self.PrintStatus(verbose=False) # just update status variables
-            
+
         #открытая смена, 24 часа кончились
         if (self.m_Device.ECRMode == 3):
             #logger.Info("Обнаружено окончание 24 часов при открытой смене");
@@ -158,21 +158,17 @@ class ECR_Object:
         if self.m_Device.ECRMode == 3:
             print "ERROR: Shift open, 24h ended. Need to make ZReport"
             return False
-            pass
         elif self.m_Device.ECRMode == 5:
             print "ERROR: Blocked because of wrong password of tax inspector"
             return False
-            pass
         elif self.m_Device.ECRMode == 6:
             print "ERROR: Waiting for Date confirmation"
             self.ResetPrinter()
             return False
-            pass
         elif self.m_Device.ECRMode == 7:
             print "ERROR: Confirmation to change decimal point?"
             self.ResetPrinter()
             return False
-            pass
         elif self.m_Device.ECRMode == 9:
             print "ERROR: State to allow technological reset"
             self.ResetSettings()
@@ -188,9 +184,8 @@ class ECR_Object:
         elif self.m_Device.ECRAdvancedMode == 3:
             print "ERROR: paper available again. waiting to continue printing"
             return False
-        
+
         return True
-        pass
     ##################################################################
     def DeviceIsReadyForPrinting(self):
     ##################################################################
@@ -235,7 +230,7 @@ class ECR_Object:
             #if (self.m_Device.GetShortECRStatus()!=0):
             #    #ResultToErrorState();
             #    return False;
-            
+
         # если вышли в правильный режим - всё хорошо
         if ((self.m_Device.ECRMode == 2 or self.m_Device.ECRMode == 4) and self.m_Device.ECRAdvancedMode == 0):
             print "DeviceIsReadyForSale() = True, because ECRMode = 2||4 and ECRAdvancedMode = 0"
@@ -258,7 +253,7 @@ class ECR_Object:
         ret = self.m_Device.InitFM()
         print "InitFM():%s,%s"%(ret, self.m_Device.ResultCodeDescription)
         self.PrintStatus()
-    
+
     ##################################################################
     def ResetSettings(self):
     ##################################################################
@@ -267,7 +262,7 @@ class ECR_Object:
         ret = self.m_Device.ResetSettings()
         print "ResetSettings():%s,%s"%(ret, self.m_Device.ResultCodeDescription)
         self.PrintStatus()
-        
+
     ##################################################################
     # CheckType 0 = sale, 1 = buy, 2 = return sale, 3 = return buy
     def Sale(self, cfg, CheckType = 0, Price = 0, StringForPrinting = ''):
@@ -277,7 +272,7 @@ class ECR_Object:
             print "NOT READY FOR SALE"
             return False
 
-        print "DEBUG: Sale(Price:%s,StringForPrinting%s)"%(Price,StringForPrinting)        
+        print "DEBUG: Sale(Price:%s,StringForPrinting%s)"%(Price,StringForPrinting)
 
         self.m_Device.SlipDocumentWidth = 0
         self.m_Device.SlipDocumentLength = 0
@@ -331,7 +326,7 @@ class ECR_Object:
             # default
             print "WARNING: wrong encoding. using default"
             self.m_Device.StringForPrinting = StringForPrinting.decode('utf-8').encode('cp1251')
-            
+
         self.m_Device.Password = self.Password
         ret = self.m_Device.Sale()
         print "Sale():%s,%s"%(ret, self.m_Device.ResultCodeDescription)
@@ -344,12 +339,12 @@ class ECR_Object:
             #self.ResetPrinter() # wrongs params error ??
             self.ResetSettings()
             #self.InitFM()
-            return False    
+            return False
         ########
         self.WaitWhilePrinting()
         ########
 
-        
+
         self.m_Device.StringForPrinting = ""
         self.m_Device.Password = self.Password
         ret = self.m_Device.CheckSubTotal()
@@ -357,7 +352,7 @@ class ECR_Object:
         if ret == 115:
             print "ERROR: CheckSubTotal() command is not supported in this state"
             return False
-        
+
         ########
         self.WaitWhilePrinting()
         ########
@@ -379,7 +374,7 @@ class ECR_Object:
         if cfg.has_option('DEFAULT', 'payment_4'):
             print "DEBUG: setting payment_4"
             self.m_Device.Summ4 = float(Price)
-            
+
         self.m_Device.Password = self.Password
         ret = self.m_Device.CloseCheck()
         print "CloseCheck():%s,%s"%(ret, self.m_Device.ResultCodeDescription)
@@ -417,7 +412,7 @@ class ECR_Object:
                 self.m_Device.Password = self.Password
                 ret = self.m_Device.CutCheck()
                 print "retry CutCheck():%s,%s"%(ret, self.m_Device.ResultCodeDescription)
-        
+
 
     ##################################################################
     def Refund(self, cfg, CheckType = 2, Price = 0.0, StringForPrinting = ''):
@@ -426,7 +421,7 @@ class ECR_Object:
         if not self.DeviceIsReadyForSale():
             print "NOT READY FOR REFUND"
             return False
-        
+
 
         self.m_Device.SlipDocumentWidth = 0
         self.m_Device.SlipDocumentLength = 0
@@ -478,7 +473,7 @@ class ECR_Object:
         if ret == 115:
             print "ERROR: CheckSubTotal() command is not supported in this state"
             return False
-        
+
         ########
         self.WaitWhilePrinting()
         ########
@@ -501,7 +496,7 @@ class ECR_Object:
             print "DEBUG: setting payment_4"
             self.m_Device.Summ4 = float(Price)
 
-            
+
         self.m_Device.Password = self.Password
         ret = self.m_Device.CloseCheck()
         print "CloseCheck():%s,%s"%(ret, self.m_Device.ResultCodeDescription)
@@ -550,12 +545,12 @@ class ECR_Object:
         self.m_Device.Password = self.Password
         ret = self.m_Device.GetEKLZVersion()
         print "GetEKLZVersion(): %s, %s"%(ret, self.m_Device.EKLZVersion)
-        
+
     ##################################################################
     def PrintCheckString(self):
     ##################################################################
         #global m_Device
-        
+
         self.m_Device.Password = self.Password
         self.m_Device.UseReceiptRibbon = 1
         self.m_Device.UseJournalRibbon = 1
@@ -575,7 +570,7 @@ class ECR_Object:
             print "ERROR: no operation parameter in plp file. exiting"
             return False
         print "ParsePLP: operation:",cfg.get('DEFAULT', 'operation')
-            
+
         if(cfg.get('DEFAULT', 'operation')=="startshift"):
             self.PrintStatus()
             self.StartShift()
@@ -599,8 +594,8 @@ class ECR_Object:
                         self.Sale(cfg, Price=cfg.get('DEFAULT', 'tr_service_fee_cost'+pref), \
                             StringForPrinting=cfg.get('DEFAULT', 'tr_service_fee_name'+pref))
                         self.WaitWhilePrinting()
-    
-            
+
+
             if cfg.has_option('DEFAULT', 'tickets_cost_kkm'): # just for safety. maybe there will be only a fee sale
                 if cfg.get('DEFAULT', 'tickets_cost_kkm')=="Yes":
                     self.Sale(cfg, Price=cfg.get('DEFAULT', 'tickets_cost'), \
@@ -618,7 +613,7 @@ class ECR_Object:
                         self.Refund(cfg, Price=cfg.get('DEFAULT', 'tr_service_fee_cost'+pref), \
                             StringForPrinting=cfg.get('DEFAULT', 'tr_service_fee_name'+pref))
                         self.WaitWhilePrinting()
-    
+
             if cfg.has_option('DEFAULT', 'tickets_cost_kkm'): # just for safety. maybe there will be only a fee refund
                 if cfg.get('DEFAULT', 'tickets_cost_kkm')=="Yes":
                     self.Refund(cfg, Price=cfg.get('DEFAULT', 'tickets_cost'), \

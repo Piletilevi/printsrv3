@@ -228,16 +228,12 @@ def get_check_printer_msg_text(cfg):
     lang = get_lang(cfg)
     if(lang == 'lv'):
         return (u'Pārbaudiet printeri un tad spiediet OK!', u'Pārbaudiet printeri!')
-        pass
     elif(lang == 'ee'):
         return (u'Check printer and click OK when ready!', u'Check printer!')
-        pass
     elif(lang == 'by'):
         return (u'Проверьте принтер и нажмите кнопку OK, когда будете готовы!', u'Проверьте принтер!')
-        pass
     else:
         return (u'Check printer and click OK when ready!', u'Check printer!')
-        pass
 
 #################################################################
 def start_new_document(cfg, is_first_document = False):
