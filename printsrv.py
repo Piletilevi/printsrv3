@@ -1149,10 +1149,10 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
     logger.info("getting my id ...")
     try:
         my_id = cfg.get("DEFAULT", "my_id").strip("\"")
-        logger.info("my_id:%s"%my_id)
+        logger.info("my_id:%s" % my_id)
     except:
         my_id = "MY_ID_NOT_SET"
-        logger.info("my_id not set. using default: ", my_id)
+        logger.info("my_id not set. using default: %s" % my_id)
 
     # Set updates_base_url where we will look for updates
     try:
@@ -1184,7 +1184,7 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
             # TODO. make own version of downgrade_cleanup(downgrade_version)
         logger.info("You are running: %s" % app.active_version)
         try:
-            print "active:[%s], cfg:[%s]"%(app.active_version,cfg.get("DEFAULT", "driver_version"))
+            print "active:[%s], cfg:[%s]" % (app.active_version,cfg.get("DEFAULT", "driver_version"))
             need_update = False
             planned_update_version = None
             if cfg.get("DEFAULT", "driver_version")=="auto":
@@ -1216,7 +1216,7 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
                         # skip uninstall_version
                     else:
                         version = app.find_update() # this needs to be called before "app._do_auto_update"
-                        logger.info("found best version:", version)
+                        logger.info("found best version: %s" % version)
                         #app._do_auto_update(planned_update_version,auto_update_callback)
                         #######
                         if(downgrade):
