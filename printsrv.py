@@ -1294,45 +1294,6 @@ def usage():
     print ""
 
 #################################################################
-def get_post_update_msg_text(cfg):
-    lang = get_lang(cfg)
-    if(lang == "lv"):
-        return (u"Biļetes izprintējās labi?", u"Pārbaude!")
-        pass
-    elif(lang == "ee"):
-        return (u"Did the tickets print OK?", u"Check tickets!")
-        pass
-    elif(lang == "by"):
-        return (u"Билеты напечатаны в порядке?", u"Билеты порядке?")
-        pass
-    else:
-        return (u"Did the tickets print OK?", u"Check tickets!")
-        pass
-
-#################################################################
-def do_post_update_check(cfg, current_version, prev_version):
-    #msg_box_text = u"Did the tickets print OK?\n Biļetes izprintējās labi?\n Билеты напечатаны в порядке?"
-    msg, title = get_post_update_msg_text(cfg)
-    #"MessageBoxW text:[%s]"%msg_box_text
-    # YESNO = 4
-    ret = windll.user32.MessageBoxW(0, msg, title, 4)
-    if ret == 6:
-        # YES response
-        logger.info("tickets printed OK")
-    elif ret == 7:
-        # NO response
-        # do downgrade
-        logger.info("tickets did not print OK. Doing downgrade from %s to %s"%(current_version, prev_version))
-        cfg.set("DEFAULT", "driver_force_upgrade", "yes")
-        cfg.set("DEFAULT", "driver_version", prev_version)
-        do_auto_update(cfg, current_version, prev_version=prev_version, downgrade = True)
-
-    else:
-        # ??
-        logger.error("unknown response from MessageBoxW:%s, expecting 6[YES] or 7[NO]"%ret)
-        pass
-
-#################################################################
 def get_lang(cfg):
     return cfg.get("DEFAULT","my_id")[0:2].lower()
 
@@ -1490,11 +1451,6 @@ if(cfg_plp.has_option("DEFAULT", "info") and cfg_plp.get("DEFAULT", "info")=="fi
    pass
 else:
    read_plp_file(cfg, plp_filename, skip_file_delete)
-
-if(prev_version!=False):
-    # this is first run after update
-    #do_post_update_check(cfg, version.VERSION, prev_version)
-    logger.info("skipping post_update_check as users can not be trusted.")
 
 if(skip_file_delete==False):
     try:
