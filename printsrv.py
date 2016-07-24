@@ -1532,7 +1532,7 @@ if(prev_version!=False):
 
 if(skip_file_delete==False):
     try:
-        logger.info("INFO: doing file delete for file:",filename)
+        logger.info("INFO: doing file delete for file:[%s]"%filename)
         os.remove(filename)
         #shutil.rmtree(filename, ignore_errors=False, onerror=handleRemoveReadonly)
         pass
