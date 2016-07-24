@@ -368,7 +368,6 @@ def set_section_font_indirect(section_cfg,postfix=""):
     hFont = win32gui.CreateFontIndirect(lf)
     if not hFont:
         raise StandardError('ERROR: Unable to create font')
-        set_exit_status(UNABLE_TO_CREATE_FONT)
     try:
         dc.SetTextColor(RGB(int(section_cfg['font_color_red'+postfix]), int(section_cfg['font_color_green'+postfix]), int(section_cfg['font_color_blue'+postfix])))
     except:
