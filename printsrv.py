@@ -831,7 +831,7 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
         #################################################################
         # End document
         #################################################################
-    elif (line[:4] == "END "):
+        elif (line[:4] == "END "):
             print_static_text_value(layout_cfg)
             print_document()
             document_open=0
@@ -1041,7 +1041,7 @@ def setup_proxy(cfg):
 #################################################################
 def auto_update_callback(data):
     #"auto_update_callback:", data["status"]
-    logger.info("auto_update_callback: {0}".format(data)
+    logger.info("auto_update_callback: {0}".format(data))
 
 #################################################################
 def override_cfg_values(cfg_1, cfg_2):
@@ -1090,7 +1090,7 @@ def override_cfg_values(cfg_1, cfg_2):
                 if(old_value!=new_value):
 
                     if(option not in disable_override_list):
-                        logger.info("overriding [%s](%s) from "%s" to "%s""%(section,option,old_value,new_value))
+                        logger.info("overriding [%s](%s) from '%s' to '%s'" % (section,option,old_value,new_value))
                         if(option=="disable_override"):
                             # inherit disable_override params so that plp values does not override persistent.ini values
                             # if in setup.ini has own disable_override values
@@ -1213,8 +1213,8 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
                             logger.info("downgrading. do install_version")
                             app.install_version(planned_update_version)
                             logger.info("downgrading. do uninstall_version")
-                            print "self.appdir:",app.appdir
-                            print "os.path.realpath("./"):",os.path.realpath("./")
+                            logger.info("self.appdir: %s" % app.appdir)
+                            logger.info("os.path.realpath(./): %s" % os.path.realpath("./"))
                             try:
                                 app.uninstall_version(current_version)
                                 logger.info("done uninstall_version")
