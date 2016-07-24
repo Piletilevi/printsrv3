@@ -1471,12 +1471,16 @@ else:
 
 # things like proxy, my_id are stored in persistent.ini
 
-cfg_persistent = read_ini_config(r'%s\\..\\persistent.ini'%get_main_dir()) # when running from first install
-if(cfg_persistent == None):
-    cfg_persistent = read_ini_config(r'%s\\..\\..\\persistent.ini'%get_main_dir()) # when running from appdata dir
-if(cfg_persistent == None):
+persistent_ini_filename = "persistent.ini"
+persistent_ini_path = os.path.join(get_main_dir(), persistent_ini_filename)
+if not os.path.isfile(persistent_ini_path):
+    persistent_ini_path = os.path.join(get_main_dir(), '..', persistent_ini_filename)
+if not os.path.isfile(persistent_ini_path):
+    persistent_ini_path = os.path.join(get_main_dir(), '..', '..', persistent_ini_filename)
+if not os.path.isfile(persistent_ini_path):
     logger.error("ERROR: persistent.ini could not be found")
     sys.exit(EXIT_STATUS)
+cfg_persistent = read_ini_config(persistent_ini_path) # when running from first install
 
 if(ini_filename==False):
     ini_filename = get_main_dir() + '\\setup_%s.ini'%get_lang(cfg_persistent)
