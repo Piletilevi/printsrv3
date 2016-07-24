@@ -217,10 +217,10 @@ def is_printer_online(printer_name):
                 print traceback.format_exc()
 
             if(s.WorkOffline):
-                print "INFO: Printer is offline"
+                logger.info("Printer is offline")
                 return False
             else:
-                print "INFO: Printer is online"
+                logger.info("Printer is online")
                 return True
 
 #################################################################
@@ -249,22 +249,22 @@ def start_new_document(cfg, is_first_document = False):
         ret = windll.user32.MessageBoxW(0, msg, title, 0x40 | 0x0) #OK only
         retry_times_left -= 1
         if(retry_times_left<=0):
-            print "ERROR: Printer is offline. Exiting"
+            logger.error("Printer is offline. Exiting")
             set_exit_status(PRINTER_IS_OFFLINE)
             sys.exit(EXIT_STATUS)
 
     try:
-        print("INFO: win32print.OpenPrinter(%s) ..."%printer)
+        logger.info("win32print.OpenPrinter(%s) ..."%printer)
         hprinter = win32print.OpenPrinter(printer)
     except:
-        print("ERROR: exception while opening printer");
+        logger.error("exception while opening printer");
         set_exit_status(COULD_NOT_OPEN_PRINTER)
         sys.exit(EXIT_STATUS)
-    print("INFO: win32print.GetPrinter ...")
+    logger.info("win32print.GetPrinter ...")
     devmode = win32print.GetPrinter(hprinter, 2)['pDevMode']
-    print("INFO: win32print.EnumJobs ...")
+    logger.info("win32print.EnumJobs ...")
     printjobs = win32print.EnumJobs(hprinter, 0, 999)
-    print("INFO: Jobs:")
+    logger.info("Jobs:")
     print printjobs
 
     # if this is first document then there should be no documents in printer queue
@@ -275,48 +275,47 @@ def start_new_document(cfg, is_first_document = False):
             ret = windll.user32.MessageBoxW(0, msg, title, 0x40 | 0x0) #OK only
             retry_times_left -= 1
             if(retry_times_left<=0):
-                print "ERROR: Printer has old jobs in queue. Exiting"
+                logger.error("Printer has old jobs in queue. Exiting")
                 # set_exit_status(PRINTER_IS_OFFLINE)
                 sys.exit(EXIT_STATUS)
 
-
     try:
-        print("INFO: Setting orientation ...")
+        logger.info("Setting orientation ...")
         devmode.Orientation = int(cfg.get('DEFAULT', 'printer_orientation'))
     except:
         pass
     try:
-        print("INFO: win32gui.CreateDC ...")
+        logger.info("win32gui.CreateDC ...")
         hdc = win32gui.CreateDC('WINSPOOL', printer, devmode)
-        print("INFO: win32ui.CreateDCFromHandle ...")
+        logger.info("win32ui.CreateDCFromHandle ...")
         dc = win32ui.CreateDCFromHandle(hdc)
     except:
-        print("ERROR: exception while creating dc")
+        logger.error("exception while creating dc")
         set_exit_status(COULD_NOT_CREATE_DC)
         sys.exit(EXIT_STATUS)
     if(dc==None):
-        print("ERROR: dc not created")
+        logger.error("dc not created")
         set_exit_status(DC_NOT_CREATED)
         sys.exit(EXIT_STATUS)
     if(hdc==None):
-        print("ERROR: hdc not created")
+        logger.error("hdc not created")
         set_exit_status(HDC_NOT_CREATED)
         sys.exit(EXIT_STATUS)
 
     # dc.SetMapMode(win32con.MM_TWIPS)
 
-    print("INFO: dc.SetMapMode ...")
+    logger.info("dc.SetMapMode ...")
     dc.SetMapMode(int(cfg.get('DEFAULT', 'map_mode')))
-    print("INFO: dc.StartDoc ...")
+    logger.info("dc.StartDoc ...")
     dc.StartDoc(cfg.get('DEFAULT', 'print_document_name'))
-    print("INFO: dc.StartPage ...")
+    logger.info("dc.StartPage ...")
     dc.StartPage()
-    print("INFO: win32ui.CreateFont ...");
+    logger.info("win32ui.CreateFont ...");
     font = win32ui.CreateFont({'name': 'Arial',
      'height': 16})
-    print("INFO: dc.SelectObject ...")
+    logger.info("dc.SelectObject ...")
     dc.SelectObject(font)
-    print("INFO: dc.SelectObject DONE")
+    logger.info("dc.SelectObject DONE")
 
 #################################################################
 def RGB(R, G, B):
@@ -324,6 +323,7 @@ def RGB(R, G, B):
 
 #################################################################
 def print_document():
+    return # temporary
     dc.EndPage()
     dc.EndDoc()
 
@@ -444,7 +444,7 @@ def print_text_value(section_cfg, value):
 
     try:
         space = value.rfind(u" ",0,int(section_cfg['font_wrap']))
-        print "INFO: wrap %d found at:%d"%(int(section_cfg['font_wrap']),space)
+        logger.info("wrap %d found at:%d"%(int(section_cfg['font_wrap']),space))
         if(space!=-1):
             value_w = value[space+1:]
             value = value[0:space]
@@ -457,7 +457,7 @@ def print_text_value(section_cfg, value):
 
     try:
         space1 = value1.rfind(u" ",0,int(section_cfg['font_wrap1']))
-        print "INFO: wrap %d found at:%d"%(int(section_cfg['font_wrap1']),space1)
+        logger.info("wrap %d found at:%d"%(int(section_cfg['font_wrap1']),space1))
         if(space1!=-1):
             value_w1 = value1[space1+1:]
             value1 = value1[0:space1]
@@ -791,7 +791,7 @@ def print_static_text_value(cfg):
             elif (cfg.get(section, 'type') == 'image'):
                 print_image_value(dict(cfg.items(section)), cfg.get(section, 'value'))
         except:
-            print "INFO: no section type"
+            logger.info("no section type")
             pass
 
 #################################################################
@@ -840,7 +840,7 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
                 infile.seek(file_read_pos) # undo up one line. it was not layout directive
                 layout_cfg = cfg # use original ini file for cfg.
 
-            print "INFO: start new document"
+            logger.info("start new document")
             printer_cfg = cfg
 
             # we check for old jobs in printer queue when starting first document
@@ -920,6 +920,7 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
 # print available printer name on the system
 #################################################################
 def print_available_printers():
+    return
     print 'local printers:'
     for p in win32print.EnumPrinters(win32print.PRINTER_ENUM_LOCAL):
         #print p[2]
@@ -938,7 +939,7 @@ def read_ini_config(ini_file):
     cfg = ConfigParser.ConfigParser()
     # print "sys.argv:%s"%os.path.dirname(sys.argv[0])
     ini_file_full_path = ini_file
-    print "INFO: trying to read ini file from file:[%s] ..."%ini_file_full_path
+    logger.info("trying to read ini file from file:[%s] ..."%ini_file_full_path)
     ret = cfg.read(ini_file_full_path)
     if(len(ret)==0):
         return None
@@ -1055,9 +1056,9 @@ def setup_proxy(cfg):
     proxy = None
     try:
         proxy = cfg.get('DEFAULT', 'http_proxy')
-        print "INFO: http proxy set:[%s]"%proxy
+        logger.info("http proxy set:[%s]"%proxy)
     except:
-        print "INFO: no http proxy set"
+        logger.info("no http proxy set")
 
     if(proxy!=None):
         proxy_handler = urllib2.ProxyHandler({
@@ -1076,20 +1077,20 @@ def auto_update_callback(data):
 #################################################################
 def override_cfg_values(cfg_1, cfg_2):
     if(cfg_1 is None) and (cfg_2 is None):
-        print "ERROR: cfg_1=None and cfg_2=None "
+        logger.error("cfg_1=None and cfg_2=None ")
         return None
     if(cfg_1 is None):
-        print "ERROR: cfg_1=None"
+        logger.error("cfg_1=None")
         return cfg_2
     if(cfg_2 is None):
-        print "ERROR: cfg_2=None"
+        logger.error("cfg_2=None")
         return cfg_1
 
     # cfg_2 overrides cfg_1
     cfg_1_defaults = cfg_1.defaults()
-    print "INFO: cfg_1 defaults",cfg_1_defaults
+    logger.info("cfg_1 defaults",cfg_1_defaults)
     cfg_2_defaults = cfg_2.defaults()
-    print "INFO: cfg_2 defaults",cfg_2_defaults
+    logger.info("cfg_2 defaults",cfg_2_defaults)
 
     cfg_2_sections = cfg_2.sections()
     cfg_2_sections.extend(['DEFAULT'])
@@ -1120,7 +1121,7 @@ def override_cfg_values(cfg_1, cfg_2):
                 if(old_value!=new_value):
 
                     if(option not in disable_override_list):
-                        print "INFO: overriding [%s](%s) from '%s' to '%s'"%(section,option,old_value,new_value)
+                        logger.info("overriding [%s](%s) from '%s' to '%s'"%(section,option,old_value,new_value))
                         if(option=='disable_override'):
                             # inherit disable_override params so that plp values does not override persistent.ini values
                             # if in setup.ini has own disable_override values
@@ -1128,7 +1129,7 @@ def override_cfg_values(cfg_1, cfg_2):
                         else:
                             cfg_1.set(section, option, cfg_2.get(section, option))
                     else:
-                        print "INFO: disable_override for [%s](%s)"%(section,option)
+                        logger.info("disable_override for [%s](%s)"%(section,option))
                 else:
                     # values are the same in both config
                     pass
@@ -1161,20 +1162,20 @@ def get_ready_for_update_msg_text(cfg, v1, v2):
 #################################################################
 def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = False, prev_version=False):
     # Set my_id to identify ourselves when requesting update
-    print "INFO: getting my id ..."
+    logger.info("getting my id ...")
     try:
         my_id = cfg.get('DEFAULT', 'my_id').strip('"')
-        print "INFO: my_id:%s"%my_id
+        logger.info("my_id:%s"%my_id)
     except:
         my_id = 'MY_ID_NOT_SET'
-        print "INFO: my_id not set. using default: ", my_id
+        logger.info("my_id not set. using default: ", my_id)
 
     # Set updates_base_url where we will look for updates
     try:
         updates_base_url = cfg.get('DEFAULT', 'updates_base_url').strip('"')
     except:
         updates_base_url = r'http://www.4scan.lv/printsrv/updates/'
-        print "WARNING: updates_base_url not set. using default"
+        logger.warning("updates_base_url not set. using default")
 
     ret_do_not_delete_plp_file = False
 
@@ -1191,13 +1192,13 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
             url_args['prev_version'] = prev_version;
         app = esky.Esky(sys.executable,"%s?%s"%(updates_base_url, urllib.urlencode(url_args)))
         if(downgrade_version!=False):
-            print "INFO: clean up that bad version we had to downgrade from. try to uninstall it"
+            logger.info("clean up that bad version we had to downgrade from. try to uninstall it")
             #lockfile = os.path.join(vdir,ESKY_CONTROL_DIR,"bootstrap-manifest.txt")
             #unlock_version_dir()
             #app.uninstall_version(downgrade_version)
             #app.cleanup() # this is not good. it restores the downgraded version. we need to manually delete the downgraded version folder
             # TODO. make own version of downgrade_cleanup(downgrade_version)
-        print "INFO: You are running: %s" % app.active_version
+        logger.info("You are running: %s" % app.active_version)
         try:
             print "active:[%s], cfg:[%s]"%(app.active_version,cfg.get('DEFAULT', 'driver_version'))
             need_update = False
@@ -1221,7 +1222,7 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
                 print "MessageBoxA ret:", ret
                 if ret == 1:
                     # OK response
-                    print "INFO: doing auto_update ..."
+                    logger.info("doing auto_update ...")
                     if cfg.get('DEFAULT', 'driver_version')=='auto':
                         #app.auto_update(auto_update_callback)
                         #version = app.find_update() # this needs to be called before "app._do_auto_update"
@@ -1231,35 +1232,35 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
                         # skip uninstall_version
                     else:
                         version = app.find_update() # this needs to be called before "app._do_auto_update"
-                        print "INFO: found best version:", version
+                        logger.info("found best version:", version)
                         #app._do_auto_update(planned_update_version,auto_update_callback)
                         #######
                         if(downgrade):
                             #we are downgrading. should be enaugh to just uninstall the current version
 
 
-                            print "INFO: downgrading. fetch_version()"
+                            logger.info("downgrading. fetch_version()")
                             app.fetch_version(planned_update_version,auto_update_callback)
-                            print "INFO: downgrading. do install_version"
+                            logger.info("downgrading. do install_version")
                             app.install_version(planned_update_version)
-                            print "INFO: downgrading. do uninstall_version"
+                            logger.info("downgrading. do uninstall_version")
                             print "self.appdir:",app.appdir
                             print "os.path.realpath('./'):",os.path.realpath('./')
                             try:
                                 app.uninstall_version(current_version)
-                                print "INFO: done uninstall_version"
+                                logger.info("done uninstall_version")
                             except:
                                 print traceback.format_exc()
-                                print "INFO: exception while doing uninstall_version. Will try to fool the bootstrap ..."
+                                logger.info("exception while doing uninstall_version. Will try to fool the bootstrap ...")
                                 directory = "%s/esky-files/bootstrap"%get_main_dir()
-                                print "INFO: creating directory:",directory
+                                logger.info("creating directory:",directory)
                                 if not os.path.exists(directory):
                                     os.makedirs(directory)
                             pass
                             app.reinitialize()
-                            print "INFO: done reinitialize()"
+                            logger.info("done reinitialize()")
                             #app.cleanup()
-                            #print "INFO: done cleanup()"
+                            #logger.info("done cleanup()")
                             ret_do_not_delete_plp_file = True
                         else:
                             app.fetch_version(planned_update_version,auto_update_callback)
@@ -1282,28 +1283,28 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
                             if(not argv.startswith('--prev_version=')):
                                 argv_to_pass.extend([argv])
                             argv_to_pass.extend(['--downgrade_version=%s'%current_version])
-                        print "INFO: downgrade finished. Will do restart with args:",argv_to_pass
+                        logger.info("downgrade finished. Will do restart with args:",argv_to_pass)
                         ret_do_not_delete_plp_file = True
                         os.execv(appexe,[appexe] + argv_to_pass)
                         pass
                     else:
-                        print "INFO: update finished. Will do restart with args:",sys.argv[1:],['--prev_version=%s'%current_version]
+                        logger.info("update finished. Will do restart with args:",sys.argv[1:],['--prev_version=%s'%current_version])
                         ret_do_not_delete_plp_file = True
                         os.execv(appexe,[appexe] + sys.argv[1:] + ['--prev_version=%s'%current_version])
-                    print "INFO: after updater os.execv call"
+                    logger.info("after updater os.execv call")
                 elif ret == 2:
                     # CANCEL response
-                    print "INFO: update canceled"
+                    logger.info("update canceled")
                 else:
                     # ??
                     pass
 
         #except Exception, e:
         except KeyError:
-            print "ERROR: KeyError while updating app ", e
+            logger.error("KeyError while updating app ", e)
             logger.debug(traceback.format_exc())
         except Exception, e:
-            print "ERROR: exception when updating app"
+            logger.error("exception when updating app")
             logger.debug(traceback.format_exc())
         #app.cleanup()
         return ret_do_not_delete_plp_file
@@ -1314,13 +1315,13 @@ def usage():
     print 'Usage: %s [-V] [-v|verbose] [-h|--help] [--skip_file_delete] [--ini_file=filename] plp_file'%sys.argv[0]
     print ''
     print 'Options:'
-    print '   -V                            print version and exit'
-    print '   -v --verbose                  be verbose'
-    print '   -h --help                     show usage'
-    print '   --skip_file_delete            skip plp file deletion after printing'
-    print '   --ini_file=<filename>         use alternate ini file than default setup.ini. must reside in the same folder'
-    print '   --prev_version=<version>      if printsrv is run for the first time with new version'
-    print '   --downgrade_version=<version> we have just started after downgrade'
+    print '   -V                             print version and exit'
+    print '   -v --verbose                   be verbose'
+    print '   -h --help                      show usage'
+    print '   --skip_file_delete             skip plp file deletion after printing'
+    print '   --ini_file=<filename>          use alternate ini file than default setup.ini. must reside in the same folder'
+    print '   --prev_version=<version>       if printsrv is run for the first time with new version'
+    print '   --downgrade_version=<version>  we have just started after downgrade'
     print '   --list_printer_fonts=<printer> list all fonts'
     print ''
 
@@ -1349,18 +1350,18 @@ def do_post_update_check(cfg, current_version, prev_version):
     ret = windll.user32.MessageBoxW(0, msg, title, 4)
     if ret == 6:
         # YES response
-        print "INFO: tickets printed OK"
+        logger.info("tickets printed OK")
     elif ret == 7:
         # NO response
         # do downgrade
-        print "INFO: tickets did not print OK. Doing downgrade from %s to %s"%(current_version, prev_version)
+        logger.info("tickets did not print OK. Doing downgrade from %s to %s"%(current_version, prev_version))
         cfg.set('DEFAULT', 'driver_force_upgrade', 'yes')
         cfg.set('DEFAULT', 'driver_version', prev_version)
         do_auto_update(cfg, current_version, prev_version=prev_version, downgrade = True)
 
     else:
         # ??
-        print "ERROR: unknown response from MessageBoxW:%s, expecting 6[YES] or 7[NO]"%ret
+        logger.error("unknown response from MessageBoxW:%s, expecting 6[YES] or 7[NO]"%ret)
         pass
 
 #################################################################
@@ -1404,7 +1405,7 @@ sys.stderr = sl
 # create logger
 logger = logging.getLogger('printsrv')
 
-logger.info("INFO: starting version %s"%version.VERSION)
+logger.info("starting version %s"%version.VERSION)
 print_available_printers()
 
 
@@ -1420,7 +1421,7 @@ except getopt.GetoptError as err:
 
 verbose = False
 ini_filename = False
-skip_file_delete = False
+skip_file_delete = True
 prev_version = False
 downgrade_version = False
 
@@ -1436,20 +1437,20 @@ for o, a in opts:
         sys.exit(EXIT_STATUS)
     elif o in ("--ini_file"):
         ini_filename = a
-        logger.info('INFO: found --ini_file= parameter with value:[%s]'%ini_filename)
+        logger.info('found --ini_file= parameter with value:[%s]'%ini_filename)
     elif o in ("--skip_file_delete"):
         skip_file_delete = True
-        logger.info('INFO: found --skip_file_delete parameter')
+        logger.info('found --skip_file_delete parameter')
     elif o in ("--prev_version"):
         # we have just started after upgrade
         prev_version = a
         skip_file_delete = True
-        logger.info('INFO: found --prev_version parameter with value:[%s]'%prev_version)
+        logger.info('found --prev_version parameter with value:[%s]'%prev_version)
     elif o in ("--downgrade_version"):
         # we have just started after downgrade
         downgrade_version = a
         skip_file_delete = True
-        logger.info('INFO: found --downgrade_version parameter with value:[%s]'%downgrade_version)
+        logger.info('found --downgrade_version parameter with value:[%s]'%downgrade_version)
     elif o in ("--list_printer_fonts"):
         tmp_printer = a
         hprinter = win32print.OpenPrinter(tmp_printer)
@@ -1465,7 +1466,7 @@ for o, a in opts:
 if(len(args)==1):
     plp_filename = args[0].strip('"')
 else:
-    logger.error('ERROR: File not specified as first argument\n')
+    logger.error('File not specified as first argument\n')
     set_exit_status(PLP_FILE_NOT_SPECIFIED)
     sys.exit(EXIT_STATUS)
 
@@ -1484,7 +1485,7 @@ cfg_persistent = read_ini_config(persistent_ini_path) # when running from first 
 
 if(ini_filename==False):
     ini_filename = get_main_dir() + '\\setup_%s.ini'%get_lang(cfg_persistent)
-    logger.info('INFO: setting ini filename to:%s'%ini_filename)
+    logger.info('setting ini filename to:%s'%ini_filename)
 
 # default layout
 cfg_setup = read_ini_config(ini_filename)
@@ -1492,7 +1493,7 @@ cfg_setup = read_ini_config(ini_filename)
 # setup.ini overrides persistent.ini values if there are any
 cfg = override_cfg_values(cfg_persistent, cfg_setup)
 
-logger.info("INFO: plp filename:[%s]"%plp_filename)
+logger.info("plp filename:[%s]"%plp_filename)
 
 cfg_plp = read_plp_in_cfg(plp_filename)
 # plp overrides persistent.ini and setup.ini values if there are any
@@ -1503,10 +1504,7 @@ cfg = override_cfg_values(cfg, cfg_plp)
 
 proxy = setup_proxy(cfg)
 
-logger.debug("argv1:")
-logger.debug(sys.argv)
-logger.debug("len:")
-logger.debug(len(sys.argv))
+logger.debug({"argv":sys.argv, "len":len(sys.argv)})
 
 
 if do_auto_update(cfg, version.VERSION, downgrade_version=downgrade_version, prev_version=prev_version):
@@ -1528,11 +1526,11 @@ else:
 if(prev_version!=False):
     # this is first run after update
     #do_post_update_check(cfg, version.VERSION, prev_version)
-    logger.info("INFO: skipping post_update_check as users can not be trusted.")
+    logger.info("skipping post_update_check as users can not be trusted.")
 
 if(skip_file_delete==False):
     try:
-        logger.info("INFO: doing file delete for file:[%s]"%plp_filename)
+        logger.info("doing file delete for file:[%s]"%plp_filename)
         os.remove(plp_filename)
         #shutil.rmtree(plp_filename, ignore_errors=False, onerror=handleRemoveReadonly)
         pass
@@ -1542,5 +1540,5 @@ if(skip_file_delete==False):
         os.chmod(plp_filename, stat.S_IRWXU| stat.S_IRWXG| stat.S_IRWXO) # 0777
         os.remove(plp_filename)
         pass
-logger.info("INFO: exit status:%d"%EXIT_STATUS)
+logger.info("exit status:%d"%EXIT_STATUS)
 sys.exit(EXIT_STATUS)
