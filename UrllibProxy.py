@@ -19,19 +19,21 @@ class _FancyURLopener(urllib.FancyURLopener):
     """ This class handles basic auth, providing user and password
         when required by twitter
     """
-    def __init__(self, usr, pwd, prx={}):
+    def __init__(self, usr, pwd, prx=None):
         """ Set default values for local proxy (if any)
             and set user/password for twitter
         """
+        if not prx:
+		    prx = {}
         urllib.FancyURLopener.__init__(self,prx)
         self.usr = usr
         self.pwd = pwd
-        
+
     def prompt_user_passwd(self, host, realm):
         """ Basic auth callback
         """
         return (self.usr,self.pwd)
-    
+
 class UrllibProxy(object):
     """ Simple class for fetching URLs via urllib.
         It adds proxy support and http basic authentication.
@@ -65,8 +67,8 @@ class UrllibProxy(object):
                 if ':' in user_pass:
                     user, password = user_pass.split(':', 1)
                     puser_pass = ('%s:%s' %
-                                  (unquote(user),
-                                  unquote(password))).encode('base64').strip()            
+                                            (unquote(user),
+                                            unquote(password))).encode('base64').strip()
             self.urlopener_proxy = {'http':'http://%s'%phost}
             if not puser_pass:
                 self.headers = [('User-agent', self.user_agent)]
@@ -90,21 +92,21 @@ class UrllibProxy(object):
             f = self.urlopener().open(self.url,params) #post
         else:
             f = self.urlopener().open(self.url) #get
-            
+
         return f
 
     def urlretrieve(self, url, filename=None):
         if not filename:
             filename = url[url.rfind("/") + 1:]
-        f = open(filename,"wb")    
+        f = open(filename,"wb")
         f.write(self.open(url).read())
-        
-        
+
+
 if __name__ == "__main__":
-    
+
     local_file = "e:\\Wordmobi-0.7.0.zip"
     url = "http://wordmobi.googlecode.com/files/Wordmobi-0.7.0.zip"
     proxy = "http://username:password@192.168.1.40:8080"
-    
+
     urlprx = UrllibProxy(proxy)
     urlprx.urlretrieve(url, local_file)
