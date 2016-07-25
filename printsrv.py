@@ -809,17 +809,8 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
             break
         param_key, param_val = param
         logger.info("key:val = {0}:{1}".format(param_key, param_val))
-        # line = infile.readline()
-        # if line.startswith(codecs.BOM_UTF8):
-        #     line = line[3:]
-        #
-        # if (len(line) == 0):
-        #     break
-        # line = line.strip()
-        # value = line.split("=")
-        #################################################################
+
         # Start new document
-        #################################################################
         if (param_key == "BEGIN"):
             # attempt to check if there is a layouts definition
             file_read_pos = infile.tell()
@@ -842,9 +833,7 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
             start_new_document(printer_cfg, is_first_document = (param_val == "BEGIN 1"))
             document_open = 1
 
-        #################################################################
         # End document
-        #################################################################
         elif (param_key == "END"):
             print_static_text_value(layout_cfg)
             print_document()
@@ -858,52 +847,32 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
                 for postfix in ["", "_1", "_2", "_3"]: # this makes it possible to print out several types for one value
                     param_name = param_key + postfix
                     if layout_cfg.has_section(param_name):
-                        if (layout_cfg.get(param_name, "type") == "text"):
+                        if   (layout_cfg.get(param_name, "type") == "text"):
                             print_text_value(dict(layout_cfg.items(param_name)), param_val)
-                            if (layout_cfg.get(param_name, "type") == "qmatrix"):
-                                print_qmatrix_value(dict(layout_cfg.items(param_name)), param_val)
-
-                                if (layout_cfg.get(param_name, "type") == "image_url"):
-                                    print_image_url_value(dict(layout_cfg.items(param_name)), param_val)
-                                else:
-                                    if(layout_cfg.get(param_name, "type") == "image_xml"):
-                                        if(param_val != ""):
-                                            print_image_xml_value(dict(layout_cfg.items(param_name)), param_val)
-                                        else:
-                                            if (layout_cfg.get(param_name, "type") == "bar_2_of_5"):
-                                                print_bar_2_of_5_value(dict(layout_cfg.items(param_name)), param_val)
-                                                if layout_cfg.has_section("%s_text" % param_name):
-                                                    print_text_value(dict(layout_cfg.items("%s_text" % param_name)), param_val)
-                                                else:
-                                                    if (layout_cfg.get(param_name, "type") == "bar_3_of_9"):
-                                                        print_bar_3_of_9_value(dict(layout_cfg.items(param_name)), param_val)
-                                                        if layout_cfg.has_section("%s_text" % param_name):
-                                                            print_text_value(dict(layout_cfg.items("%s_text" % param_name)), param_val)
-                                                        else:
-                                                            if (layout_cfg.get(param_name, "type") == "bar_code128"):
-                                                                print_code128_value(dict(layout_cfg.items(param_name)), param_val)
-                                                                if layout_cfg.has_section("%s_text" % param_name):
-                                                                    print_text_value(dict(layout_cfg.items("%s_text" % param_name)), param_val)
-                                                                else:
-                                                                    logger.warning("unknown type for section:%s" % param_name)
-                                                                    set_exit_status(UNKNOWN_TYPE_FOR_SECTION)
+                        elif (layout_cfg.get(param_name, "type") == "qmatrix"):
+                            print_qmatrix_value(dict(layout_cfg.items(param_name)), param_val)
+                        elif (layout_cfg.get(param_name, "type") == "image_url"):
+                            print_image_url_value(dict(layout_cfg.items(param_name)), param_val)
+                        elif (layout_cfg.get(param_name, "type") == "image_xml" and param_val != ""):
+                            print_image_xml_value(dict(layout_cfg.items(param_name)), param_val)
+                        elif (layout_cfg.get(param_name, "type") == "bar_2_of_5"):
+                            print_bar_2_of_5_value(dict(layout_cfg.items(param_name)), param_val)
+                            if layout_cfg.has_section("%s_text" % param_name):
+                                print_text_value(dict(layout_cfg.items("%s_text" % param_name)), param_val)
+                        elif (layout_cfg.get(param_name, "type") == "bar_3_of_9"):
+                            print_bar_3_of_9_value(dict(layout_cfg.items(param_name)), param_val)
+                            if layout_cfg.has_section("%s_text" % param_name):
+                                print_text_value(dict(layout_cfg.items("%s_text" % param_name)), param_val)
+                        elif (layout_cfg.get(param_name, "type") == "bar_code128"):
+                            print_code128_value(dict(layout_cfg.items(param_name)), param_val)
+                            if layout_cfg.has_section("%s_text" % param_name):
+                                print_text_value(dict(layout_cfg.items("%s_text" % param_name)), param_val)
+                        else:
+                            logger.warning("unknown type for section:%s" % param_name)
+                            set_exit_status(UNKNOWN_TYPE_FOR_SECTION)
                     else:
-                        pass
-                        # set_exit_status(NO_SUCH_SECTION)
-
-    # continue
+                        logger.info("No section for parameter {0}".format(param))
     infile.close()
-
-    # do not delete file as this might be bad version right after upgrade
-    # if(skip_file_delete==0):
-    #     try:
-    #         pass
-    #         os.remove(plp_filename)
-    #     except:
-    #         set_exit_status(COULD_NOT_DELETE_PLP)
-    #         pass
-    #         f.fileno ()
-    #         os.close(infile.fileno())
 
 #################################################################
 # Log available printer name on the system
