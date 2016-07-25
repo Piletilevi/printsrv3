@@ -80,8 +80,8 @@ COULD_NOT_DOWNLOAD_URL_LAYOUT = 524288*2
 
 EXIT_STATUS = EXIT_OK
 
-dc = None
-hdc = None
+device_context_handle = None # pylint: disable=C0103
+device_context = None # pylint: disable=C0103
 proxy = None
 
 class StreamToLogger(object):
@@ -197,10 +197,10 @@ def translate_to_2_of_5(code):
 
 #################################################################
 def is_printer_online(printer_name):
-    c = wmi.WMI()
-    for s in c.Win32_Printer ():
-        if(printer_name == s.caption):
-            if(s.WorkOffline):
+    wmi = wmi.WMI()
+    for wmi_printer in wmi.Win32_Printer ():
+        if(printer_name == wmi_printer.caption):
+            if(wmi_printer.WorkOffline):
                 logger.info("Printer is offline")
                 return False
             else:
@@ -221,8 +221,8 @@ def get_check_printer_msg_text(cfg):
 
 #################################################################
 def start_new_document(cfg, is_first_document = False):
-    global dc
-    global hdc
+    global device_context
+    global device_context_handle
     global EXIT_STATUS
 
     printer = cfg.get("DEFAULT", "printer_name")
@@ -269,35 +269,35 @@ def start_new_document(cfg, is_first_document = False):
         pass
     try:
         logger.info("win32gui.CreateDC ...")
-        hdc = win32gui.CreateDC("WINSPOOL", printer, devmode)
+        device_context_handle = win32gui.CreateDC("WINSPOOL", printer, devmode)
         logger.info("win32ui.CreateDCFromHandle ...")
-        dc = win32ui.CreateDCFromHandle(hdc)
+        device_context = win32ui.CreateDCFromHandle(device_context_handle)
     except:
-        logger.error("exception while creating dc")
+        logger.error("exception while creating device_context")
         set_exit_status(COULD_NOT_CREATE_DC)
         sys.exit(EXIT_STATUS)
-    if(dc==None):
-        logger.error("dc not created")
+    if(device_context==None):
+        logger.error("device_context not created")
         set_exit_status(DC_NOT_CREATED)
         sys.exit(EXIT_STATUS)
-    if(hdc==None):
-        logger.error("hdc not created")
+    if(device_context_handle == None):
+        logger.error("device_context_handle not created")
         set_exit_status(HDC_NOT_CREATED)
         sys.exit(EXIT_STATUS)
 
-    # dc.SetMapMode(win32con.MM_TWIPS)
+    # device_context.SetMapMode(win32con.MM_TWIPS)
 
-    logger.info("dc.SetMapMode ...")
-    dc.SetMapMode(int(cfg.get("DEFAULT", "map_mode")))
-    logger.info("dc.StartDoc ...")
-    dc.StartDoc(cfg.get("DEFAULT", "print_document_name"))
-    logger.info("dc.StartPage ...")
-    dc.StartPage()
+    logger.info("device_context.SetMapMode ...")
+    device_context.SetMapMode(int(cfg.get("DEFAULT", "map_mode")))
+    logger.info("device_context.StartDoc ...")
+    device_context.StartDoc(cfg.get("DEFAULT", "print_document_name"))
+    logger.info("device_context.StartPage ...")
+    device_context.StartPage()
     logger.info("win32ui.CreateFont ...");
     font = win32ui.CreateFont({"name": "Arial", "height": 16})
-    logger.info("dc.SelectObject ...")
-    dc.SelectObject(font)
-    logger.info("dc.SelectObject DONE")
+    logger.info("device_context.SelectObject ...")
+    device_context.SelectObject(font)
+    logger.info("device_context.SelectObject DONE")
 
 #################################################################
 def RGB(R, G, B):
@@ -305,19 +305,19 @@ def RGB(R, G, B):
 
 #################################################################
 def print_document():
-    dc.EndPage()
-    dc.EndDoc()
+    device_context.EndPage()
+    device_context.EndDoc()
 
 #################################################################
 def set_section_font_indirect(section_cfg,postfix=""):
-    global dc
-    global hdc
+    global device_context
+    global device_context_handle
     fonts=[section_cfg["font_name"+postfix]]
     def callback(font, tm, fonttype, fonts):
         if(font.lfFaceName == fonts[0]):
             fonts.append(font)
         return True
-    win32gui.EnumFontFamilies(hdc, None, callback,fonts)
+    win32gui.EnumFontFamilies(device_context_handle, None, callback,fonts)
     # lf = win32gui.LOGFONT()
     try:
         lf = fonts[1]
@@ -349,15 +349,15 @@ def set_section_font_indirect(section_cfg,postfix=""):
     if not hFont:
         raise StandardError("ERROR: Unable to create font")
     try:
-        dc.SetTextColor(RGB(int(section_cfg["font_color_red"+postfix]), int(section_cfg["font_color_green"+postfix]), int(section_cfg["font_color_blue"+postfix])))
+        device_context.SetTextColor(RGB(int(section_cfg["font_color_red"+postfix]), int(section_cfg["font_color_green"+postfix]), int(section_cfg["font_color_blue"+postfix])))
     except:
-        dc.SetTextColor(RGB(0, 0, 0))
-    hFont = win32gui.SelectObject(hdc, hFont)
+        device_context.SetTextColor(RGB(0, 0, 0))
+    hFont = win32gui.SelectObject(device_context_handle, hFont)
 
 #################################################################
 def set_section_font(section_cfg,postfix=""):
-    global dc
-    global hdc
+    global device_context
+    global device_context_handle
     font_params = {}
     font_params["name"] = section_cfg["font_name"+postfix]
     font_params["height"] = int(section_cfg["font_height"+postfix])
@@ -371,15 +371,15 @@ def set_section_font(section_cfg,postfix=""):
         pass
     font = win32ui.CreateFont(font_params)
     try:
-        dc.SetTextColor(RGB(int(section_cfg["font_color_red"+postfix]), int(section_cfg["font_color_green"+postfix]), int(section_cfg["font_color_blue"+postfix])))
+        device_context.SetTextColor(RGB(int(section_cfg["font_color_red"+postfix]), int(section_cfg["font_color_green"+postfix]), int(section_cfg["font_color_blue"+postfix])))
     except:
-        dc.SetTextColor(RGB(0, 0, 0))
-    dc.SelectObject(font)
+        device_context.SetTextColor(RGB(0, 0, 0))
+    device_context.SelectObject(font)
 
 #################################################################
 def print_text_value(section_cfg, value):
-    global dc
-    global hdc
+    global device_context
+    global device_context_handle
 
     try:
         value = value.replace(section_cfg["replace_from"],section_cfg["replace_to"])
@@ -403,7 +403,7 @@ def print_text_value(section_cfg, value):
     # for v in value :
     #     print "%d,"%ord(v)
     # set_section_font(section_cfg,"")
-    # windll.gdi32.TextOutW(hdc,int(section_cfg["x"]),int(section_cfg["y"]),value,len(value))
+    # windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x"]),int(section_cfg["y"]),value,len(value))
     # value="te"+u"\u2424"+value
     value_w = ""
     value_w1 = ""
@@ -473,39 +473,39 @@ def print_text_value(section_cfg, value):
 
     try:
         set_section_font_indirect(section_cfg,"")
-        windll.gdi32.TextOutW(hdc,int(section_cfg["x"]),int(section_cfg["y"]),value,len(value))
+        windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x"]),int(section_cfg["y"]),value,len(value))
         try:
             set_section_font_indirect(section_cfg,"")
-            windll.gdi32.TextOutW(hdc,int(section_cfg["x"]),int(section_cfg["y"])+int(section_cfg["font_height"]),value_w,len(value_w))
+            windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x"]),int(section_cfg["y"])+int(section_cfg["font_height"]),value_w,len(value_w))
             set_section_font_indirect(section_cfg,"")
-            windll.gdi32.TextOutW(hdc,int(section_cfg["x"]),int(section_cfg["y"])+2*int(section_cfg["font_height"]),value_ww,len(value_ww))
+            windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x"]),int(section_cfg["y"])+2*int(section_cfg["font_height"]),value_ww,len(value_ww))
         except:
             pass
         set_section_font_indirect(section_cfg,"1")
-        windll.gdi32.TextOutW(hdc,int(section_cfg["x1"]),int(section_cfg["y1"]),value1,len(value1))
+        windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x1"]),int(section_cfg["y1"]),value1,len(value1))
         try:
             set_section_font_indirect(section_cfg,"1")
-            windll.gdi32.TextOutW(hdc,int(section_cfg["x1"]),int(section_cfg["y1"])+int(section_cfg["font_height1"]),value_w1,len(value_w1))
+            windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x1"]),int(section_cfg["y1"])+int(section_cfg["font_height1"]),value_w1,len(value_w1))
             set_section_font_indirect(section_cfg,"1")
-            windll.gdi32.TextOutW(hdc,int(section_cfg["x1"]),int(section_cfg["y1"])+2*int(section_cfg["font_height1"]),value_ww1,len(value_ww1))
+            windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x1"]),int(section_cfg["y1"])+2*int(section_cfg["font_height1"]),value_ww1,len(value_ww1))
         except:
             pass
         set_section_font_indirect(section_cfg,"2")
-        windll.gdi32.TextOutW(hdc,int(section_cfg["x2"]),int(section_cfg["y2"]),value2,len(value2))
+        windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x2"]),int(section_cfg["y2"]),value2,len(value2))
         try:
             set_section_font_indirect(section_cfg,"2")
-            windll.gdi32.TextOutW(hdc,int(section_cfg["x2"]),int(section_cfg["y2"])+int(section_cfg["font_height2"]),value_w2,len(value_w2))
+            windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x2"]),int(section_cfg["y2"])+int(section_cfg["font_height2"]),value_w2,len(value_w2))
             set_section_font_indirect(section_cfg,"2")
-            windll.gdi32.TextOutW(hdc,int(section_cfg["x2"]),int(section_cfg["y2"])+2*int(section_cfg["font_height2"]),value_ww2,len(value_ww2))
+            windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x2"]),int(section_cfg["y2"])+2*int(section_cfg["font_height2"]),value_ww2,len(value_ww2))
         except:
             pass
         set_section_font_indirect(section_cfg,"3")
-        windll.gdi32.TextOutW(hdc,int(section_cfg["x3"]),int(section_cfg["y3"]),value3,len(value3))
+        windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x3"]),int(section_cfg["y3"]),value3,len(value3))
         try:
             set_section_font_indirect(section_cfg,"3")
-            windll.gdi32.TextOutW(hdc,int(section_cfg["x3"]),int(section_cfg["y3"])+int(section_cfg["font_height3"]),value_w3,len(value_w3))
+            windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x3"]),int(section_cfg["y3"])+int(section_cfg["font_height3"]),value_w3,len(value_w3))
             set_section_font_indirect(section_cfg,"3")
-            windll.gdi32.TextOutW(hdc,int(section_cfg["x3"]),int(section_cfg["y3"])+2*int(section_cfg["font_height3"]),value_ww3,len(value_ww3))
+            windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x3"]),int(section_cfg["y3"])+2*int(section_cfg["font_height3"]),value_ww3,len(value_ww3))
         except:
             pass
     except(KeyError):
@@ -515,8 +515,8 @@ def print_text_value(section_cfg, value):
 
 #################################################################
 def print_image(x, y, value, rotate=0):
-    global dc
-    global hdc
+    global device_context
+    global device_context_handle
     try:
         bmp = Image.open(value)
     except:
@@ -538,12 +538,12 @@ def print_image(x, y, value, rotate=0):
         print "ERROR: Only jpg and bmp are supported"
         set_exit_status(UNSUPPORTED_IMAGE_FORMAT)
         return None
-    dib.draw(dc.GetHandleOutput(), (int(x), int(y), int(x) + bmp.size[0], int(y) + bmp.size[1]))
+    dib.draw(device_context.GetHandleOutput(), (int(x), int(y), int(x) + bmp.size[0], int(y) + bmp.size[1]))
 
 #################################################################
 def print_qmatrix(x, y, size, value):
-    global dc
-    global hdc
+    global device_context
+    global device_context_handle
 
     factory = qrcode.image.pil.PilImage
 
@@ -564,12 +564,12 @@ def print_qmatrix(x, y, size, value):
         print "ERROR: unsupported image format in print_qmatrix"
         set_exit_status(UNSUPPORTED_IMAGE_FORMAT)
         return None
-    dib.draw(dc.GetHandleOutput(), (int(x), int(y), int(x) + int(size), int(y) + int(size)))
+    dib.draw(device_context.GetHandleOutput(), (int(x), int(y), int(x) + int(size), int(y) + int(size)))
 
 #################################################################
 def print_qmatrix_value(section_cfg, value):
-    global dc
-    global hdc
+    global device_context
+    global device_context_handle
     # try:
     print_qmatrix(section_cfg["x"], section_cfg["y"], section_cfg["size"], value)
     # except:
@@ -577,8 +577,8 @@ def print_qmatrix_value(section_cfg, value):
 
 #################################################################
 def print_image_value(section_cfg, value):
-    global dc
-    global hdc
+    global device_context
+    global device_context_handle
     """\n\tThis function prints image specified in ini file\n\tvalues are x position, y position and value which is full path to the jpg/bmp file\n\t"""
     try:
         try:
@@ -606,8 +606,8 @@ def print_image_value(section_cfg, value):
 
 #################################################################
 def print_image_xml_value(section_cfg, value):
-    global dc
-    global hdc
+    global device_context
+    global device_context_handle
     global proxy
     """
     This function prints image specified. if it is not available locally it downloads it from web.
@@ -685,17 +685,17 @@ def print_image_url_value(section_cfg, value):
 
 #################################################################
 def print_bar_2_of_5_value(section_cfg, value):
-    global dc
-    global hdc
+    global device_context
+    global device_context_handle
     try:
         set_section_font_indirect(section_cfg,"")
-        dc.TextOut(int(section_cfg["x"]), int(section_cfg["y"]), translate_to_2_of_5(value))
+        device_context.TextOut(int(section_cfg["x"]), int(section_cfg["y"]), translate_to_2_of_5(value))
         set_section_font_indirect(section_cfg,"1")
-        dc.TextOut(int(section_cfg["x1"]), int(section_cfg["y1"]), translate_to_2_of_5(value))
+        device_context.TextOut(int(section_cfg["x1"]), int(section_cfg["y1"]), translate_to_2_of_5(value))
         set_section_font_indirect(section_cfg,"2")
-        dc.TextOut(int(section_cfg["x2"]), int(section_cfg["y2"]), translate_to_2_of_5(value))
+        device_context.TextOut(int(section_cfg["x2"]), int(section_cfg["y2"]), translate_to_2_of_5(value))
         set_section_font_indirect(section_cfg,"3")
-        dc.TextOut(int(section_cfg["x3"]), int(section_cfg["y3"]), translate_to_2_of_5(value))
+        device_context.TextOut(int(section_cfg["x3"]), int(section_cfg["y3"]), translate_to_2_of_5(value))
     except(KeyError):
         pass
     except:
@@ -704,17 +704,17 @@ def print_bar_2_of_5_value(section_cfg, value):
 
 #################################################################
 def print_bar_3_of_9_value(section_cfg, value):
-    global dc
-    global hdc
+    global device_context
+    global device_context_handle
     try:
         set_section_font_indirect(section_cfg,"")
-        dc.TextOut(int(section_cfg["x"]), int(section_cfg["y"]), translate_to_3_of_9(value))
+        device_context.TextOut(int(section_cfg["x"]), int(section_cfg["y"]), translate_to_3_of_9(value))
         set_section_font_indirect(section_cfg,"1")
-        dc.TextOut(int(section_cfg["x1"]), int(section_cfg["y1"]), translate_to_3_of_9(value))
+        device_context.TextOut(int(section_cfg["x1"]), int(section_cfg["y1"]), translate_to_3_of_9(value))
         set_section_font_indirect(section_cfg,"2")
-        dc.TextOut(int(section_cfg["x2"]), int(section_cfg["y2"]), translate_to_3_of_9(value))
+        device_context.TextOut(int(section_cfg["x2"]), int(section_cfg["y2"]), translate_to_3_of_9(value))
         set_section_font_indirect(section_cfg,"3")
-        dc.TextOut(int(section_cfg["x3"]), int(section_cfg["y3"]), translate_to_3_of_9(value))
+        device_context.TextOut(int(section_cfg["x3"]), int(section_cfg["y3"]), translate_to_3_of_9(value))
     except(KeyError):
         pass
     except:
@@ -723,17 +723,17 @@ def print_bar_3_of_9_value(section_cfg, value):
 
 #################################################################
 def print_code128_value(section_cfg, value):
-    global dc
-    global hdc
+    global device_context
+    global device_context_handle
     try:
         set_section_font_indirect(section_cfg,"")
-        dc.TextOut(int(section_cfg["x"]), int(section_cfg["y"]), translate_to_code128(value))
+        device_context.TextOut(int(section_cfg["x"]), int(section_cfg["y"]), translate_to_code128(value))
         set_section_font_indirect(section_cfg,"1")
-        dc.TextOut(int(section_cfg["x1"]), int(section_cfg["y1"]), translate_to_code128(value))
+        device_context.TextOut(int(section_cfg["x1"]), int(section_cfg["y1"]), translate_to_code128(value))
         set_section_font_indirect(section_cfg,"2")
-        dc.TextOut(int(section_cfg["x2"]), int(section_cfg["y2"]), translate_to_code128(value))
+        device_context.TextOut(int(section_cfg["x2"]), int(section_cfg["y2"]), translate_to_code128(value))
         set_section_font_indirect(section_cfg,"3")
-        dc.TextOut(int(section_cfg["x3"]), int(section_cfg["y3"]), translate_to_code128(value))
+        device_context.TextOut(int(section_cfg["x3"]), int(section_cfg["y3"]), translate_to_code128(value))
     except(KeyError):
         pass
     except:
@@ -742,8 +742,8 @@ def print_code128_value(section_cfg, value):
 
 #################################################################
 def font_tests():
-    global dc
-    global hdc
+    global device_context
+    global device_context_handle
     arr = {}
     arr["x"] = 300
     arr["y"] = -300
@@ -754,7 +754,7 @@ def font_tests():
     #print type(text)
     #print type(text)
     set_section_font(arr,"")
-    dc.TextOut(int(arr["x"]), int(arr["y"]), text)
+    device_context.TextOut(int(arr["x"]), int(arr["y"]), text)
 
 #################################################################
 def print_static_text_value(cfg):
@@ -796,8 +796,8 @@ def read_param(line):
 
 #################################################################
 def read_plp_file(cfg, plp_filename, skip_file_delete):
-    global dc
-    global hdc
+    global device_context
+    global device_context_handle
     global proxy
 
     document_open = 0
@@ -1362,10 +1362,10 @@ for o, a in opts:
         hprinter = win32print.OpenPrinter(tmp_printer)
         devmode = win32print.GetPrinter(hprinter, 2)["pDevMode"]
         printjobs = win32print.EnumJobs(hprinter, 0, 999)
-        hdc = win32gui.CreateDC("WINSPOOL", tmp_printer, devmode)
-        dc = win32ui.CreateDCFromHandle(hdc)
+        device_context_handle = win32gui.CreateDC("WINSPOOL", tmp_printer, devmode)
+        device_context = win32ui.CreateDCFromHandle(device_context_handle)
         fonts = []
-        win32gui.EnumFontFamilies(hdc, None, font_list_callback,fonts)
+        win32gui.EnumFontFamilies(device_context_handle, None, font_list_callback,fonts)
         sys.exit(EXIT_STATUS)
     else:
         assert False, "unhandled option"
