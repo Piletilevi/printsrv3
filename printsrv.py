@@ -791,6 +791,7 @@ def read_param(line):
     if (len(param[0]) == 0):
         logger.warning(message)
         return False
+    logger.info("Param: {0}".format(param))
     return param
 
 #################################################################
@@ -803,96 +804,86 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
     infile = open(plp_filename, "rb")
     param_dict = {}
     while infile:
-        line = infile.readline()
-        if line.startswith(codecs.BOM_UTF8):
-            line = line[3:]
-
-        if (len(line) == 0):
+        param = read_param(infile.readline())
+        if not param:
             break
-        line = line.strip()
-        value = line.split("=")
+        param_key, param_val = param
+        logger.info("key:val = {0}:{1}".format(param_key, param_val))
+        # line = infile.readline()
+        # if line.startswith(codecs.BOM_UTF8):
+        #     line = line[3:]
+        #
+        # if (len(line) == 0):
+        #     break
+        # line = line.strip()
+        # value = line.split("=")
         #################################################################
         # Start new document
         #################################################################
-        if (line[:6] == "BEGIN "):
-            begin_section_name = line
+        if (param_key == "BEGIN"):
             # attempt to check if there is a layouts definition
             file_read_pos = infile.tell()
-            line = infile.readline()
-            params = line.split("=")
-            if(len(params)==2):
-                key = params[0].strip()
-                value = params[1].strip()
-                if(key == "layout"):
-                    # is this going to work?
-                    if(cfg.has_option("DEFAULT", "layout")):
-                        if(cfg.get("DEFAULT", "layout")=="none"):
-                            layout_cfg = cfg
-                        else:
-                            layout_cfg = get_layout_cfg(value)
-                    else:
-                        layout_cfg = get_layout_cfg(value)
-                else:
-                    infile.seek(file_read_pos) # undo up one line. it was not layout directive
-                    layout_cfg = cfg # use original ini file for cfg.
-            else:
+            param = read_param(infile.readline())
+            if (not param or param[0] != "layout"):
                 infile.seek(file_read_pos) # undo up one line. it was not layout directive
                 layout_cfg = cfg # use original ini file for cfg.
+            else:
+                key, val = param
+                if (cfg.has_option("DEFAULT", "layout")
+                    and cfg.get("DEFAULT", "layout") == "none"):
+                        layout_cfg = cfg
+                else:
+                    layout_cfg = get_layout_cfg(val)
 
             logger.info("start new document")
             printer_cfg = cfg
 
             # we check for old jobs in printer queue when starting first document
-            if(begin_section_name[:8] == "BEGIN 1"):
-                start_new_document(printer_cfg, is_first_document=True)
-            else:
-                start_new_document(printer_cfg, is_first_document=False)
-            document_open=1
+            start_new_document(printer_cfg, is_first_document = (param_val == "BEGIN 1"))
+            document_open = 1
 
         #################################################################
         # End document
         #################################################################
-        elif (line[:4] == "END "):
+        elif (param_key == "END"):
             print_static_text_value(layout_cfg)
             print_document()
-            document_open=0
+            document_open = 0
 
         #################################################################
         # parse every parameter if file is open
         #################################################################
         else:
-            if ((len(value) == 2)and(document_open==1)):
-                param_name_from_file = value[0]
-                param_value = value[1]
+            if (document_open == 1):
                 for postfix in ["", "_1", "_2", "_3"]: # this makes it possible to print out several types for one value
-                    param_name = param_name_from_file + postfix
+                    param_name = param_key + postfix
                     if layout_cfg.has_section(param_name):
                         if (layout_cfg.get(param_name, "type") == "text"):
-                            print_text_value(dict(layout_cfg.items(param_name)), param_value)
+                            print_text_value(dict(layout_cfg.items(param_name)), param_val)
                             if (layout_cfg.get(param_name, "type") == "qmatrix"):
-                                print_qmatrix_value(dict(layout_cfg.items(param_name)), param_value)
+                                print_qmatrix_value(dict(layout_cfg.items(param_name)), param_val)
 
                                 if (layout_cfg.get(param_name, "type") == "image_url"):
-                                    print_image_url_value(dict(layout_cfg.items(param_name)), param_value)
+                                    print_image_url_value(dict(layout_cfg.items(param_name)), param_val)
                                 else:
                                     if(layout_cfg.get(param_name, "type") == "image_xml"):
-                                        if(param_value != ""):
-                                            print_image_xml_value(dict(layout_cfg.items(param_name)), param_value)
+                                        if(param_val != ""):
+                                            print_image_xml_value(dict(layout_cfg.items(param_name)), param_val)
                                         else:
                                             if (layout_cfg.get(param_name, "type") == "bar_2_of_5"):
-                                                print_bar_2_of_5_value(dict(layout_cfg.items(param_name)), param_value)
+                                                print_bar_2_of_5_value(dict(layout_cfg.items(param_name)), param_val)
                                                 if layout_cfg.has_section("%s_text" % param_name):
-                                                    print_text_value(dict(layout_cfg.items("%s_text" % param_name)), param_value)
+                                                    print_text_value(dict(layout_cfg.items("%s_text" % param_name)), param_val)
                                                 else:
                                                     if (layout_cfg.get(param_name, "type") == "bar_3_of_9"):
-                                                        print_bar_3_of_9_value(dict(layout_cfg.items(param_name)), param_value)
+                                                        print_bar_3_of_9_value(dict(layout_cfg.items(param_name)), param_val)
                                                         if layout_cfg.has_section("%s_text" % param_name):
-                                                            print_text_value(dict(layout_cfg.items("%s_text" % param_name)), param_value)
+                                                            print_text_value(dict(layout_cfg.items("%s_text" % param_name)), param_val)
                                                         else:
                                                             if (layout_cfg.get(param_name, "type") == "bar_code128"):
-                                                                print_code128_value(dict(layout_cfg.items(param_name)), param_value)
+                                                                print_code128_value(dict(layout_cfg.items(param_name)), param_val)
                                                                 if layout_cfg.has_section("%s_text" % param_name):
-                                                                    print_text_value(dict(layout_cfg.items("%s_text" % param_name)), param_value)
+                                                                    print_text_value(dict(layout_cfg.items("%s_text" % param_name)), param_val)
                                                                 else:
                                                                     logger.warning("unknown type for section:%s" % param_name)
                                                                     set_exit_status(UNKNOWN_TYPE_FOR_SECTION)
@@ -1273,7 +1264,7 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
                         os.execv(appexe,[appexe] + argv_to_pass)
                         pass
                     else:
-                        logger.info("update finished. Will do restart with args:%s. --prev_version=%s" % sys.argv[1:], current_version])
+                        logger.info("update finished. Will do restart with args:%s. --prev_version=%s" % (sys.argv[1:], current_version))
                         ret_do_not_delete_plp_file = True
                         os.execv(appexe,[appexe] + sys.argv[1:] + ["--prev_version=%s" % current_version])
                     logger.info("after updater os.execv call")
