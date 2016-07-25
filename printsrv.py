@@ -197,8 +197,7 @@ def translate_to_2_of_5(code):
 
 #################################################################
 def is_printer_online(printer_name):
-    wmi = wmi.WMI()
-    for wmi_printer in wmi.Win32_Printer ():
+    for wmi_printer in wmi.WMI().Win32_Printer ():
         if(printer_name == wmi_printer.caption):
             if(wmi_printer.WorkOffline):
                 logger.info("Printer is offline")
@@ -300,7 +299,7 @@ def start_new_document(cfg, is_first_document = False):
     logger.info("device_context.SelectObject DONE")
 
 #################################################################
-def RGB(R, G, B):
+def rgb2int(R, G, B):
     return R + G * 256 + B * 256 * 256
 
 #################################################################
@@ -309,7 +308,7 @@ def print_document():
     device_context.EndDoc()
 
 #################################################################
-def set_section_font_indirect(section_cfg,postfix=""):
+def set_section_font_indirect(section_cfg, postfix = ""):
     global device_context
     global device_context_handle
     fonts=[section_cfg["font_name"+postfix]]
@@ -320,39 +319,39 @@ def set_section_font_indirect(section_cfg,postfix=""):
     win32gui.EnumFontFamilies(device_context_handle, None, callback,fonts)
     # lf = win32gui.LOGFONT()
     try:
-        lf = fonts[1]
+        log_font = fonts[1]
     except:
         logger.warning("No such font available:%s" % section_cfg["font_name"+postfix])
         set_exit_status(NO_SUCH_FONT_AVAILABLE)
-        lf = win32gui.LOGFONT()
+        log_font = win32gui.LOGFONT()
     try:
-        lf.lfHeight = int(section_cfg["font_height"+postfix])
+        log_font.lfHeight = int(section_cfg["font_height"+postfix])
     except:
         pass
 
     try:
-        lf.lfWidth = int(section_cfg["font_width"+postfix])
+        log_font.lfWidth = int(section_cfg["font_width"+postfix])
     except:
         pass
     try:
-        lf.lfWeight = int(section_cfg["font_weight"+postfix])
+        log_font.lfWeight = int(section_cfg["font_weight"+postfix])
     except:
         pass
     try:
-        #lf.lfOrientation = int(90)*10
-        #lf.lfEscapement = int(90)*10
-        lf.lfOrientation = int(section_cfg["font_orientation"+postfix])*10
-        lf.lfEscapement = int(section_cfg["font_orientation"+postfix])*10
+        #log_font.lfOrientation = int(90)*10
+        #log_font.lfEscapement = int(90)*10
+        log_font.lfOrientation = int(section_cfg["font_orientation"+postfix])*10
+        log_font.lfEscapement = int(section_cfg["font_orientation"+postfix])*10
     except:
         pass
-    hFont = win32gui.CreateFontIndirect(lf)
-    if not hFont:
+    font_handle = win32gui.CreateFontIndirect(log_font)
+    if not font_handle:
         raise StandardError("ERROR: Unable to create font")
     try:
-        device_context.SetTextColor(RGB(int(section_cfg["font_color_red"+postfix]), int(section_cfg["font_color_green"+postfix]), int(section_cfg["font_color_blue"+postfix])))
+        device_context.SetTextColor(rgb2int(int(section_cfg["font_color_red"+postfix]), int(section_cfg["font_color_green"+postfix]), int(section_cfg["font_color_blue"+postfix])))
     except:
-        device_context.SetTextColor(RGB(0, 0, 0))
-    hFont = win32gui.SelectObject(device_context_handle, hFont)
+        device_context.SetTextColor(rgb2int(0, 0, 0))
+    font_handle = win32gui.SelectObject(device_context_handle, font_handle)
 
 #################################################################
 def set_section_font(section_cfg,postfix=""):
@@ -371,9 +370,9 @@ def set_section_font(section_cfg,postfix=""):
         pass
     font = win32ui.CreateFont(font_params)
     try:
-        device_context.SetTextColor(RGB(int(section_cfg["font_color_red"+postfix]), int(section_cfg["font_color_green"+postfix]), int(section_cfg["font_color_blue"+postfix])))
+        device_context.SetTextColor(rgb2int(int(section_cfg["font_color_red"+postfix]), int(section_cfg["font_color_green"+postfix]), int(section_cfg["font_color_blue"+postfix])))
     except:
-        device_context.SetTextColor(RGB(0, 0, 0))
+        device_context.SetTextColor(rgb2int(0, 0, 0))
     device_context.SelectObject(font)
 
 #################################################################
@@ -403,7 +402,7 @@ def print_text_value(section_cfg, value):
     # for v in value :
     #     print "%d,"%ord(v)
     # set_section_font(section_cfg,"")
-    # windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x"]),int(section_cfg["y"]),value,len(value))
+    # windll.gdi32.TextOutW( device_context_handle,int(section_cfg["x"]),int(section_cfg["y"]),value,len(value) )
     # value="te"+u"\u2424"+value
     value_w = ""
     value_w1 = ""
@@ -473,39 +472,75 @@ def print_text_value(section_cfg, value):
 
     try:
         set_section_font_indirect(section_cfg,"")
-        windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x"]),int(section_cfg["y"]),value,len(value))
+        windll.gdi32.TextOutW( device_context_handle,
+            int(section_cfg["x"]),
+            int(section_cfg["y"]),
+            value, len(value) )
         try:
             set_section_font_indirect(section_cfg,"")
-            windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x"]),int(section_cfg["y"])+int(section_cfg["font_height"]),value_w,len(value_w))
+            windll.gdi32.TextOutW( device_context_handle,
+                int(section_cfg["x"]),
+                int(section_cfg["y"]) + int(section_cfg["font_height"]),
+                value_w, len(value_w) )
             set_section_font_indirect(section_cfg,"")
-            windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x"]),int(section_cfg["y"])+2*int(section_cfg["font_height"]),value_ww,len(value_ww))
+            windll.gdi32.TextOutW( device_context_handle,
+                int(section_cfg["x"]),
+                int(section_cfg["y"]) + 2 * int(section_cfg["font_height"]),
+                value_ww, len(value_ww) )
         except:
             pass
         set_section_font_indirect(section_cfg,"1")
-        windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x1"]),int(section_cfg["y1"]),value1,len(value1))
+        windll.gdi32.TextOutW( device_context_handle,
+            int(section_cfg["x1"]),
+            int(section_cfg["y1"]),
+            value1, len(value1) )
         try:
             set_section_font_indirect(section_cfg,"1")
-            windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x1"]),int(section_cfg["y1"])+int(section_cfg["font_height1"]),value_w1,len(value_w1))
+            windll.gdi32.TextOutW( device_context_handle,
+                int(section_cfg["x1"]),
+                int(section_cfg["y1"]) + int(section_cfg["font_height1"]),
+                value_w1, len(value_w1) )
             set_section_font_indirect(section_cfg,"1")
-            windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x1"]),int(section_cfg["y1"])+2*int(section_cfg["font_height1"]),value_ww1,len(value_ww1))
+            windll.gdi32.TextOutW( device_context_handle,
+                int(section_cfg["x1"]),
+                int(section_cfg["y1"]) + 2 * int(section_cfg["font_height1"]),
+                value_ww1, len(value_ww1) )
         except:
             pass
         set_section_font_indirect(section_cfg,"2")
-        windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x2"]),int(section_cfg["y2"]),value2,len(value2))
+        windll.gdi32.TextOutW( device_context_handle,
+            int(section_cfg["x2"]),
+            int(section_cfg["y2"]),
+            value2, len(value2) )
         try:
             set_section_font_indirect(section_cfg,"2")
-            windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x2"]),int(section_cfg["y2"])+int(section_cfg["font_height2"]),value_w2,len(value_w2))
+            windll.gdi32.TextOutW( device_context_handle,
+                int(section_cfg["x2"]),
+                int(section_cfg["y2"]) + int(section_cfg["font_height2"]),
+                value_w2, len(value_w2) )
             set_section_font_indirect(section_cfg,"2")
-            windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x2"]),int(section_cfg["y2"])+2*int(section_cfg["font_height2"]),value_ww2,len(value_ww2))
+            windll.gdi32.TextOutW( device_context_handle,
+                int(section_cfg["x2"]),
+                int(section_cfg["y2"]) + 2 * int(section_cfg["font_height2"]),
+                value_ww2, len(value_ww2) )
         except:
             pass
         set_section_font_indirect(section_cfg,"3")
-        windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x3"]),int(section_cfg["y3"]),value3,len(value3))
+        windll.gdi32.TextOutW( device_context_handle,
+            int(section_cfg["x3"]),
+            int(section_cfg["y3"]),
+            value3, len(value3) )
         try:
             set_section_font_indirect(section_cfg,"3")
-            windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x3"]),int(section_cfg["y3"])+int(section_cfg["font_height3"]),value_w3,len(value_w3))
+            windll.gdi32.TextOutW( device_context_handle,
+                int(section_cfg["x3"]),
+                int(section_cfg["y3"]) + int(section_cfg["font_height3"]),
+                value_w3, len(value_w3) )
             set_section_font_indirect(section_cfg,"3")
-            windll.gdi32.TextOutW(device_context_handle,int(section_cfg["x3"]),int(section_cfg["y3"])+2*int(section_cfg["font_height3"]),value_ww3,len(value_ww3))
+            windll.gdi32.TextOutW( device_context_handle,
+                int(section_cfg["x3"]),
+                int(section_cfg["y3"]) + 2 * int(section_cfg["font_height3"]),
+                value_ww3, len(value_ww3) )
         except:
             pass
     except(KeyError):
@@ -629,6 +664,7 @@ def print_image_xml_value(section_cfg, value):
 
             # use proxy class wrap to urllib to download image if proxy is set
             if(proxy == None):
+                logger.info("image_url:{0}, local_image_filename:{1}".format(image_url, local_image_filename))
                 ret = urllib.urlretrieve(image_url, local_image_filename)
             else:
                 urlprx = UrllibProxy(proxy)
@@ -830,7 +866,8 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
             printer_cfg = cfg
 
             # we check for old jobs in printer queue when starting first document
-            start_new_document(printer_cfg, is_first_document = (param_val == "BEGIN 1"))
+            start_new_document(printer_cfg, is_first_document = False)
+            # start_new_document(printer_cfg, is_first_document = (param_val == "BEGIN 1"))
             document_open = 1
 
         # End document
@@ -845,33 +882,33 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
         else:
             if (document_open == 1):
                 for postfix in ["", "_1", "_2", "_3"]: # this makes it possible to print out several types for one value
-                    param_name = param_key + postfix
-                    if layout_cfg.has_section(param_name):
-                        if   (layout_cfg.get(param_name, "type") == "text"):
-                            print_text_value(dict(layout_cfg.items(param_name)), param_val)
-                        elif (layout_cfg.get(param_name, "type") == "qmatrix"):
-                            print_qmatrix_value(dict(layout_cfg.items(param_name)), param_val)
-                        elif (layout_cfg.get(param_name, "type") == "image_url"):
-                            print_image_url_value(dict(layout_cfg.items(param_name)), param_val)
-                        elif (layout_cfg.get(param_name, "type") == "image_xml" and param_val != ""):
-                            print_image_xml_value(dict(layout_cfg.items(param_name)), param_val)
-                        elif (layout_cfg.get(param_name, "type") == "bar_2_of_5"):
-                            print_bar_2_of_5_value(dict(layout_cfg.items(param_name)), param_val)
-                            if layout_cfg.has_section("%s_text" % param_name):
-                                print_text_value(dict(layout_cfg.items("%s_text" % param_name)), param_val)
-                        elif (layout_cfg.get(param_name, "type") == "bar_3_of_9"):
-                            print_bar_3_of_9_value(dict(layout_cfg.items(param_name)), param_val)
-                            if layout_cfg.has_section("%s_text" % param_name):
-                                print_text_value(dict(layout_cfg.items("%s_text" % param_name)), param_val)
-                        elif (layout_cfg.get(param_name, "type") == "bar_code128"):
-                            print_code128_value(dict(layout_cfg.items(param_name)), param_val)
-                            if layout_cfg.has_section("%s_text" % param_name):
-                                print_text_value(dict(layout_cfg.items("%s_text" % param_name)), param_val)
+                    section_name = param_key + postfix
+                    if layout_cfg.has_section(section_name):
+                        if   (layout_cfg.get(section_name, "type") == "text"):
+                            print_text_value(dict(layout_cfg.items(section_name)), param_val)
+                        elif (layout_cfg.get(section_name, "type") == "qmatrix"):
+                            print_qmatrix_value(dict(layout_cfg.items(section_name)), param_val)
+                        elif (layout_cfg.get(section_name, "type") == "image_url"):
+                            print_image_url_value(dict(layout_cfg.items(section_name)), param_val)
+                        elif (layout_cfg.get(section_name, "type") == "image_xml" and param_val != ""):
+                            print_image_xml_value(dict(layout_cfg.items(section_name)), param_val)
+                        elif (layout_cfg.get(section_name, "type") == "bar_2_of_5"):
+                            print_bar_2_of_5_value(dict(layout_cfg.items(section_name)), param_val)
+                            if layout_cfg.has_section("%s_text" % section_name):
+                                print_text_value(dict(layout_cfg.items("%s_text" % section_name)), param_val)
+                        elif (layout_cfg.get(section_name, "type") == "bar_3_of_9"):
+                            print_bar_3_of_9_value(dict(layout_cfg.items(section_name)), param_val)
+                            if layout_cfg.has_section("%s_text" % section_name):
+                                print_text_value(dict(layout_cfg.items("%s_text" % section_name)), param_val)
+                        elif (layout_cfg.get(section_name, "type") == "bar_code128"):
+                            print_code128_value(dict(layout_cfg.items(section_name)), param_val)
+                            if layout_cfg.has_section("%s_text" % section_name):
+                                print_text_value(dict(layout_cfg.items("%s_text" % section_name)), param_val)
                         else:
-                            logger.warning("unknown type for section:%s" % param_name)
+                            logger.warning("unknown type for section:%s" % section_name)
                             set_exit_status(UNKNOWN_TYPE_FOR_SECTION)
-                    else:
-                        logger.info("No section for parameter {0}".format(param))
+                    # else:
+                    #     logger.info("No section {0} for parameter {1}".format(section_name, param))
     infile.close()
 
 #################################################################
