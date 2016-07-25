@@ -38,7 +38,7 @@ from uuid import getnode
 import getopt
 
 import sys
-sys.coinit_flags = 0 # fixes Win32 exception occurred releasing IUnknown at... ??
+sys.coinit_flags = 0 # fixes Win32 exception occurred releasing IUnknown at ??
 import codecs
 
 import logging
@@ -237,15 +237,15 @@ def start_new_document(cfg, is_first_document = False):
             sys.exit(EXIT_STATUS)
 
     try:
-        logger.info("win32print.OpenPrinter(%s) ..."%printer)
+        logger.info("win32print.OpenPrinter(%s)" % printer)
         hprinter = win32print.OpenPrinter(printer)
     except:
         logger.error("exception while opening printer");
         set_exit_status(COULD_NOT_OPEN_PRINTER)
         sys.exit(EXIT_STATUS)
-    logger.info("win32print.GetPrinter ...")
+    logger.info("win32print.GetPrinter")
     devmode = win32print.GetPrinter(hprinter, 2)["pDevMode"]
-    logger.info("win32print.EnumJobs ...")
+    logger.info("win32print.EnumJobs")
     printjobs = win32print.EnumJobs(hprinter, 0, 999)
     logger.info("Jobs: {0}".format(printjobs))
 
@@ -262,14 +262,13 @@ def start_new_document(cfg, is_first_document = False):
                 sys.exit(EXIT_STATUS)
 
     try:
-        logger.info("Setting orientation ...")
         devmode.Orientation = int(cfg.get("DEFAULT", "printer_orientation"))
     except:
-        pass
+        logger.info("Setting orientation failed: {0}".format(sys.exc_info()[0]))
     try:
-        logger.info("win32gui.CreateDC ...")
+        logger.info("win32gui.CreateDC")
         device_context_handle = win32gui.CreateDC("WINSPOOL", printer, devmode)
-        logger.info("win32ui.CreateDCFromHandle ...")
+        logger.info("win32ui.CreateDCFromHandle")
         device_context = win32ui.CreateDCFromHandle(device_context_handle)
     except:
         logger.error("exception while creating device_context")
@@ -286,15 +285,15 @@ def start_new_document(cfg, is_first_document = False):
 
     # device_context.SetMapMode(win32con.MM_TWIPS)
 
-    logger.info("device_context.SetMapMode ...")
+    logger.info("device_context.SetMapMode")
     device_context.SetMapMode(int(cfg.get("DEFAULT", "map_mode")))
-    logger.info("device_context.StartDoc ...")
+    logger.info("device_context.StartDoc")
     device_context.StartDoc(cfg.get("DEFAULT", "print_document_name"))
-    logger.info("device_context.StartPage ...")
+    logger.info("device_context.StartPage")
     device_context.StartPage()
-    logger.info("win32ui.CreateFont ...");
+    logger.info("win32ui.CreateFont");
     font = win32ui.CreateFont({"name": "Arial", "height": 16})
-    logger.info("device_context.SelectObject ...")
+    logger.info("device_context.SelectObject")
     device_context.SelectObject(font)
     logger.info("device_context.SelectObject DONE")
 
@@ -973,7 +972,7 @@ def get_layout_cfg(file_url):
 
         # check to see if we have the file available localy
         if not os.path.isfile(local_file_filename):
-            logger.info("no file found in local folder. will try to download ...")
+            logger.info("no file found in local folder. will try to download")
             try:
                 file_url = file_url.encode("utf-8")
                 local_file_filename = local_file_filename.encode("utf-8")
@@ -996,7 +995,7 @@ def get_layout_cfg(file_url):
             strip_file_null_chars(local_file_filename)
             return read_ini_config(local_file_filename) # reading local copy
     else:
-        logger.error("len(file_url_parts)!=5. Exiting ...")
+        logger.error("len(file_url_parts)!=5. Exiting")
     return None
 
 #################################################################
@@ -1144,7 +1143,7 @@ def get_ready_for_update_msg_text(cfg, v1, v2):
 #################################################################
 def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = False, prev_version=False):
     # Set my_id to identify ourselves when requesting update
-    logger.info("getting my id ...")
+    logger.info("getting my id")
     try:
         my_id = cfg.get("DEFAULT", "my_id").strip("\"")
         logger.info("my_id:%s" % my_id)
@@ -1204,7 +1203,7 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
                 logger.info("MessageBoxA ret: %s" % ret)
                 if ret == 1:
                     # OK response
-                    logger.info("doing auto_update ...")
+                    logger.info("doing auto_update")
                     if cfg.get("DEFAULT", "driver_version") == "auto":
                         #app.auto_update(auto_update_callback)
                         #version = app.find_update() # this needs to be called before "app._do_auto_update"
@@ -1233,7 +1232,7 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
                                 logger.info("done uninstall_version")
                             except:
                                 logger.info(traceback.format_exc())
-                                logger.info("exception while doing uninstall_version. Will try to fool the bootstrap ...")
+                                logger.info("exception while doing uninstall_version. Will try to fool the bootstrap")
                                 directory = "%s/esky-files/bootstrap" % get_main_dir()
                                 logger.info("creating directory: %s" % directory)
                                 if not os.path.exists(directory):
@@ -1440,43 +1439,39 @@ logger.info("plp filename:[%s]"%plp_filename)
 
 cfg_plp = read_plp_in_cfg(plp_filename)
 # plp overrides persistent.ini and setup.ini values if there are any
-logger.debug("Print cfqg DEFAULT after read_plp_in_cfg")
-logger.debug(cfg_plp.defaults())
+logger.debug("Print cfqg DEFAULT after read_plp_in_cfg: {0}".format(cfg_plp.defaults()))
 
 cfg = override_cfg_values(cfg, cfg_plp)
 
 proxy = setup_proxy(cfg)
 
-logger.debug({"argv":sys.argv, "len":len(sys.argv)})
-
-
-if do_auto_update(cfg, version.VERSION, downgrade_version=downgrade_version, prev_version=prev_version):
+if (do_auto_update(cfg, version.VERSION, downgrade_version=downgrade_version, prev_version=prev_version)):
     skip_file_delete = True
 
-logger.debug("Print cfg before read_plp_file")
-logger.debug(cfg.defaults())
+logger.debug("Print cfg before read_plp_file: {0}".format(cfg.defaults()))
 
-if(cfg_plp.has_option("DEFAULT", "info") and cfg_plp.get("DEFAULT", "info")=="fiscal"):
-   shtrih_fp_f = ecr.ECR_Object()
-   shtrih_fp_f.Connect(cfg)
-   shtrih_fp_f.ParsePLP(cfg)
-   shtrih_fp_f.Close()
-   del shtrih_fp_f
-   pass
+if (cfg_plp.has_option("DEFAULT", "info") and cfg_plp.get("DEFAULT", "info") == "fiscal"):
+    logger.info("Printing fiscal information.")
+    lang = get_lang(cfg)
+    if (lang == "ru"):
+        shtrih_fp_f = ecr.ECR_Object()
+        shtrih_fp_f.Connect(cfg)
+        shtrih_fp_f.ParsePLP(cfg)
+        shtrih_fp_f.Close()
+        del shtrih_fp_f
+    else:
+        appexe = "fiscal_%(language)s.exe" % lang
+        os.execv(appexe,[appexe] + plp_filename)
 else:
    read_plp_file(cfg, plp_filename, skip_file_delete)
 
-if(skip_file_delete==False):
+if (skip_file_delete == False):
     try:
         logger.info("doing file delete for file:[%s]"%plp_filename)
         os.remove(plp_filename)
-        #shutil.rmtree(plp_filename, ignore_errors=False, onerror=handleRemoveReadonly)
-        pass
     except:
-        logger.debug("WARNING: Exception when doing file delete. Will retry with chmod 777")
-        logger.debug(traceback.format_exc())
+        logger.debug("WARNING: can't remove. Will retry with chmod 777: {0}".format(traceback.format_exc()))
         os.chmod(plp_filename, stat.S_IRWXU| stat.S_IRWXG| stat.S_IRWXO) # 0777
         os.remove(plp_filename)
-        pass
-logger.info("exit status:%d"%EXIT_STATUS)
+logger.info("exit status:%d" % EXIT_STATUS)
 sys.exit(EXIT_STATUS)
