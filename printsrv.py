@@ -772,8 +772,8 @@ def print_static_text_value(cfg):
 
 def read_param(line):
     message = "Cannot parse parameter from line [%s]" % line
-    if line.startswith(codecs.BOM_UTF8)
-        line = line[3:] 
+    if line.startswith(codecs.BOM_UTF8):
+        line = line[3:]
     line = line.strip()
     if (len(line) == 0):
         logger.warning(message)
