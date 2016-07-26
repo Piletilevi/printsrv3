@@ -1,0 +1,36 @@
+---
+  info: "fiscal"
+  operation: "sale"
+  sales point: "* Bilietai BO"
+  payments:
+    -
+      amount: 10
+      components:
+        -
+          type: "ticket"
+          name: "Bilietai"
+          cost: 1.6
+          kkm: true
+        -
+          type: "service fee"
+          name: "Test mokestis BT"
+          cost: 7.2
+          kkm: true
+        -
+          type: "service fee"
+          name: "Pardavimo punkto mokestis"
+          cost: 1.2
+          kkm: true
+    -
+      amount: 3.6
+      components:
+        -
+          type: "ticket"
+          name: "Bilietai"
+          cost: 0
+          kkm: true
+        -
+          type: "service fee"
+          name: "Pardavimo punkto mokestis"
+          cost: 3.6
+          kkm: true
