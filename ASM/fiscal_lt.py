@@ -24,7 +24,10 @@ bills.FStart(0)
 bills.Print("")
 bills.Print("{0} - {1}".format(plp_json_data["salesPoint"], plp_json_data["operation"]))
 bills.Print("")
+
+payment_methods = {1:0, 2:0, 3:0, 4:0}
 for payment in plp_json_data["payments"]:
+    payment_methods[payment["type"]] += payment["cost"]
     for component in payment["components"]:
         if (not component["kkm"]):
             continue
@@ -35,7 +38,8 @@ for payment in plp_json_data["payments"]:
             " x %s" % component["amount"] if component["amount"] else ""
         ))
         component["amount"] = 1
-        bills.FOperation(component["name"], component["amount"], component["cost"], 0)
+        vat_sign = 0 if component["type"] == "service fee" else 3
+        bills.FOperation(component["name"], component["amount"], component["cost"], vat_sign)
 
 # bills.Print( "Nr. Prekė          ")
 # bills.FOperation("1. Bilietas      ",1,20.0,0)
@@ -43,5 +47,8 @@ for payment in plp_json_data["payments"]:
 # bills.FOperation("Mokestis",1,3.0,0)
 # bills.FOperation("Kasos extra",1,1.0,0)
 # bills.Print("----------------------------------------------------")
-bills.FFinish3("KREDITAS1",0,1,"KREDITAS2",0,2,"GRYNIEJI",200,0)
+bills.FFinish3(
+    "Gift card", payment_methods[1], 1,
+    "Cache", payment_methods[3], 0,
+    "GRYNIEJI", payment_methods[3], 0)
 bills.Close()
