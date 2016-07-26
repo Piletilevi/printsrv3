@@ -999,25 +999,11 @@ def get_layout_cfg(file_url):
     return None
 
 #################################################################
-def read_plp_in_array(fname):
-    ret = {}
-    with open(fname) as f:
-        content = f.readlines()
-    for line in content:
-        params = line.split("=")
-        if len(params)==2:
-            key = params[0].strip("\n\r ")
-            val = params[1].strip("\n\r ")
-            ret[key] = val
-    return ret
-
-#################################################################
 def read_plp_in_cfg(fname):
     ret = {}
     section="DEFAULT"
     cfg = ConfigParser.ConfigParser()
     with open(fname) as f:
-
         content = f.readlines()
     for line in content:
         if line.startswith(codecs.BOM_UTF8):
