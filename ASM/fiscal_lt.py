@@ -27,7 +27,7 @@ bills.Print("")
 
 payment_methods = {1:0, 2:0, 3:0, 4:0}
 for payment in plp_json_data["payments"]:
-    payment_methods[payment["type"]] += payment["cost"]
+    payment_methods[payment["type"]] = payment_methods[payment["type"]] + payment["cost"]
     for component in payment["components"]:
         if (not component["kkm"]):
             continue
