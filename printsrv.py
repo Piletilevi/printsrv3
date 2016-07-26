@@ -836,7 +836,6 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
 
     document_open = 0
     infile = open(plp_filename, "rb")
-    param_dict = {}
     while infile:
         param = read_param(infile.readline())
         if not param:
@@ -844,7 +843,6 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
         param_key, param_val = param
         # logger.info("key:val = {0}:{1}".format(param_key, param_val))
 
-        # Start new document
         if (param_key == "BEGIN"):
             # attempt to check if there is a layouts definition
             file_read_pos = infile.tell()
@@ -867,16 +865,10 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
             start_new_document(printer_cfg, is_first_document = False)
             # start_new_document(printer_cfg, is_first_document = (param_val == "BEGIN 1"))
             document_open = 1
-
-        # End document
         elif (param_key == "END"):
             print_static_text_value(layout_cfg)
             print_document()
             document_open = 0
-
-        #################################################################
-        # parse every parameter if file is open
-        #################################################################
         else:
             if (document_open == 1):
                 for postfix in ["", "_1", "_2", "_3"]: # this makes it possible to print out several types for one value
@@ -1000,7 +992,7 @@ def get_layout_cfg(file_url):
 #################################################################
 def read_plp_in_cfg(fname):
     ret = {}
-    section="DEFAULT"
+    section = "DEFAULT"
     cfg = ConfigParser.ConfigParser()
     with open(fname) as f:
         content = f.readlines()
@@ -1011,10 +1003,10 @@ def read_plp_in_cfg(fname):
         if len(params)==2:
             key = params[0].strip("\n\r ")
             val = params[1].strip("\n\r ")
-            if((not cfg.has_section(section)) and (section!="DEFAULT")):
+            if((not cfg.has_section(section)) and (section != "DEFAULT")):
                 cfg.add_section(section)
             cfg.set(section,key,val)
-        elif(line[:5]=="BEGIN"):
+        elif(line[:5] == "BEGIN"):
             section = line.strip("\n\r ")
         else:
             # probably "END 1", "END 2" etc. here
@@ -1047,13 +1039,13 @@ def auto_update_callback(data):
 #################################################################
 def override_cfg_values(cfg_1, cfg_2):
     if(cfg_1 is None) and (cfg_2 is None):
-        logger.error("cfg_1=None and cfg_2=None ")
+        logger.error("cfg_1 = None and cfg_2 = None ")
         return None
     if(cfg_1 is None):
-        logger.warning("cfg_1=None")
+        logger.warning("cfg_1 = None")
         return cfg_2
     if(cfg_2 is None):
-        logger.warning("cfg_2=None")
+        logger.warning("cfg_2 = None")
         return cfg_1
 
     # cfg_2 overrides cfg_1
