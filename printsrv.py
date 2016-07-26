@@ -839,7 +839,7 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
     while infile:
         param = read_param(infile.readline())
         if not param:
-            break
+            continue
         param_key, param_val = param
         # logger.info("key:val = {0}:{1}".format(param_key, param_val))
 
@@ -990,27 +990,27 @@ def get_layout_cfg(file_url):
     return None
 
 #################################################################
-def read_plp_in_cfg(fname):
+def read_plp_in_cfg(plp_filename):
     ret = {}
     section = "DEFAULT"
     cfg = ConfigParser.ConfigParser()
-    with open(fname) as f:
-        content = f.readlines()
-    for line in content:
-        if line.startswith(codecs.BOM_UTF8):
-            line = line[3:]
-        params = line.split("=")
-        if len(params)==2:
-            key = params[0].strip("\n\r ")
-            val = params[1].strip("\n\r ")
-            if((not cfg.has_section(section)) and (section != "DEFAULT")):
+
+    infile = open(plp_filename, "rb")
+    while infile:
+        param = read_param(infile.readline())
+        if not param:
+            continue
+        param_key, param_val = param
+        if (param_key == "BEGIN"):
+            section = param_val
+            if (not cfg.has_section(section)):
                 cfg.add_section(section)
-            cfg.set(section,key,val)
-        elif(line[:5] == "BEGIN"):
-            section = line.strip("\n\r ")
+        elif (param_key == "END"):
+            continue
         else:
-            # probably "END 1", "END 2" etc. here
-            pass
+            cfg.set(section, key, val)
+    infile.close()
+    
     return cfg
 
 #################################################################
@@ -1078,17 +1078,17 @@ def override_cfg_values(cfg_1, cfg_2):
             if (cfg_1.has_option(section, option)):
                 old_value = cfg_1.get(section, option)
                 new_value = cfg_2.get(section, option)
-                if (old_value!=new_value):
+                if (old_value != new_value):
                     if (option not in disable_override_list):
                         # logger.info("overriding [%s](%s) from '%s' to '%s'" % (section,option,old_value,new_value))
-                        if (option=="disable_override"):
+                        if (option == "disable_override"):
                             # inherit disable_override params so that plp values does not override persistent.ini values
                             # if in setup.ini has own disable_override values
-                            cfg_1.set(section, option, "%s,%s"%(cfg_1.get(section, option),cfg_2.get(section, option)))
+                            cfg_1.set(section, option, "%s,%s" % (cfg_1.get(section, option), cfg_2.get(section, option)))
                         else:
                             cfg_1.set(section, option, cfg_2.get(section, option))
                     else:
-                        logger.info("disable_override for [%s](%s)"%(section,option))
+                        logger.info("disable_override for [%s](%s)" % (section, option))
                 else:
                     # values are the same in both config
                     pass
