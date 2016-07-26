@@ -200,10 +200,10 @@ def is_printer_online(printer_name):
     for wmi_printer in wmi.WMI().Win32_Printer ():
         if(printer_name == wmi_printer.caption):
             if(wmi_printer.WorkOffline):
-                logger.info("Printer is offline")
+                logger.warning("Printer is offline")
                 return False
             else:
-                logger.info("Printer is online")
+                # logger.info("Printer is online")
                 return True
 
 #################################################################
@@ -811,7 +811,6 @@ def read_param(line):
         line = line[3:]
     line = line.strip()
     if (len(line) == 0):
-        logger.warning(message)
         return False
 
     if (line[:6] == "BEGIN "):
@@ -826,7 +825,7 @@ def read_param(line):
     if (len(param[0]) == 0):
         logger.warning(message)
         return False
-    logger.info("Param: {0}".format(param))
+    # logger.info("Param: {0}".format(param))
     return param
 
 #################################################################
@@ -843,7 +842,7 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
         if not param:
             break
         param_key, param_val = param
-        logger.info("key:val = {0}:{1}".format(param_key, param_val))
+        # logger.info("key:val = {0}:{1}".format(param_key, param_val))
 
         # Start new document
         if (param_key == "BEGIN"):
@@ -914,7 +913,7 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
 # Log available printer name on the system
 #################################################################
 def print_available_printers():
-    # return
+    return
     logger.info("local printers: {0}".format(win32print.EnumPrinters(win32print.PRINTER_ENUM_LOCAL)))
     logger.info("network printers:{0}".format(win32print.EnumPrinters(win32print.PRINTER_ENUM_CONNECTIONS)))
     logger.info("default printer:{0}".format(win32print.GetDefaultPrinter()))
@@ -924,7 +923,7 @@ def print_available_printers():
 #################################################################
 def read_ini_config(ini_file_full_path):
     cfg = ConfigParser.ConfigParser()
-    logger.info("Read configuration from: [%s]" % ini_file_full_path)
+    logger.info("Read configuration from:\n- %s" % ini_file_full_path)
     ret = cfg.read(ini_file_full_path)
     if(len(ret)==0):
         return None
@@ -1051,10 +1050,10 @@ def override_cfg_values(cfg_1, cfg_2):
         logger.error("cfg_1=None and cfg_2=None ")
         return None
     if(cfg_1 is None):
-        logger.error("cfg_1=None")
+        logger.warning("cfg_1=None")
         return cfg_2
     if(cfg_2 is None):
-        logger.error("cfg_2=None")
+        logger.warning("cfg_2=None")
         return cfg_1
 
     # cfg_2 overrides cfg_1
@@ -1072,7 +1071,7 @@ def override_cfg_values(cfg_1, cfg_2):
             disable_override_list = cfg_1.get(section, "disable_override").strip("\"").split(",")
         else:
             disable_override_list = []
-        logger.info("disable_override_list: %s" % disable_override_list)
+        # logger.info("disable_override_list: %s" % disable_override_list)
 
 
         if((not cfg_1.has_section(section))and section!="DEFAULT"):
@@ -1092,7 +1091,7 @@ def override_cfg_values(cfg_1, cfg_2):
                 if(old_value!=new_value):
 
                     if(option not in disable_override_list):
-                        logger.info("overriding [%s](%s) from '%s' to '%s'" % (section,option,old_value,new_value))
+                        # logger.info("overriding [%s](%s) from '%s' to '%s'" % (section,option,old_value,new_value))
                         if(option=="disable_override"):
                             # inherit disable_override params so that plp values does not override persistent.ini values
                             # if in setup.ini has own disable_override values
@@ -1333,7 +1332,7 @@ sys.stderr = sl
 # create logger
 logger = logging.getLogger("printsrv")
 
-logger.info("starting version %s"%version.VERSION)
+logger.info("\n--------\nStarting version\n%s\n\n" % version.VERSION)
 print_available_printers()
 
 
@@ -1412,8 +1411,8 @@ if not os.path.isfile(persistent_ini_path):
 cfg_persistent = read_ini_config(persistent_ini_path)
 
 if(ini_filename==False):
-    ini_filename = os.path.join(get_main_dir(), "\\setup_%s.ini" % get_lang(cfg_persistent))
-    logger.info("setting ini filename to:%s"%ini_filename)
+    ini_filename = os.path.join(get_main_dir(), "setup_%s.ini" % get_lang(cfg_persistent))
+    logger.info("setting ini filename to:\n- %s" % ini_filename)
 
 # default layout
 cfg_setup = read_ini_config(ini_filename)
@@ -1421,7 +1420,7 @@ cfg_setup = read_ini_config(ini_filename)
 # setup.ini overrides persistent.ini values if there are any
 cfg = override_cfg_values(cfg_persistent, cfg_setup)
 
-logger.info("plp filename:[%s]"%plp_filename)
+logger.info("plp filename:\n- %s" % plp_filename)
 
 cfg_plp = read_plp_in_cfg(plp_filename)
 # plp overrides persistent.ini and setup.ini values if there are any
