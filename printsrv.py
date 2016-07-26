@@ -1008,7 +1008,7 @@ def read_plp_in_cfg(plp_filename):
         elif (param_key == "END"):
             continue
         else:
-            cfg.set(section, key, val)
+            cfg.set(section, param_key, param_val)
     infile.close()
     
     return cfg
