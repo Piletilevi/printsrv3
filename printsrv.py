@@ -209,12 +209,12 @@ def is_printer_online(printer_name):
 
 #################################################################
 def get_check_printer_msg_text(cfg):
-    lang = get_lang(cfg)
-    if(lang == "lv"):
+    # lang = get_lang(cfg)
+    if(language == "lv"):
         return (u"Pārbaudiet printeri un tad spiediet OK!", u"Pārbaudiet printeri!")
-    elif(lang == "ee"):
+    elif(language == "ee"):
         return (u"Check printer and click OK when ready!", u"Check printer!")
-    elif(lang == "by"):
+    elif(language == "by"):
         return (u"Проверьте принтер и нажмите кнопку OK, когда будете готовы!", u"Проверьте принтер!")
     else:
         return (u"Check printer and click OK when ready!", u"Check printer!")
@@ -1101,12 +1101,12 @@ def override_cfg_values(cfg_1, cfg_2):
 
 #################################################################
 def get_ready_for_update_msg_text(cfg, v1, v2):
-    lang = get_lang(cfg)
-    if(lang == "lv"):
+    # lang = get_lang(cfg)
+    if(language == "lv"):
         return (u"Gatavi veikt printera programmas atjaunināšanu no %s uz %s?"%(v1,v2), u"Atjauninājums!")
-    elif(lang == "ee"):
+    elif(language == "ee"):
         return (u"Ready for ticket printer update from %s to %s?"%(v1,v2), u"Update!")
-    elif(lang == "by"):
+    elif(language == "by"):
         return (u"Готовы для обновления принтера билет от %s к %s?"%(v1,v2), u"Oбновления!")
     else:
         return (u"Ready for ticket printer update from %s to %s?"%(v1,v2), u"Update!")
@@ -1384,18 +1384,9 @@ else:
     logger.error("File not specified as first argument\n")
     set_exit_status(PLP_FILE_NOT_SPECIFIED)
     sys.exit(EXIT_STATUS)
+logger.info("plp filename:\n- %s" % plp_filename)
 
-try:
-    with open(plp_filename, "rU") as plp_data_file:
-        plp_json_data = json.load(plp_data_file)
-except Exception as e:
-    plp_file_type = "ticket"
-else:
-    plp_file_type = plp_json_data["info"]
-
-logger.info("plp_file_type:%s\n" % plp_file_type)
 # things like proxy, my_id are stored in persistent.ini
-
 persistent_ini_filename = "persistent.ini"
 persistent_ini_path = os.path.join(get_main_dir(), persistent_ini_filename)
 if not os.path.isfile(persistent_ini_path):
@@ -1407,7 +1398,7 @@ if not os.path.isfile(persistent_ini_path):
     sys.exit(EXIT_STATUS)
 cfg_persistent = read_ini_config(persistent_ini_path)
 
-if(ini_filename==False):
+if(ini_filename == False):
     ini_filename = os.path.join(get_main_dir(), "setup_%s.ini" % get_lang(cfg_persistent))
     logger.info("setting ini filename to:\n- %s" % ini_filename)
 
@@ -1416,8 +1407,27 @@ cfg_setup = read_ini_config(ini_filename)
 
 # setup.ini overrides persistent.ini values if there are any
 cfg = override_cfg_values(cfg_persistent, cfg_setup)
+language = get_lang(cfg)
 
-logger.info("plp filename:\n- %s" % plp_filename)
+# Detect plp file type.
+# If valid JSON, read file type from "info" field, otherwise assume it's for a ticket
+try:
+    with open(plp_filename, "rU") as plp_data_file:
+        plp_json_data = json.load(plp_data_file)
+except Exception as e:
+    plp_file_type = "ticket"
+else:
+    plp_file_type = plp_json_data["info"]
+logger.info("plp_file_type:%s\n" % plp_file_type)
+
+if (plp_file_type == "fiscal"):
+    # appexe = "fiscal_%(language)s.exe" % {"language":language}
+    appexe = "ipy"
+    appparam = "ASM\\fiscal_%(language)s.py" % {"language":language}
+    os.environ["plp_filename"] = plp_filename
+    logger.info("Invoke {0} {1}".format(appexe, appparam))
+    os.execlp(appexe, appexe, appparam)
+    sys.exit(EXIT_STATUS)
 
 cfg_plp = read_plp_in_cfg(plp_filename)
 # plp overrides persistent.ini and setup.ini values if there are any
@@ -1434,16 +1444,14 @@ logger.debug("Print cfg before read_plp_file: {0}".format(cfg.defaults()))
 
 if (cfg_plp.has_option("DEFAULT", "info") and cfg_plp.get("DEFAULT", "info") == "fiscal"):
     logger.info("Printing fiscal information.")
-    lang = get_lang(cfg)
-    if (lang == "ru"):
+    if (language == "ru"):
         shtrih_fp_f = ecr.ECR_Object()
         shtrih_fp_f.Connect(cfg)
         shtrih_fp_f.ParsePLP(cfg)
         shtrih_fp_f.Close()
         del shtrih_fp_f
     else:
-        appexe = "fiscal_%(language)s.exe" % lang
-        os.execv(appexe,[appexe] + plp_filename)
+        logger.error('Fiscal .plp file should be in JSON')
 else:
    read_plp_file(cfg, plp_filename, skip_file_delete)
 
