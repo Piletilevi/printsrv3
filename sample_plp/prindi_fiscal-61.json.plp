@@ -8,22 +8,36 @@
       "cost": 10,
       "components": [
         {
-          "type": "ticket",
+          "type": "tickets",
+          "amount": 2,
           "name": "Bilietai",
           "cost": 1.6,
-          "kkm": true
+          "kkm": true,
+          "vatPerc": 0
+        },
+        {
+          "type": "tickets",
+          "amount": 3,
+          "name": "Bilietai",
+          "cost": 3,
+          "kkm": true,
+          "vatPerc": 21
         },
         {
           "type": "service fee",
+          "amount": 2,
           "name": "Test mokestis BT",
           "cost": 7.2,
-          "kkm": true
+          "kkm": true,
+          "vatPerc": 21
         },
         {
           "type": "service fee",
+          "amount": 2,
           "name": "Pardavimo punkto mokestis",
           "cost": 1.2,
-          "kkm": true
+          "kkm": true,
+          "vatPerc": 17
         }
       ]
     },
@@ -32,16 +46,12 @@
       "cost": 3.6,
       "components": [
         {
-          "type": "ticket",
-          "name": "Bilietai",
-          "cost": 0,
-          "kkm": true
-        },
-        {
           "type": "service fee",
+          "amount": 2,
           "name": "Pardavimo punkto mokestis",
           "cost": 3.6,
-          "kkm": true
+          "kkm": true,
+          "vatPerc": 17
         }
       ]
     }
