@@ -1050,41 +1050,38 @@ def override_cfg_values(cfg_1, cfg_2):
 
     # cfg_2 overrides cfg_1
     cfg_1_defaults = cfg_1.defaults()
-    logger.info("cfg_1 defaults %s" % cfg_1_defaults)
+    # logger.info("cfg_1 defaults %s" % cfg_1_defaults)
     cfg_2_defaults = cfg_2.defaults()
-    logger.info("cfg_2 defaults %s" % cfg_2_defaults)
+    # logger.info("cfg_2 defaults %s" % cfg_2_defaults)
 
     cfg_2_sections = cfg_2.sections()
     cfg_2_sections.extend(["DEFAULT"])
-    logger.info("cfg_2_sections: %s" % cfg_2_sections)
+    # logger.info("cfg_2_sections: %s" % cfg_2_sections)
     for section in cfg_2_sections:
         # each section can have disable_override value that lists parameters not to be overriden
-        if(cfg_1.has_option(section, "disable_override")):
+        if (cfg_1.has_option(section, "disable_override")):
             disable_override_list = cfg_1.get(section, "disable_override").strip("\"").split(",")
         else:
             disable_override_list = []
         # logger.info("disable_override_list: %s" % disable_override_list)
 
-
-        if((not cfg_1.has_section(section))and section!="DEFAULT"):
+        if ((not cfg_1.has_section(section)) and section != "DEFAULT"):
             cfg_1.add_section(section)
 
         # cfg_2.options(section) fails if section="DEFAULT"
-        if(section=="DEFAULT"):
+        if (section=="DEFAULT"):
             option_list = cfg_2.defaults()
         else:
             option_list = cfg_2.options(section)
         for option in option_list:
             #"[%s](%s)"%(section,option)
-            if(cfg_1.has_option(section, option)):
-
+            if (cfg_1.has_option(section, option)):
                 old_value = cfg_1.get(section, option)
                 new_value = cfg_2.get(section, option)
-                if(old_value!=new_value):
-
-                    if(option not in disable_override_list):
+                if (old_value!=new_value):
+                    if (option not in disable_override_list):
                         # logger.info("overriding [%s](%s) from '%s' to '%s'" % (section,option,old_value,new_value))
-                        if(option=="disable_override"):
+                        if (option=="disable_override"):
                             # inherit disable_override params so that plp values does not override persistent.ini values
                             # if in setup.ini has own disable_override values
                             cfg_1.set(section, option, "%s,%s"%(cfg_1.get(section, option),cfg_2.get(section, option)))
@@ -1099,8 +1096,6 @@ def override_cfg_values(cfg_1, cfg_2):
                 # adding new option
                 cfg_1.set(section, option, cfg_2.get(section, option))
                 pass
-
-
     return cfg_1
 
 #################################################################
