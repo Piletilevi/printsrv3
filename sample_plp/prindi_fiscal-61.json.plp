@@ -1,7 +1,7 @@
 {
   "info": "fiscal",
   "operation": "sale",
-  "sales point": "* Bilietai BO",
+  "salesPoint": "* Bilietai BO",
   "payments": [
     {
       "type": "3",
