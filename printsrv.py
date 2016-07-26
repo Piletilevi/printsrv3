@@ -10,6 +10,7 @@ import ConfigParser
 import codecs
 import imp
 import os
+import json
 import urllib
 import urllib2
 import urlparse
@@ -1010,7 +1011,7 @@ def read_plp_in_cfg(plp_filename):
         else:
             cfg.set(section, param_key, param_val)
     infile.close()
-    
+
     return cfg
 
 #################################################################
@@ -1377,13 +1378,22 @@ for o, a in opts:
         sys.exit(EXIT_STATUS)
     else:
         assert False, "unhandled option"
-if(len(args)==1):
+if (len(args) == 1):
     plp_filename = args[0].strip("\"")
 else:
     logger.error("File not specified as first argument\n")
     set_exit_status(PLP_FILE_NOT_SPECIFIED)
     sys.exit(EXIT_STATUS)
 
+try:
+    with open(plp_filename, "rU") as plp_data_file:
+        plp_json_data = json.load(plp_data_file)
+except Exception as e:
+    plp_file_type = "ticket"
+else:
+    plp_file_type = plp_json_data["info"]
+
+logger.info("plp_file_type:%s\n" % plp_file_type)
 # things like proxy, my_id are stored in persistent.ini
 
 persistent_ini_filename = "persistent.ini"
