@@ -1,0 +1,9 @@
+{
+"info": "fiscal",
+"operation": "sale",
+"salesPoint": "* Bilietai BO",
+"payments": [
+{
+"type": "3",
+"cost": 10.00,
+<BR>Unable to run Web object 'proc/json_fiscal.plp'<BR>
