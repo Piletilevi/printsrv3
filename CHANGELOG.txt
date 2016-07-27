@@ -1,6 +1,10 @@
 CHANGELOG (latest on top)
 
 
+0.1.90  - 27/07/2016, Mihkel Putrinš
+        - refactored printsrv
+        - added driver for POS printer Raso
+        - some documentation
 
 0.1.83 - multiple fee definitions for KKM ru printer
 
