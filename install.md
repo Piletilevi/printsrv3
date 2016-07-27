@@ -31,10 +31,14 @@ For fastest delivery of driver code we require python 2.7.12 and ironPython 2.7.
   > currently **1.0.0a4**
 
 
-### Driver
+### Drivers
 
-Download source from
-- https://github.com/Piletilevi/printsrv
+- Download ticket printer driver from  
+  https://github.com/Piletilevi/printsrv
+
+- Download Raso ASM driver from  
+  https://github.com/Piletilevi/RasoASM
+
 
 ### Special note
 
