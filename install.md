@@ -6,7 +6,7 @@ For fastest delivery of driver code we require python 2.7.12 and ironPython 2.7.
 - http://ironpython.net/download/
 
 ### Required modules:
- 
+
 - upgrade pip if needed  
   `python -m pip install --upgrade pip`
   > currently **8.1.2**
@@ -35,3 +35,13 @@ For fastest delivery of driver code we require python 2.7.12 and ironPython 2.7.
 
 Download source from
 - https://github.com/Piletilevi/printsrv
+
+### Special note
+
+Please make sure, that connected wires are connected in same order over all installations.
+Also make sure port mapping is identical everywhere.  
+
+Even better - create a document, where required wiring and port mapping is described and every time someone drives to point of sale to install the printers, give these instructions along.  
+
+Thank me later.  
+M-O-O-R
