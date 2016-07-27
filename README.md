@@ -4,6 +4,12 @@ Ticket printer driver
 
 
 ## Setup
+
+#### Install pip packages in one go from requirement file  
+  `pip install -r requirement.txt`
+
+#### Alternatively install packages one by one
+
 - install latest python from 2.x.x series https://www.python.org/downloads/  
   > currently **2.7.12**
 
@@ -39,7 +45,7 @@ Ticket printer driver
   > currently **5.3**
 
 
-Pip packages should now look like  
+#### Pip packages should now look like  
 `pip list`
 > esky (0.9.9)  
 fontname (0.2.0)  
@@ -53,7 +59,8 @@ setuptools (20.10.1)
 six (1.10.0)  
 WMI (1.4.9)  
 
----
+
+## Build and deploy
 
 - to build run compile.bat or compile\_console\_esky.bat
 - to package run make\_nsis\_esky.bat
