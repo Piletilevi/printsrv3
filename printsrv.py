@@ -1409,6 +1409,7 @@ cfg_setup = read_ini_config(ini_filename)
 cfg = override_cfg_values(cfg_persistent, cfg_setup)
 language = get_lang(cfg)
 os.environ['plp_language'] = language
+os.environ['plp_filename'] = plp_filename
 # Detect plp file type.
 # If valid JSON, read file type from "info" field, otherwise assume it's for a ticket
 try:
