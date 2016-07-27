@@ -1398,7 +1398,7 @@ if not os.path.isfile(persistent_ini_path):
     sys.exit(EXIT_STATUS)
 cfg_persistent = read_ini_config(persistent_ini_path)
 
-if(ini_filename == False):
+if (ini_filename == False):
     ini_filename = os.path.join(get_main_dir(), "setup_%s.ini" % get_lang(cfg_persistent))
     logger.info("setting ini filename to:\n- %s" % ini_filename)
 
@@ -1409,7 +1409,7 @@ cfg_setup = read_ini_config(ini_filename)
 cfg = override_cfg_values(cfg_persistent, cfg_setup)
 language = get_lang(cfg)
 os.environ['plp_language'] = language
-os.environ['plp_filename'] = plp_filename
+os.environ['plp_filename'] = os.path.abspath(plp_filename)
 os.environ['plp_devmode'] = "TRUE" if os.path.splitext(sys.argv[0])[1] == ".py" else "FALSE"
 
 # Detect plp file type.
