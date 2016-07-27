@@ -1404,11 +1404,11 @@ if(ini_filename == False):
 
 # default layout
 cfg_setup = read_ini_config(ini_filename)
-os.environ['plp_language'] = language
+
 # setup.ini overrides persistent.ini values if there are any
 cfg = override_cfg_values(cfg_persistent, cfg_setup)
 language = get_lang(cfg)
-
+os.environ['plp_language'] = language
 # Detect plp file type.
 # If valid JSON, read file type from "info" field, otherwise assume it's for a ticket
 try:
