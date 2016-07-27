@@ -2,8 +2,7 @@
 
 import json
 import os
-import System
-from System import *
+from System import Type, Activator
 
 plp_filename = os.environ["plp_filename"]
 
