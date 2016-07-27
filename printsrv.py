@@ -57,27 +57,27 @@ import traceback
 import errno, stat, shutil
 
 EXIT_OK = 0
-COULD_NOT_OPEN_PRINTER = 1
-COULD_NOT_CREATE_DC = 2
-NO_SUCH_FONT_AVAILABLE = 4
-UNABLE_TO_CREATE_FONT = 8
-CANT_DECODE_AS_UTF8 = 16
-NO_IMAGE_BY_THAT_NAME = 32
-UNSUPPORTED_IMAGE_FORMAT = 64
-COULD_NOT_DOWNLOAD_XML_IMAGE = 128
-COULD_NOT_DOWNLOAD_URL_IMAGE = 256
-EXCEPTION_IN_2_OF_5 = 512
-EXCEPTION_IN_3_OF_9 = 1024
-EXCEPTION_IN_CODE128 = 2048
-UNKNOWN_TYPE_FOR_SECTION = 4096
-NO_SUCH_SECTION = 8192
-COULD_NOT_DELETE_PLP = 16384
-PLP_FILE_NOT_SPECIFIED = 32768
-PRINTER_IS_OFFLINE = 65536
-DC_NOT_CREATED = 131072
-HDC_NOT_CREATED = 262144
-HELP_MESSAGE = 524288
-COULD_NOT_DOWNLOAD_URL_LAYOUT = 524288*2
+COULD_NOT_OPEN_PRINTER        = 2 ** 0
+COULD_NOT_CREATE_DC           = 2 ** 1
+NO_SUCH_FONT_AVAILABLE        = 2 ** 2
+UNABLE_TO_CREATE_FONT         = 2 ** 3
+CANT_DECODE_AS_UTF8           = 2 ** 4
+NO_IMAGE_BY_THAT_NAME         = 2 ** 5
+UNSUPPORTED_IMAGE_FORMAT      = 2 ** 6
+COULD_NOT_DOWNLOAD_XML_IMAGE  = 2 ** 7
+COULD_NOT_DOWNLOAD_URL_IMAGE  = 2 ** 8
+EXCEPTION_IN_2_OF_5           = 2 ** 9
+EXCEPTION_IN_3_OF_9           = 2 ** 10
+EXCEPTION_IN_CODE128          = 2 ** 11
+UNKNOWN_TYPE_FOR_SECTION      = 2 ** 12
+NO_SUCH_SECTION               = 2 ** 13
+COULD_NOT_DELETE_PLP          = 2 ** 14
+PLP_FILE_NOT_SPECIFIED        = 2 ** 15
+PRINTER_IS_OFFLINE            = 2 ** 16
+DC_NOT_CREATED                = 2 ** 17
+HDC_NOT_CREATED               = 2 ** 18
+HELP_MESSAGE                  = 2 ** 19
+COULD_NOT_DOWNLOAD_URL_LAYOUT = 2 ** 20
 
 EXIT_STATUS = EXIT_OK
 
@@ -1404,7 +1404,7 @@ if(ini_filename == False):
 
 # default layout
 cfg_setup = read_ini_config(ini_filename)
-
+os.environ['plp_language'] = language
 # setup.ini overrides persistent.ini values if there are any
 cfg = override_cfg_values(cfg_persistent, cfg_setup)
 language = get_lang(cfg)
@@ -1421,13 +1421,22 @@ else:
 logger.info("plp_file_type:%s\n" % plp_file_type)
 
 if (plp_file_type == "fiscal"):
-    # appexe = "fiscal_%(language)s.exe" % {"language":language}
-    appexe = "ipy"
-    appparam = "ASM\\fiscal_%(language)s.py" % {"language":language}
-    os.environ["plp_filename"] = plp_filename
-    logger.info("Invoke {0} {1}".format(appexe, appparam))
-    os.execlp(appexe, appexe, appparam)
-    sys.exit(EXIT_STATUS)
+    fiscal_exe_path = cfg.get("DEFAULT", "fiscal_exe_path").strip("\"")
+    fiscal_exe_name = cfg.get("DEFAULT", "fiscal_exe_name").strip("\"")
+    if (os.path.splitext(fiscal_exe_name)[1] == ".exe"):
+        appexe = os.path.join(fiscal_exe_path, fiscal_exe_name)
+        logger.info("Invoke {0}".format(appexe))
+        os.execlp(appexe, appexe)
+    elif (os.path.splitext(fiscal_exe_name)[1] == ".py"):
+        appexe = 'python'
+        appparam = os.path.join(fiscal_exe_path, fiscal_exe_name)
+        logger.info("Invoke {0} {1}".format(appexe, appparam))
+        os.execlp(appexe, appexe, appparam)
+    else:
+        logger.error("Incorrect configuration parameters fiscal_exe_path:{0}, fiscal_exe_name:{1}"
+            .format(fiscal_exe_path, fiscal_exe_name))
+        sys.exit(EXIT_STATUS)
+
 
 cfg_plp = read_plp_in_cfg(plp_filename)
 # plp overrides persistent.ini and setup.ini values if there are any
