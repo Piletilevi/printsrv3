@@ -39,6 +39,19 @@ For fastest delivery of driver code we require python 2.7.12 and ironPython 2.7.
 - Download Raso ASM driver from  
   https://github.com/Piletilevi/RasoASM
 
+I suggest You put these under same parent folder, i.e.
+```
+C:\...\...\drivers\printsrv
+C:\...\...\drivers\RasoASM
+```
+
+### Configuration
+
+- register .plp files to open with `python printsrv.py`  
+- check persistent.ini
+- check setup_<lang>.ini
+- ignore README.md (its currently mostly for developers)
+- forgive me for tons of unnecessary code and files - no time to safely clean up
 
 ### Special note
 
