@@ -5,6 +5,13 @@ For fastest delivery of driver code we require python 2.7.12 and ironPython 2.7.
 - https://www.python.org/downloads/release/python-2712/
 - http://ironpython.net/download/
 
+Also You heve to add them to windows PATH
+do something like
+```
+> PATH %PATH%;c:\Program Files (x86)\IronPython 2.7
+> PATH %PATH%;c:\Python27
+```
+
 ### Required modules:
 
 - upgrade pip if needed  
