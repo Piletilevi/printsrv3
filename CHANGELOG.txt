@@ -1,6 +1,9 @@
 CHANGELOG (latest on top)
 
 
+0.1.91  - 28/07/2016, Mihkel Putrinš
+        - Last version before rewrite
+
 0.1.90  - 27/07/2016, Mihkel Putrinš
         - refactored printsrv
         - added driver for POS printer Raso
