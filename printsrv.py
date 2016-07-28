@@ -238,26 +238,26 @@ def start_new_document(cfg, is_first_document = False):
             sys.exit(EXIT_STATUS)
 
     try:
-        logger.info("win32print.OpenPrinter(%s)" % printer)
+        # logger.info("win32print.OpenPrinter(%s)" % printer)
         hprinter = win32print.OpenPrinter(printer)
     except:
         logger.error("exception while opening printer");
         set_exit_status(COULD_NOT_OPEN_PRINTER)
         sys.exit(EXIT_STATUS)
-    logger.info("win32print.GetPrinter")
+    # logger.info("win32print.GetPrinter")
     devmode = win32print.GetPrinter(hprinter, 2)["pDevMode"]
-    logger.info("win32print.EnumJobs")
+    # logger.info("win32print.EnumJobs")
     printjobs = win32print.EnumJobs(hprinter, 0, 999)
-    logger.info("Jobs: {0}".format(printjobs))
+    # logger.info("Jobs: {0}".format(printjobs))
 
     # if this is first document then there should be no documents in printer queue
-    if(is_first_document):
+    if (is_first_document):
         retry_times_left = 3
         while (len(printjobs)!=0):
             msg, title = get_check_printer_msg_text(cfg)
             ret = windll.user32.MessageBoxW(0, msg, title, 0x40 | 0x0) #OK only
             retry_times_left -= 1
-            if(retry_times_left<=0):
+            if (retry_times_left<=0):
                 logger.error("Printer has old jobs in queue. Exiting")
                 # set_exit_status(PRINTER_IS_OFFLINE)
                 sys.exit(EXIT_STATUS)
@@ -836,42 +836,40 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
     global proxy
 
     document_open = 0
-    infile = open(plp_filename, "rb")
-    while infile:
-        param = read_param(infile.readline())
-        if not param:
-            continue
-        param_key, param_val = param
-        # logger.info("key:val = {0}:{1}".format(param_key, param_val))
 
-        if (param_key == "BEGIN"):
-            # attempt to check if there is a layouts definition
-            file_read_pos = infile.tell()
-            param = read_param(infile.readline())
-            if (not param or param[0] != "layout"):
-                infile.seek(file_read_pos) # undo up one line. it was not layout directive
-                layout_cfg = cfg # use original ini file for cfg.
+    after_begin = False
+    with open(plp_filename, "rb") as infile:
+        for line in infile:
+            param = read_param(line)
+            if not param:
+                continue
+            param_key, param_val = param
+            # logger.info("key:val = {0}:{1}".format(param_key, param_val))
+
+            if (param_key == "BEGIN"):
+                logger.info("start new document")
+                printer_cfg = cfg
+                # we check for old jobs in printer queue when starting first document
+                start_new_document(printer_cfg, is_first_document = False)
+                # start_new_document(printer_cfg, is_first_document = (param_val == "BEGIN 1"))
+                document_open = 1
+                after_begin = True
+            elif (param_key == "END"):
+                print_static_text_value(layout_cfg)
+                print_document()
+                document_open = 0
             else:
-                key, val = param
-                if (cfg.has_option("DEFAULT", "layout")
-                    and cfg.get("DEFAULT", "layout") == "none"):
-                        layout_cfg = cfg
-                else:
-                    layout_cfg = get_layout_cfg(val)
-
-            logger.info("start new document")
-            printer_cfg = cfg
-
-            # we check for old jobs in printer queue when starting first document
-            start_new_document(printer_cfg, is_first_document = False)
-            # start_new_document(printer_cfg, is_first_document = (param_val == "BEGIN 1"))
-            document_open = 1
-        elif (param_key == "END"):
-            print_static_text_value(layout_cfg)
-            print_document()
-            document_open = 0
-        else:
-            if (document_open == 1):
+                if (document_open == 0):
+                    continue
+                if (after_begin):
+                    after_begin = False
+                    if (param_key == "layout"):
+                        if (cfg.has_option("DEFAULT", "layout")
+                            and cfg.get("DEFAULT", "layout") == "none"):
+                                layout_cfg = cfg
+                        else:
+                            layout_cfg = get_layout_cfg(param_val)
+                    continue
                 for postfix in ["", "_1", "_2", "_3"]: # this makes it possible to print out several types for one value
                     section_name = param_key + postfix
                     if layout_cfg.has_section(section_name):
@@ -996,20 +994,22 @@ def read_plp_in_cfg(plp_filename):
     section = "DEFAULT"
     cfg = ConfigParser.ConfigParser()
 
-    infile = open(plp_filename, "rb")
-    while infile:
-        param = read_param(infile.readline())
-        if not param:
-            continue
-        param_key, param_val = param
-        if (param_key == "BEGIN"):
-            section = param_val
-            if (not cfg.has_section(section)):
-                cfg.add_section(section)
-        elif (param_key == "END"):
-            continue
-        else:
-            cfg.set(section, param_key, param_val)
+    print plp_filename
+    with open(plp_filename, "rb") as infile:
+        for line in infile:
+            param = read_param(line)
+            # print param
+            if not param:
+                continue
+            param_key, param_val = param
+            if (param_key == "BEGIN"):
+                section = param_val
+                if (not cfg.has_section(section)):
+                    cfg.add_section(section)
+            elif (param_key == "END"):
+                continue
+            else:
+                cfg.set(section, param_key, param_val)
     infile.close()
 
     return cfg
@@ -1089,7 +1089,8 @@ def override_cfg_values(cfg_1, cfg_2):
                         else:
                             cfg_1.set(section, option, cfg_2.get(section, option))
                     else:
-                        logger.info("disable_override for [%s](%s)" % (section, option))
+                        # logger.info("disable_override for [%s](%s)" % (section, option))
+                        pass
                 else:
                     # values are the same in both config
                     pass
@@ -1443,7 +1444,7 @@ if (plp_file_type == "fiscal"):
 
 cfg_plp = read_plp_in_cfg(plp_filename)
 # plp overrides persistent.ini and setup.ini values if there are any
-logger.debug("Print cfqg DEFAULT after read_plp_in_cfg: {0}".format(cfg_plp.defaults()))
+# logger.debug("Print cfg DEFAULT after read_plp_in_cfg: {0}".format(cfg_plp.defaults()))
 
 cfg = override_cfg_values(cfg, cfg_plp)
 
@@ -1452,7 +1453,7 @@ proxy = setup_proxy(cfg)
 if (do_auto_update(cfg, version.VERSION, downgrade_version=downgrade_version, prev_version=prev_version)):
     skip_file_delete = True
 
-logger.debug("Print cfg before read_plp_file: {0}".format(cfg.defaults()))
+# logger.debug("Print cfg before read_plp_file: {0}".format(cfg.defaults()))
 
 if (cfg_plp.has_option("DEFAULT", "info") and cfg_plp.get("DEFAULT", "info") == "fiscal"):
     logger.info("Printing fiscal information.")
