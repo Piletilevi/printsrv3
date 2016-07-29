@@ -1217,6 +1217,10 @@ for o, a in opts:
         assert False, "unhandled option"
 if (len(args) == 1):
     plp_filename = args[0].strip("\"")
+    print("set plp file from args")
+elif ('plp_filename' in os.environ):
+    print("set plp file from env")
+    plp_filename = os.environ['plp_filename']
 else:
     logger.error("File not specified as first argument\n")
     set_exit_status(PLP_FILE_NOT_SPECIFIED)
