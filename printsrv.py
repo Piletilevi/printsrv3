@@ -1230,12 +1230,9 @@ logger.info("plp filename:\n- %s" % plp_filename)
 # things like proxy, my_id are stored in persistent.ini
 persistent_ini_filename = "persistent.ini"
 persistent_ini_path = os.path.join(get_main_dir(), persistent_ini_filename)
+logger.info("Loading persistent.ini from:\n{0}".format(persistent_ini_path))
 if not os.path.isfile(persistent_ini_path):
-    persistent_ini_path = os.path.join(get_main_dir(), "..", persistent_ini_filename)
-if not os.path.isfile(persistent_ini_path):
-    persistent_ini_path = os.path.join(get_main_dir(), "..", "..", persistent_ini_filename)
-if not os.path.isfile(persistent_ini_path):
-    logger.error("ERROR: persistent.ini could not be found")
+    logger.error("ERROR: persistent.ini could not be found at:\n{0}".format(persistent_ini_path))
     sys.exit(EXIT_STATUS)
 cfg_persistent = read_ini_config(persistent_ini_path)
 
