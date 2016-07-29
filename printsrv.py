@@ -1264,21 +1264,9 @@ else:
 logger.info("plp_file_type:%s\n" % plp_file_type)
 
 if (plp_file_type == "fiscal"):
-    fiscal_exe_path = "..\RasoASM"
-    fiscal_exe_name = "fiscal.py"
-    if (os.path.splitext(fiscal_exe_name)[1] == ".exe"):
-        appexe = os.path.join(fiscal_exe_path, fiscal_exe_name)
-        logger.info("Invoke {0}".format(appexe))
-        os.execlp(appexe, appexe)
-    elif (os.path.splitext(fiscal_exe_name)[1] == ".py"):
-        appexe = 'python'
-        appparam = os.path.join(fiscal_exe_path, fiscal_exe_name)
-        logger.info("Invoke {0} {1}".format(appexe, appparam))
-        os.execlp(appexe, appexe, appparam)
-    else:
-        logger.error("Incorrect configuration parameters fiscal_exe_path:{0}, fiscal_exe_name:{1}"
-            .format(fiscal_exe_path, fiscal_exe_name))
-        sys.exit(EXIT_STATUS)
+    appexe = os.path.abspath(os.path.join("..", "RasoASM", "fiscal.py"))
+    logger.info("Invoke: {0}".format(appexe))
+    os.execlp("python", "python", appexe)
 
 
 cfg_plp = read_plp_in_cfg(plp_filename)
