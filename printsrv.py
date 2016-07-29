@@ -176,13 +176,13 @@ def translate_to_2_of_5(code):
 #################################################################
 def is_printer_online(printer_name):
     for wmi_printer in wmi.WMI().Win32_Printer ():
-        logger.info("printer_name {0} =? wmi_printer.caption {1}".format(printer_name, wmi_printer.caption)):
+        # logger.info("printer_name {0} =? wmi_printer.caption {1}".format(printer_name, wmi_printer.caption))
         if (printer_name == wmi_printer.caption):
             if (wmi_printer.WorkOffline):
                 logger.error("Printer {0} is offline.".format(printer_name))
                 return False
             else:
-                logger.info("Printer {0} is online.".format(printer_name))
+                # logger.info("Printer {0} is online.".format(printer_name))
                 return True
 
 #################################################################
@@ -1264,8 +1264,8 @@ else:
 logger.info("plp_file_type:%s\n" % plp_file_type)
 
 if (plp_file_type == "fiscal"):
-    fiscal_exe_path = cfg.get("DEFAULT", "fiscal_exe_path").strip("\"")
-    fiscal_exe_name = cfg.get("DEFAULT", "fiscal_exe_name").strip("\"")
+    fiscal_exe_path = "..\RasoASM"
+    fiscal_exe_name = "fiscal.py"
     if (os.path.splitext(fiscal_exe_name)[1] == ".exe"):
         appexe = os.path.join(fiscal_exe_path, fiscal_exe_name)
         logger.info("Invoke {0}".format(appexe))
