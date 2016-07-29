@@ -51,7 +51,7 @@ do something like
     https://github.com/Piletilevi/printsrv
 
 - Download Raso ASM driver from  
-    https://github.com/Piletilevi/printsrv/tree/1.0.0
+    https://github.com/Piletilevi/RasoASM
 
 - Put these under C:\plevi
     ```
