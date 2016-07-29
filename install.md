@@ -5,11 +5,10 @@ For fastest delivery of driver code we require python 2.7.12 and ironPython 2.7.
 - https://www.python.org/downloads/release/python-2712/
 - http://ironpython.net/download/
 
-Also You heve to add them to windows PATH
+Also You have to add ironPython manually to windows PATH
 do something like
 ```
 > PATH %PATH%;c:\Program Files (x86)\IronPython 2.7
-> PATH %PATH%;c:\Python27
 ```
 
 ### Required modules:
@@ -30,7 +29,6 @@ do something like
   `pip install github3`
   > currently **1.0.0a4**
 
-### Required modules part 2:
 - install PIL from http://www.pythonware.com/products/pil/  
   > currently **1.1.7**
 
@@ -41,25 +39,23 @@ do something like
   `pip install wmi`
   > currently **1.4.9**
 
-- install esky from https://github.com/cloudmatrix/esky/  
-  `pip install esky`
-  > currently **0.9.9**
-
-
 
 ### Drivers
 
 - Download ticket printer driver from  
-  https://github.com/Piletilevi/printsrv
+    https://github.com/Piletilevi/printsrv
 
 - Download Raso ASM driver from  
-  https://github.com/Piletilevi/printsrv/tree/1.0.0
+    https://github.com/Piletilevi/printsrv/tree/1.0.0
 
-I suggest You put these under same parent folder, i.e.
-```
-C:\...\...\drivers\printsrv
-C:\...\...\drivers\RasoASM
-```
+- Put these under C:\plevi
+    ```
+    C:\plevi\printsrv
+    C:\plevi\RasoASM
+    ```
+
+- execute `C:\plevi\printsrv\install.bat`
+
 
 ### Configuration
 
