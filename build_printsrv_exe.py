@@ -7,7 +7,7 @@ console = [
     {
         "script": "printsrv_exe.py",
         "icon_resources": [(0, "favicon.ico")],
-        "dest_base" : "printsrv"
+        "dest_base" : "printsrv2"
     }]
 
 setup(console = console)
