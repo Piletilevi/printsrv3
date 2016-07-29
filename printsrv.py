@@ -176,6 +176,7 @@ def translate_to_2_of_5(code):
 #################################################################
 def is_printer_online(printer_name):
     for wmi_printer in wmi.WMI().Win32_Printer ():
+        logger.info("printer_name {0} =? wmi_printer.caption {1}".format(printer_name, wmi_printer.caption)):
         if (printer_name == wmi_printer.caption):
             if (wmi_printer.WorkOffline):
                 logger.error("Printer {0} is offline.".format(printer_name))
@@ -209,8 +210,8 @@ def start_new_document(cfg, is_first_document = False):
         msg, title = get_check_printer_msg_text(cfg)
         ret = windll.user32.MessageBoxW(0, msg, title, 0x40 | 0x0) #OK only
         retry_times_left -= 1
-        if(retry_times_left<=0):
-            logger.error("Printer is offline. Exiting")
+        if (retry_times_left <= 0):
+            logger.error("Printer {0} is offline. Exiting.".format(printer))
             set_exit_status(PRINTER_IS_OFFLINE)
             sys.exit(EXIT_STATUS)
 
