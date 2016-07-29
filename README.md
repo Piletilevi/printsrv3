@@ -64,10 +64,9 @@ do something like
 
 ### Configuration
 
-- register .plp files to open with `python printsrv.py`  
+- register .plp files to open with `C:\plevi\printsrv.exe`  
 - check persistent.ini
 - check setup_<lang>.ini
-- ignore README.md (its currently mostly for developers)
 - forgive me for tons of unnecessary code and files - cleaning up right now
 
 ### Special note
