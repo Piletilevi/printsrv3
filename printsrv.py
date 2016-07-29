@@ -813,6 +813,7 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
     document_open = 0
 
     after_begin = False
+    layout_cfg = cfg
     with open(plp_filename, "rb") as infile:
         for line in infile:
             param = read_param(line)
