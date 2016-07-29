@@ -23,6 +23,7 @@ Ticket printer driver
   > currently **0.6.9**
 
 - install wmi from https://pypi.python.org/pypi/WMI  
+  `pip install wmi`
   > currently **1.4.9**
 
 - upgrade pip if needed  

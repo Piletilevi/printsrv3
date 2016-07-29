@@ -32,7 +32,7 @@ import email.iterators
 import email.generator
 import email.utils
 
-import esky
+# import esky
 
 import version
 from uuid import getnode
@@ -1116,6 +1116,7 @@ def get_ready_for_update_msg_text(cfg, v1, v2):
 # This function gets used for both: update and rollback downgrade in case tickets did not print OK
 #################################################################
 def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = False, prev_version=False):
+    return
     # Set my_id to identify ourselves when requesting update
     logger.info("getting my id")
     try:
@@ -1135,134 +1136,134 @@ def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = 
     ret_do_not_delete_plp_file = False
 
     # ESKY
-    if getattr(sys,"frozen",False):
-
-        url_args = {"my_id":my_id, "my_version":current_version, "getnode":hex(getnode())}
-        if(downgrade_version!=False):
-            # we inform server and server should take care of not showing the bad version to us ever again.
-            url_args["downgrade_version"] = downgrade_version;
-        if(downgrade == True):
-            url_args["downgrade"] = 1;
-        if(prev_version!=False):
-            url_args["prev_version"] = prev_version;
-        app = esky.Esky(sys.executable,"%s?%s"%(updates_base_url, urllib.urlencode(url_args)))
-        if(downgrade_version!=False):
-            logger.info("clean up that bad version we had to downgrade from. try to uninstall it")
-            #lockfile = os.path.join(vdir,ESKY_CONTROL_DIR,"bootstrap-manifest.txt")
-            #unlock_version_dir()
-            #app.uninstall_version(downgrade_version)
-            #app.cleanup() # this is not good. it restores the downgraded version. we need to manually delete the downgraded version folder
-            # TODO. make own version of downgrade_cleanup(downgrade_version)
-        logger.info("You are running: %s" % app.active_version)
-        try:
-            print "active:[%s], cfg:[%s]" % (app.active_version,cfg.get("DEFAULT", "driver_version"))
-            need_update = False
-            planned_update_version = None
-            if cfg.get("DEFAULT", "driver_version")=="auto":
-                planned_update_version = app.find_update()
-                if(planned_update_version != None):
-                    need_update = True
-            else:
-                planned_update_version = cfg.get("DEFAULT", "driver_version").strip("\"\r\n ")
-                if(app.active_version != planned_update_version):
-                    need_update = True
-
-            if(need_update==True):
-                # plp file can override update choice
-                if(cfg.get("DEFAULT", "driver_force_upgrade") == "yes"):
-                    ret = 1
-                else:
-                    msg, title = get_ready_for_update_msg_text(cfg, app.active_version, planned_update_version)
-                    ret = windll.user32.MessageBoxW(0, msg, title, 1)
-                logger.info("MessageBoxA ret: %s" % ret)
-                if ret == 1:
-                    # OK response
-                    logger.info("doing auto_update")
-                    if cfg.get("DEFAULT", "driver_version") == "auto":
-                        #app.auto_update(auto_update_callback)
-                        #version = app.find_update() # this needs to be called before "app._do_auto_update"
-                        app.fetch_version(planned_update_version,auto_update_callback)
-                        app.install_version(planned_update_version)
-                        ret_do_not_delete_plp_file = True
-                        # skip uninstall_version
-                    else:
-                        version = app.find_update() # this needs to be called before "app._do_auto_update"
-                        logger.info("found best version: %s" % version)
-                        #app._do_auto_update(planned_update_version,auto_update_callback)
-                        #######
-                        if(downgrade):
-                            #we are downgrading. should be enaugh to just uninstall the current version
-
-
-                            logger.info("downgrading. fetch_version()")
-                            app.fetch_version(planned_update_version,auto_update_callback)
-                            logger.info("downgrading. do install_version")
-                            app.install_version(planned_update_version)
-                            logger.info("downgrading. do uninstall_version")
-                            logger.info("self.appdir: %s" % app.appdir)
-                            logger.info("os.path.realpath(./): %s" % os.path.realpath("./"))
-                            try:
-                                app.uninstall_version(current_version)
-                                logger.info("done uninstall_version")
-                            except:
-                                logger.info(traceback.format_exc())
-                                logger.info("exception while doing uninstall_version. Will try to fool the bootstrap")
-                                directory = "%s/esky-files/bootstrap" % get_main_dir()
-                                logger.info("creating directory: %s" % directory)
-                                if not os.path.exists(directory):
-                                    os.makedirs(directory)
-                            pass
-                            app.reinitialize()
-                            logger.info("done reinitialize()")
-                            #app.cleanup()
-                            #logger.info("done cleanup()")
-                            ret_do_not_delete_plp_file = True
-                        else:
-                            app.fetch_version(planned_update_version,auto_update_callback)
-                            #callback({"status":"installing", "new_version":version})
-                            app.install_version(planned_update_version)
-                            try:
-                                pass
-                                #app.uninstall_version(current_version)
-                            except VersionLockedError:
-                                pass
-                            app.reinitialize()
-                            ret_do_not_delete_plp_file = True
-                        #######
-
-                    appexe = esky.util.appexe_from_executable(sys.executable)
-                    if(downgrade):
-                        argv_to_pass = []
-                        for argv in sys.argv[1:]:
-                            # we don't want to do downgrade from the downgrade we just did
-                            if(not argv.startswith("--prev_version=")):
-                                argv_to_pass.extend([argv])
-                            argv_to_pass.extend(["--downgrade_version=%s" % current_version])
-                        logger.info("downgrade finished. Will do restart with args: %s" % argv_to_pass)
-                        ret_do_not_delete_plp_file = True
-                        os.execv(appexe,[appexe] + argv_to_pass)
-                        pass
-                    else:
-                        logger.info("update finished. Will do restart with args:%s. --prev_version=%s" % (sys.argv[1:], current_version))
-                        ret_do_not_delete_plp_file = True
-                        os.execv(appexe,[appexe] + sys.argv[1:] + ["--prev_version=%s" % current_version])
-                    logger.info("after updater os.execv call")
-                elif ret == 2:
-                    # CANCEL response
-                    logger.info("update canceled")
-                else:
-                    # ??
-                    pass
-
-        #except Exception, e:
-        except KeyError:
-            logger.error("KeyError while updating app %s" % e)
-            logger.debug(traceback.format_exc())
-        except Exception, e:
-            logger.error("exception when updating app")
-            logger.debug(traceback.format_exc())
-        #app.cleanup()
-        return ret_do_not_delete_plp_file
+    # if getattr(sys,"frozen",False):
+    #
+    #     url_args = {"my_id":my_id, "my_version":current_version, "getnode":hex(getnode())}
+    #     if(downgrade_version!=False):
+    #         # we inform server and server should take care of not showing the bad version to us ever again.
+    #         url_args["downgrade_version"] = downgrade_version;
+    #     if(downgrade == True):
+    #         url_args["downgrade"] = 1;
+    #     if(prev_version!=False):
+    #         url_args["prev_version"] = prev_version;
+    #     app = esky.Esky(sys.executable,"%s?%s"%(updates_base_url, urllib.urlencode(url_args)))
+    #     if(downgrade_version!=False):
+    #         logger.info("clean up that bad version we had to downgrade from. try to uninstall it")
+    #         #lockfile = os.path.join(vdir,ESKY_CONTROL_DIR,"bootstrap-manifest.txt")
+    #         #unlock_version_dir()
+    #         #app.uninstall_version(downgrade_version)
+    #         #app.cleanup() # this is not good. it restores the downgraded version. we need to manually delete the downgraded version folder
+    #         # TODO. make own version of downgrade_cleanup(downgrade_version)
+    #     logger.info("You are running: %s" % app.active_version)
+    #     try:
+    #         print "active:[%s], cfg:[%s]" % (app.active_version,cfg.get("DEFAULT", "driver_version"))
+    #         need_update = False
+    #         planned_update_version = None
+    #         if cfg.get("DEFAULT", "driver_version")=="auto":
+    #             planned_update_version = app.find_update()
+    #             if(planned_update_version != None):
+    #                 need_update = True
+    #         else:
+    #             planned_update_version = cfg.get("DEFAULT", "driver_version").strip("\"\r\n ")
+    #             if(app.active_version != planned_update_version):
+    #                 need_update = True
+    #
+    #         if(need_update==True):
+    #             # plp file can override update choice
+    #             if(cfg.get("DEFAULT", "driver_force_upgrade") == "yes"):
+    #                 ret = 1
+    #             else:
+    #                 msg, title = get_ready_for_update_msg_text(cfg, app.active_version, planned_update_version)
+    #                 ret = windll.user32.MessageBoxW(0, msg, title, 1)
+    #             logger.info("MessageBoxA ret: %s" % ret)
+    #             if ret == 1:
+    #                 # OK response
+    #                 logger.info("doing auto_update")
+    #                 if cfg.get("DEFAULT", "driver_version") == "auto":
+    #                     #app.auto_update(auto_update_callback)
+    #                     #version = app.find_update() # this needs to be called before "app._do_auto_update"
+    #                     app.fetch_version(planned_update_version,auto_update_callback)
+    #                     app.install_version(planned_update_version)
+    #                     ret_do_not_delete_plp_file = True
+    #                     # skip uninstall_version
+    #                 else:
+    #                     version = app.find_update() # this needs to be called before "app._do_auto_update"
+    #                     logger.info("found best version: %s" % version)
+    #                     #app._do_auto_update(planned_update_version,auto_update_callback)
+    #                     #######
+    #                     if(downgrade):
+    #                         #we are downgrading. should be enaugh to just uninstall the current version
+    #
+    #
+    #                         logger.info("downgrading. fetch_version()")
+    #                         app.fetch_version(planned_update_version,auto_update_callback)
+    #                         logger.info("downgrading. do install_version")
+    #                         app.install_version(planned_update_version)
+    #                         logger.info("downgrading. do uninstall_version")
+    #                         logger.info("self.appdir: %s" % app.appdir)
+    #                         logger.info("os.path.realpath(./): %s" % os.path.realpath("./"))
+    #                         try:
+    #                             app.uninstall_version(current_version)
+    #                             logger.info("done uninstall_version")
+    #                         except:
+    #                             logger.info(traceback.format_exc())
+    #                             logger.info("exception while doing uninstall_version. Will try to fool the bootstrap")
+    #                             directory = "%s/esky-files/bootstrap" % get_main_dir()
+    #                             logger.info("creating directory: %s" % directory)
+    #                             if not os.path.exists(directory):
+    #                                 os.makedirs(directory)
+    #                         pass
+    #                         app.reinitialize()
+    #                         logger.info("done reinitialize()")
+    #                         #app.cleanup()
+    #                         #logger.info("done cleanup()")
+    #                         ret_do_not_delete_plp_file = True
+    #                     else:
+    #                         app.fetch_version(planned_update_version,auto_update_callback)
+    #                         #callback({"status":"installing", "new_version":version})
+    #                         app.install_version(planned_update_version)
+    #                         try:
+    #                             pass
+    #                             #app.uninstall_version(current_version)
+    #                         except VersionLockedError:
+    #                             pass
+    #                         app.reinitialize()
+    #                         ret_do_not_delete_plp_file = True
+    #                     #######
+    #
+    #                 appexe = esky.util.appexe_from_executable(sys.executable)
+    #                 if(downgrade):
+    #                     argv_to_pass = []
+    #                     for argv in sys.argv[1:]:
+    #                         # we don't want to do downgrade from the downgrade we just did
+    #                         if(not argv.startswith("--prev_version=")):
+    #                             argv_to_pass.extend([argv])
+    #                         argv_to_pass.extend(["--downgrade_version=%s" % current_version])
+    #                     logger.info("downgrade finished. Will do restart with args: %s" % argv_to_pass)
+    #                     ret_do_not_delete_plp_file = True
+    #                     os.execv(appexe,[appexe] + argv_to_pass)
+    #                     pass
+    #                 else:
+    #                     logger.info("update finished. Will do restart with args:%s. --prev_version=%s" % (sys.argv[1:], current_version))
+    #                     ret_do_not_delete_plp_file = True
+    #                     os.execv(appexe,[appexe] + sys.argv[1:] + ["--prev_version=%s" % current_version])
+    #                 logger.info("after updater os.execv call")
+    #             elif ret == 2:
+    #                 # CANCEL response
+    #                 logger.info("update canceled")
+    #             else:
+    #                 # ??
+    #                 pass
+    #
+    #     #except Exception, e:
+    #     except KeyError:
+    #         logger.error("KeyError while updating app %s" % e)
+    #         logger.debug(traceback.format_exc())
+    #     except Exception, e:
+    #         logger.error("exception when updating app")
+    #         logger.debug(traceback.format_exc())
+    #     #app.cleanup()
+    #     return ret_do_not_delete_plp_file
 
 #################################################################
 def usage():
