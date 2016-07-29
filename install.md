@@ -53,7 +53,7 @@ do something like
   https://github.com/Piletilevi/printsrv
 
 - Download Raso ASM driver from  
-  https://github.com/Piletilevi/RasoASM
+  https://github.com/Piletilevi/printsrv/tree/1.0.0
 
 I suggest You put these under same parent folder, i.e.
 ```
