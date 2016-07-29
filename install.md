@@ -30,6 +30,22 @@ do something like
   `pip install github3`
   > currently **1.0.0a4**
 
+### Required modules part 2:
+- install PIL from http://www.pythonware.com/products/pil/  
+  > currently **1.1.7**
+
+- install PythonWin from https://sourceforge.net/projects/pywin32/files/  
+  > currently **Build 220**
+
+- install wmi from https://pypi.python.org/pypi/WMI  
+  `pip install wmi`
+  > currently **1.4.9**
+
+- install esky from https://github.com/cloudmatrix/esky/  
+  `pip install esky`
+  > currently **0.9.9**
+
+
 
 ### Drivers
 
