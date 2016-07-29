@@ -1,2 +1,2 @@
-ren dist/* .
+move dist\* ..\
 del install.bat
