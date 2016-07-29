@@ -176,12 +176,12 @@ def translate_to_2_of_5(code):
 #################################################################
 def is_printer_online(printer_name):
     for wmi_printer in wmi.WMI().Win32_Printer ():
-        if(printer_name == wmi_printer.caption):
-            if(wmi_printer.WorkOffline):
-                logger.warning("Printer is offline")
+        if (printer_name == wmi_printer.caption):
+            if (wmi_printer.WorkOffline):
+                logger.error("Printer {0} is offline.".format(printer_name))
                 return False
             else:
-                # logger.info("Printer is online")
+                logger.info("Printer {0} is online.".format(printer_name))
                 return True
 
 #################################################################
