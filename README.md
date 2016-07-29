@@ -1,41 +1,26 @@
-# cardsrv
+# printsrv
 Ticket printer driver  
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/fd513dfbfcb645b1ac43bc381b4b5482)](https://www.codacy.com/app/mihkel-putrinsh/cardsrv?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Piletilevi/cardsrv&amp;utm_campaign=Badge_Grade)
 
 
-## Setup
+For fastest delivery of driver code we require python 2.7.12 and ironPython 2.7.5 preinstalled.
 
-#### Install pip packages in one go from requirement file  
-  `pip install -r requirement.txt`
+## Prerequisites
 
-#### Alternatively install packages one by one
+- https://www.python.org/downloads/release/python-2712/
+- http://ironpython.net/download/
 
-- install latest python from 2.x.x series https://www.python.org/downloads/  
-  > currently **2.7.12**
+Also You have to add ironPython manually to windows PATH
+do something like
+```
+> PATH %PATH%;c:\Program Files (x86)\IronPython 2.7
+```
 
-- install PIL from http://www.pythonware.com/products/pil/  
-  > currently **1.1.7**
-
-- install PythonWin from https://sourceforge.net/projects/pywin32/files/  
-  > currently **Build 220**
-
-- install py2exe from http://sourceforge.net/projects/py2exe/files/  
-  > currently **0.6.9**
-
-- install wmi from https://pypi.python.org/pypi/WMI  
-  `pip install wmi`
-  > currently **1.4.9**
+### Required modules:
 
 - upgrade pip if needed  
   `python -m pip install --upgrade pip`
   > currently **8.1.2**
-
-- install esky from https://github.com/cloudmatrix/esky/  
-  `pip install esky`
-  > currently **0.9.9**
-
-- install latest Nullsoft Scriptable Install System from http://nsis.sourceforge.net/Download  
-  > currently **2.51**
 
 - install FontName from https://pypi.python.org/pypi/fontname  
   `pip install fontname`
@@ -45,25 +30,55 @@ Ticket printer driver
   `pip install qrcode`
   > currently **5.3**
 
+- install github API (v3) from https://github.com/sigmavirus24/github3.py  
+  `pip install github3`
+  > currently **1.0.0a4**
 
-#### Pip packages should now look like  
-`pip list`
-> esky (0.9.9)  
-fontname (0.2.0)  
-freetype-py (1.0.2)  
-PIL (1.1.7)  
-pip (8.1.2)  
-py2exe (0.6.9)  
-pywin32 (220)  
-qrcode (5.3)  
-setuptools (20.10.1)  
-six (1.10.0)  
-WMI (1.4.9)  
+- install PIL from http://www.pythonware.com/products/pil/  
+  > currently **1.1.7**
+
+- install PythonWin from https://sourceforge.net/projects/pywin32/files/  
+  > currently **Build 220**
+
+- install wmi from https://pypi.python.org/pypi/WMI  
+  `pip install wmi`
+  > currently **1.4.9**
 
 
-## Build and deploy
+### Drivers
 
-- to build run compile.bat or compile\_console\_esky.bat
-- to package run make\_nsis\_esky.bat
+- Download ticket printer driver from  
+    https://github.com/Piletilevi/printsrv
 
-deprecated. does not set VER variable. - right click on printsrv.nsi and choose "Compile NSIS script"
+- Download Raso ASM driver from  
+    https://github.com/Piletilevi/printsrv/tree/1.0.0
+
+- Put these under C:\plevi
+    ```
+    C:\plevi\printsrv
+    C:\plevi\RasoASM
+    ```
+
+- execute `C:\plevi\printsrv\install.bat`
+
+
+### Configuration
+
+- register .plp files to open with `python printsrv.py`  
+- check persistent.ini
+- check setup_<lang>.ini
+- ignore README.md (its currently mostly for developers)
+- forgive me for tons of unnecessary code and files - cleaning up right now
+
+### Special note
+
+Please make sure, that connected wires are connected in same order over all installations.
+Also make sure port mapping is identical everywhere.  
+
+Even better
+- create a document, where required wiring and port mapping is described and every time someone drives to point of sale to install the printers, give these instructions along.  
+- label the wires. get a permanent marker or buy labeling machine
+- take a photo of correctly connected wires at every POS
+
+Thank me later.  
+M-O-O-R
