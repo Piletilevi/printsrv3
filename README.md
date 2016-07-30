@@ -7,8 +7,12 @@ For fastest delivery of driver code we require python 2.7.12 and ironPython 2.7.
 
 ## Prerequisites
 
-- download, extract, and install [IronPython-2.7.5](https://github.com/Piletilevi/printsrv/files/391931/IronPython-2.7.5.zip)  
+**!NB**
+> Make sure that in Python installer, on Customize Python screen, You must select
+"Will be installed on local hard drive" for [Add python.exe to path]
+
 - download, extract, and install [python-2.7.12](https://github.com/Piletilevi/printsrv/files/391929/python-2.7.12.zip)  
+- download, extract, and install [IronPython-2.7.5](https://github.com/Piletilevi/printsrv/files/391931/IronPython-2.7.5.zip)  
 - download, extract, and install [PIL-1.1.7.win32-py2.7](https://github.com/Piletilevi/printsrv/files/391901/PIL-1.1.7.win32-py2.7.zip)  
 - download, extract, and install [pywin32-220.win32-py2.7](https://github.com/Piletilevi/printsrv/files/391897/pywin32-220.win32-py2.7.zip)
 
