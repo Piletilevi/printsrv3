@@ -7,13 +7,13 @@ For fastest delivery of driver code we require python 2.7.12 and ironPython 2.7.
 
 ## Prerequisites
 
-- https://www.python.org/downloads/release/python-2712/  
-    **Note** while installing python make sure the "path variables" checkbox is checked (install all components)
+- download, extract, and install [IronPython-2.7.5](https://github.com/Piletilevi/printsrv/files/391931/IronPython-2.7.5.zip)  
+- download, extract, and install [python-2.7.12](https://github.com/Piletilevi/printsrv/files/391929/python-2.7.12.zip)  
+- download, extract, and install [PIL-1.1.7.win32-py2.7](https://github.com/Piletilevi/printsrv/files/391901/PIL-1.1.7.win32-py2.7.zip)  
+- download, extract, and install [pywin32-220.win32-py2.7](https://github.com/Piletilevi/printsrv/files/391897/pywin32-220.win32-py2.7.zip)
 
-- http://ironpython.net/download/
 
-
-### Required modules:
+### Required python modules:
 
 - upgrade pip if needed  
   `python -m pip install --upgrade pip`
@@ -34,17 +34,11 @@ For fastest delivery of driver code we require python 2.7.12 and ironPython 2.7.
 - install wmi (pypi.python.org/pypi/WMI)  
   `pip install wmi`
   > currently **1.4.9**
-  
-- download, extract, and install PIL from https://github.com/Piletilevi/printsrv/files/391901/PIL-1.1.7.win32-py2.7.zip  
-  > currently **1.1.7**
-
-- download, extract, and install PythonWin from https://github.com/Piletilevi/printsrv/files/391897/pywin32-220.win32-py2.7.zip  
-  > currently **Build 220**
 
 
 ### Drivers
 
-- Download ticket printer drivers from https://github.com/Piletilevi/printsrv/files/391887/printsrv.0.2.0.zip
+- Download ticket printer drivers [printsrv 0.2.0.zip](https://github.com/Piletilevi/printsrv/files/391887/printsrv.0.2.0.zip)
 - Unpack the contents to C:\plevi folder  
 ```
 C:\plevi\printsrv  
