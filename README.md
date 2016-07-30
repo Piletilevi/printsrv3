@@ -2,7 +2,6 @@
 Ticket printer driver  
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/fd513dfbfcb645b1ac43bc381b4b5482)](https://www.codacy.com/app/mihkel-putrinsh/cardsrv?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Piletilevi/cardsrv&amp;utm_campaign=Badge_Grade)
 
-
 For fastest delivery of driver code we require python 2.7.12 and ironPython 2.7.5 preinstalled.
 
 ## Prerequisites
@@ -33,8 +32,9 @@ C:\plevi\RasoASM
 - cmd -> PATH %PATH%;%programfiles%\IronPython 2.7
  - or if path is not saved (close cmd, open cmd and type 'ipy') - then open System Environment Variables from Control Panel and add to PATH variable value ';C:\Program Files\IronPython 2.7'
 - register .plp files in Windows to be opened automatically with `C:\plevi\printsrv.exe`  
-- check `C:\plevi\persistent.ini`
-- check `C:\plevi\setup_lt.ini`
+- Salespoint ID must be unique and written to `C:\plevi\persistent.ini` file with syntax 'LT_/salespoint_name/'
+  example: my_id = LT_kauno_maxima_01
+- please make sure, that the ticket printer name in `C:\plevi\persistent.ini` and `C:\plevi\setup_lt.ini` is the same, as in Windows (Devices and printers) and page size in printer settings is 'Letter' 
 - forgive me for tons of unnecessary code and files - still cleaning up
 
 ### Special note
