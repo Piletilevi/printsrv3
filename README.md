@@ -31,6 +31,7 @@ C:\plevi\RasoASM
 ### Configuration
 
 - cmd -> PATH %PATH%;%programfiles%\IronPython 2.7
+ - or if path is not saved (close cmd, open cmd and type 'ipy') - then open System Environment Variables from Control Panel and add to PATH variable value ';C:\Program Files\IronPython 2.7'
 - register .plp files in Windows to be opened automatically with `C:\plevi\printsrv.exe`  
 - check `C:\plevi\persistent.ini`
 - check `C:\plevi\setup_lt.ini`
