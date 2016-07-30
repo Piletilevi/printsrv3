@@ -30,7 +30,7 @@ C:\plevi\RasoASM
 
 ### Configuration
 
-- cmd -> PATH %PATH%;c:\Program Files (x86)\IronPython 2.7
+- cmd -> PATH %PATH%;%programfiles%\IronPython 2.7
 - register .plp files in Windows to be opened automatically with `C:\plevi\printsrv.exe`  
 - check `C:\plevi\persistent.ini`
 - check `C:\plevi\setup_lt.ini`
