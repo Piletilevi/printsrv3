@@ -44,7 +44,7 @@ For fastest delivery of driver code we require python 2.7.12 and ironPython 2.7.
 
 ### Drivers
 
-- Download ticket printer drivers from https://github.com/Piletilevi/printsrv/releases/latest
+- Download ticket printer drivers from https://github.com/Piletilevi/printsrv/files/391887/printsrv.0.2.0.zip
 - Unpack the contents to C:\plevi folder  
 ```
 C:\plevi\printsrv  
