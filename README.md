@@ -31,7 +31,7 @@ do something like
   > currently **5.3**
 
 - install github API (v3) from https://github.com/sigmavirus24/github3.py  
-  `pip install github3`
+  `pip install github3.py`
   > currently **1.0.0a4**
 
 - install PIL from http://www.pythonware.com/products/pil/  
@@ -47,18 +47,12 @@ do something like
 
 ### Drivers
 
-- Download ticket printer driver from  
-    https://github.com/Piletilevi/printsrv
-
-- Download Raso ASM driver from  
-    https://github.com/Piletilevi/RasoASM
-
-- Put these under C:\plevi
-    ```
-    C:\plevi\printsrv
-    C:\plevi\RasoASM
-    ```
-
+- Download ticket printer drivers from https://github.com/Piletilevi/printsrv/releases/tag/0.2.0
+- Unpack the contents to C:\plevi folder
+  ```
+  C:\plevi\printsrv
+  C:\plevi\RasoASM
+  ```
 - execute `C:\plevi\printsrv\install.bat`
 
 
