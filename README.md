@@ -9,7 +9,7 @@ For fastest delivery of driver code we require python 2.7.12 and ironPython 2.7.
 
 **!NB**
 > Make sure that in Python installer, on Customize Python screen, You must select
-[Will be installed on local hard drive] for [Add python.exe to path]
+**[Will be installed on local hard drive]** for **[Add python.exe to path]**
 
 - download, extract, and install [python-2.7.12](https://github.com/Piletilevi/printsrv/files/391929/python-2.7.12.zip)  
 - download, extract, and install [IronPython-2.7.5](https://github.com/Piletilevi/printsrv/files/391931/IronPython-2.7.5.zip)  
