@@ -56,9 +56,9 @@ C:\plevi\RasoASM
 ### Configuration
 
 - register .plp files to open with `C:\plevi\printsrv.exe`  
-- check persistent.ini
-- check setup_<lang>.ini
-- forgive me for tons of unnecessary code and files - cleaning up right now
+- check `C:\plevi\persistent.ini`
+- check `C:\plevi\setup_lt.ini`
+- forgive me for tons of unnecessary code and files - still cleaning up
 
 ### Special note
 
