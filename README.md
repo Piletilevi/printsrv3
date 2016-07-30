@@ -31,10 +31,10 @@ For fastest delivery of driver code we require python 2.7.12 and ironPython 2.7.
   `pip install github3.py`
   > currently **1.0.0a4**
 
-- install PIL from http://www.pythonware.com/products/pil/  
+- install PIL from https://github.com/Piletilevi/printsrv/files/391901/PIL-1.1.7.win32-py2.7.zip  
   > currently **1.1.7**
 
-- install PythonWin from https://sourceforge.net/projects/pywin32/files/  
+- install PythonWin from https://github.com/Piletilevi/printsrv/files/391897/pywin32-220.win32-py2.7.zip  
   > currently **Build 220**
 
 - install wmi from https://pypi.python.org/pypi/WMI  
