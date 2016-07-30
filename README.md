@@ -17,29 +17,6 @@ For fastest delivery of driver code we require python 2.7.12 and ironPython 2.7.
 - download, extract, and install [pywin32-220.win32-py2.7](https://github.com/Piletilevi/printsrv/files/391897/pywin32-220.win32-py2.7.zip)
 
 
-### Required python modules:
-
-- upgrade pip if needed  
-  `python -m pip install --upgrade pip`
-  > currently **8.1.2**
-
-- install FontName (pypi.python.org/pypi/fontname)  
-  `pip install fontname`
-  > currently **0.2.0**
-
-- install qrcode (pypi.python.org/pypi/qrcode)  
-  `pip install qrcode`
-  > currently **5.3**
-
-- install github API (v3) (github.com/sigmavirus24/github3.py)  
-  `pip install github3.py`
-  > currently **1.0.0a4**
-
-- install wmi (pypi.python.org/pypi/WMI)  
-  `pip install wmi`
-  > currently **1.4.9**
-
-
 ### Drivers
 
 - Download ticket printer drivers [printsrv 0.2.0.zip](https://github.com/Piletilevi/printsrv/files/391887/printsrv.0.2.0.zip)
