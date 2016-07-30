@@ -35,7 +35,8 @@ C:\plevi\RasoASM
 - Salespoint ID must be unique and written to `C:\plevi\persistent.ini` file with syntax 'LT_/salespoint_name/'
   example: my_id = LT_kauno_maxima_01
 - please make sure, that the ticket printer name in `C:\plevi\persistent.ini` and `C:\plevi\setup_lt.ini` is the same, as in Windows (Devices and printers) and page size in printer settings is 'Letter' 
-- forgive me for tons of unnecessary code and files - still cleaning up
+- make a test sale of ticket with successful transaction confirmation - then also the receipt is printed
+
 
 ### Special note
 
@@ -47,5 +48,5 @@ Even better
 - label the wires. get a permanent marker or buy labeling machine
 - take a photo of correctly connected wires at every POS
 
-Thank me later.  
+Thank us later.  
 M-O-O-R
