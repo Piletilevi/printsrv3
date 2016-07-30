@@ -46,10 +46,10 @@ For fastest delivery of driver code we require python 2.7.12 and ironPython 2.7.
 
 - Download ticket printer drivers from https://github.com/Piletilevi/printsrv/releases/latest
 - Unpack the contents to C:\plevi folder  
-  ```
-  C:\plevi\printsrv  
-  C:\plevi\RasoASM  
-  ```
+```
+C:\plevi\printsrv  
+C:\plevi\RasoASM  
+```
 - execute `C:\plevi\printsrv\install.bat`  
 
 
