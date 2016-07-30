@@ -7,14 +7,11 @@ For fastest delivery of driver code we require python 2.7.12 and ironPython 2.7.
 
 ## Prerequisites
 
-- https://www.python.org/downloads/release/python-2712/
+- https://www.python.org/downloads/release/python-2712/  
+    **Note** while installing python make sure the "path variables" checkbox is checked (install all components)
+
 - http://ironpython.net/download/
 
-Also You have to add ironPython manually to windows PATH
-do something like
-```
-> PATH %PATH%;c:\Program Files (x86)\IronPython 2.7
-```
 
 ### Required modules:
 
@@ -47,7 +44,7 @@ do something like
 
 ### Drivers
 
-- Download ticket printer drivers from https://github.com/Piletilevi/printsrv/releases/tag/0.2.0
+- Download ticket printer drivers from https://github.com/Piletilevi/printsrv/releases/latest
 - Unpack the contents to C:\plevi folder
   ```
   C:\plevi\printsrv
