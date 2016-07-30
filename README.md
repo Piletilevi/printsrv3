@@ -19,27 +19,27 @@ For fastest delivery of driver code we require python 2.7.12 and ironPython 2.7.
   `python -m pip install --upgrade pip`
   > currently **8.1.2**
 
-- install FontName from https://pypi.python.org/pypi/fontname  
+- install FontName (pypi.python.org/pypi/fontname)  
   `pip install fontname`
   > currently **0.2.0**
 
-- install qrcode from https://pypi.python.org/pypi/qrcode  
+- install qrcode (pypi.python.org/pypi/qrcode)  
   `pip install qrcode`
   > currently **5.3**
 
-- install github API (v3) from https://github.com/sigmavirus24/github3.py  
+- install github API (v3) (github.com/sigmavirus24/github3.py)  
   `pip install github3.py`
   > currently **1.0.0a4**
 
-- install PIL from https://github.com/Piletilevi/printsrv/files/391901/PIL-1.1.7.win32-py2.7.zip  
-  > currently **1.1.7**
-
-- install PythonWin from https://github.com/Piletilevi/printsrv/files/391897/pywin32-220.win32-py2.7.zip  
-  > currently **Build 220**
-
-- install wmi from https://pypi.python.org/pypi/WMI  
+- install wmi (pypi.python.org/pypi/WMI)  
   `pip install wmi`
   > currently **1.4.9**
+  
+- download, extract, and install PIL from https://github.com/Piletilevi/printsrv/files/391901/PIL-1.1.7.win32-py2.7.zip  
+  > currently **1.1.7**
+
+- download, extract, and install PythonWin from https://github.com/Piletilevi/printsrv/files/391897/pywin32-220.win32-py2.7.zip  
+  > currently **Build 220**
 
 
 ### Drivers
