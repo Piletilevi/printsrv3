@@ -2,8 +2,6 @@
 Ticket printer driver  
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/fd513dfbfcb645b1ac43bc381b4b5482)](https://www.codacy.com/app/mihkel-putrinsh/cardsrv?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Piletilevi/cardsrv&amp;utm_campaign=Badge_Grade)
 
-For fastest delivery of driver code we require python 2.7.12 and ironPython 2.7.5 preinstalled.
-
 ## Prerequisites
 
 **!NB**
@@ -26,11 +24,12 @@ C:\plevi\RasoASM
 ```
 - execute `C:\plevi\printsrv\install.bat`  
 
+There is an issue with IronPython installation. It doesnot register to windows path variable, so we included registration command into install.bat (that You just executed). Everything should be ok now, but some windows systems it keeps forgetting.  
+To verify, that IronPython is correctly set up, open cmd and run `PATH` command. It will return all the registered system paths - look, if **IronPython 2.7** is also there.  
+If it is not, then You have to open System Environment Variables from Control Panel and append to the end of PATH variable value `;%PROGRAMFILES%\IronPython 2.7`
 
 ### Configuration
 
-- cmd -> PATH %PATH%;%programfiles%\IronPython 2.7
- - or if path is not saved (close cmd, open cmd and type 'ipy') - then open System Environment Variables from Control Panel and add to PATH variable value ';C:\Program Files\IronPython 2.7'
 - register .plp files in Windows to be opened automatically with `C:\plevi\printsrv.exe`  
 - Salespoint ID must be unique and written to `C:\plevi\persistent.ini` file with syntax 'LT_/salespoint_name/'
   example: my_id = LT_kauno_maxima_01
