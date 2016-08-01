@@ -24,7 +24,7 @@ C:\plevi\RasoASM
 ```
 - execute `C:\plevi\printsrv\install.bat`  
 
-There is an issue with IronPython installation. It doesnot register to windows path variable, so we included registration command into install.bat (that You just executed). Everything should be ok now, but some windows systems it keeps forgetting.  
+There is an issue with IronPython installation. It doesnot register to windows path variable, so we included registration command into install.bat (that You just executed). Everything should be ok now, but on some windows systems it keeps forgetting the new path.  
 To verify, that IronPython is correctly set up, open cmd and run `PATH` command. It will return all the registered system paths - look, if **IronPython 2.7** is also there.  
 If it is not, then You have to open System Environment Variables from Control Panel and append to the end of PATH variable value `;%PROGRAMFILES%\IronPython 2.7`
 
