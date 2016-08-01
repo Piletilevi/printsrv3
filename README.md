@@ -28,6 +28,22 @@ There is an issue with IronPython installation. It doesnot register to windows p
 To verify, that IronPython is correctly set up, open cmd and run `PATH` command. It will return all the registered system paths - look, if **IronPython 2.7** is also there.  
 If it is not, then You have to open System Environment Variables from Control Panel and append to the end of PATH variable value `;%PROGRAMFILES%\IronPython 2.7`
 
+Also You should verify pip modules with 
+`C:\Users\Kasa>pip list`
+and output should look like
+> fontname (0.2.0)  
+freetype-py (1.0.2)  
+github3.py (0.9.5)  
+PIL (1.1.7)  
+pip (8.1.2)  
+pywin32 (220)  
+qrcode (5.3)  
+requests (2.10.0)  
+setuptools (20.10.1)  
+six (1.10.0)  
+uritemplate.py (0.3.0)  
+WMI (1.4.9)  
+
 ### Configuration
 
 - register .plp files in Windows to be opened automatically with `C:\plevi\printsrv.exe`  
