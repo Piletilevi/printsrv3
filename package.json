@@ -3,7 +3,7 @@
 	"version": "0.2.0",
 	"updateFiles": [{
 		"repository": "printsrv",
-		"tag": "proov4",
+		"tag": "proov5",
 		"files": [
             { "remote": "package.json", "local": "package.json" },
             { "remote": "dist/_hashlib.pyd", "local": "_hashlib.pyd" },
