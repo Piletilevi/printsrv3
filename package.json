@@ -1,4 +1,23 @@
 {
-    "name": "printsrv",
-    "version": "0.2.0"
+	"name": "printsrv",
+	"version": "0.2.0",
+	"updateFiles": [{
+		"repository": "printsrv",
+		"version": "0.2.0",
+		"files": [
+            { "remote": "package.json", "local": "package.json" },
+            { "remote": "dist/*", "local": "../" },
+        ]
+	}, {
+		"repository": "RasoASM",
+		"version": "0.1.2",
+		"files": [
+            { "remote": "update.py", "local": false },
+            { "remote": "fiscal_lt.bat", "local": "fiscal_lt.bat" },
+            { "remote": "fiscal_lt.ipy", "local": "fiscal_lt.ipy" },
+            { "remote": "fiscal.py", "local": "fiscal.py" },
+            { "remote": "package.json", "local": "package.json" },
+            { "remote": "fiscal_lt.bat", "local": "fiscal_lt.bat" }
+        ]
+	}]
 }
