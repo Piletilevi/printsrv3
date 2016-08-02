@@ -6,7 +6,7 @@
 		"version": "0.2.0",
 		"files": [
             { "remote": "package.json", "local": "package.json" },
-            { "remote": "dist/*", "local": "../" },
+            { "remote": "dist/*", "local": "../" }
         ]
 	}, {
 		"repository": "RasoASM",
