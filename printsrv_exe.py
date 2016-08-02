@@ -9,10 +9,12 @@
        then RasoASM gets invoked;
     If .plp is JSON;
        and info == 'update',
+       and version = 'GitHub tag' is provided
        then update script gets invoked;
     If .plp is JSON;
        and info == 'fiscal',
        and operation 'endshift'
+       and version = 'GitHub tag' is provided
        then update script gets invoked after RasoASM returns.
 """
 from os import environ, path, chdir
@@ -67,7 +69,8 @@ else:
     PLP_FILE_TYPE = PLP_JSON_DATA['info']
 
 
-def call_update():
+def call_update(plp_update_to_version):
+    environ['plp_update_to_version'] = plp_update_to_version
     UPDATE_DIRNAME = path.join(path.dirname(argv[0]), 'printsrv')
     UPDATE_FILENAME = path.join(UPDATE_DIRNAME, 'update.py')
     chdir(UPDATE_DIRNAME)
@@ -88,8 +91,7 @@ elif (PLP_FILE_TYPE == 'fiscal'):
     print('Invoke: {0}'.format(RASO_FILENAME))
     call(['python', RASO_FILENAME])
     if (PLP_JSON_DATA['operation'] == 'endshift'):
-        call_update()
+        if ('version' in PLP_JSON_DATA):
+            call_update(PLP_JSON_DATA['version'])
 elif (PLP_FILE_TYPE == 'update'):
-    if ('version' in PLP_JSON_DATA):
-        environ['plp_update_to_version'] = PLP_JSON_DATA['version']
-    call_update()
+    call_update(PLP_JSON_DATA['version'])
