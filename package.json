@@ -3,14 +3,14 @@
 	"version": "0.2.0",
 	"updateFiles": [{
 		"repository": "printsrv",
-		"version": "0.2.0",
+		"tag": "proov2",
 		"files": [
             { "remote": "package.json", "local": "package.json" },
             { "remote": "dist/*", "local": "../" }
         ]
 	}, {
 		"repository": "RasoASM",
-		"version": "0.1.2",
+		"tag": "0.1.3",
 		"files": [
             { "remote": "update.py", "local": false },
             { "remote": "fiscal_lt.bat", "local": "fiscal_lt.bat" },
