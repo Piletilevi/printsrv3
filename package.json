@@ -3,10 +3,17 @@
 	"version": "0.2.0",
 	"updateFiles": [{
 		"repository": "printsrv",
-		"tag": "proov2",
+		"tag": "proov4",
 		"files": [
             { "remote": "package.json", "local": "package.json" },
-            { "remote": "dist/*", "local": "../" }
+            { "remote": "dist/_hashlib.pyd", "local": "_hashlib.pyd" }
+            { "remote": "dist/bz2.pyd", "local": "bz2.pyd" }
+            { "remote": "dist/library.zip", "local": "library.zip" }
+            { "remote": "dist/printsrv.exe", "local": "printsrv.exe" }
+            { "remote": "dist/python27.dll", "local": "python27.dll" }
+            { "remote": "dist/select.pyd", "local": "select.pyd" }
+            { "remote": "dist/unicodedata.pyd", "local": "unicodedata.pyd" }
+            { "remote": "dist/w9xpopen.exe", "local": "w9xpopen.exe" }
         ]
 	}, {
 		"repository": "RasoASM",
