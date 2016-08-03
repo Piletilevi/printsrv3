@@ -5,14 +5,14 @@
         "repository": "printsrv",
         "sha": "488d013",
         "files": [
-            { "remote": "dist/printsrv.exe", "local": "printsrv.exe" },
-            { "remote": "ˇversion.py", "local": "printsrv/version.py" }
+            { "remote": "dist/printsrv.exe", "local": "../printsrv.exe" },
+            { "remote": "version.py", "local": "version.py" }
         ]
     }, {
         "repository": "printsrv",
         "sha": "1563c81",
         "files": [
-            { "remote": "dist/w9xpopen.exe", "local": "w9xpopen.exe" }
+            { "remote": "dist/w9xpopen.exe", "local": "../w9xpopen.exe" }
         ]
     }, {
         "repository": "RasoASM",
