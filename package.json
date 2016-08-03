@@ -1,18 +1,18 @@
 {
-	"name": "printsrv",
-	"version": "0.2.0",
-	"updateFiles": [{
-		"repository": "printsrv",
-		"tag": "proov7",
-		"files": [
+    "name": "printsrv",
+    "version": "0.2.0",
+    "updateFiles": [{
+        "repository": "printsrv",
+        "sha": "488d013",
+        "files": [
             { "remote": "package.json", "local": "package.json" },
             { "remote": "dist/printsrv.exe", "local": "printsrv.exe" },
             { "remote": "dist/w9xpopen.exe", "local": "w9xpopen.exe" }
         ]
-	}, {
-		"repository": "RasoASM",
-		"tag": "0.1.3",
-		"files": [
+    }, {
+        "repository": "RasoASM",
+        "sha": "b89fad8",
+        "files": [
             { "remote": "update.py", "local": false },
             { "remote": "fiscal_lt.bat", "local": "fiscal_lt.bat" },
             { "remote": "fiscal_lt.ipy", "local": "fiscal_lt.ipy" },
@@ -20,5 +20,5 @@
             { "remote": "package.json", "local": "package.json" },
             { "remote": "fiscal_lt.bat", "local": "fiscal_lt.bat" }
         ]
-	}]
+    }]
 }
