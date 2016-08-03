@@ -1,19 +1,20 @@
 {
     "name": "printsrv",
-    "version": "0.2.1",
+    "version": "0.2.0",
     "updateFiles": [{
         "repository": "printsrv",
-        "sha": "9ba410f",
+        "sha": "0af93a2",
         "files": [
             { "remote": "dist/printsrv.exe", "local": "../printsrv.exe" },
-            { "remote": "version.py", "local": "version.py" }
+            { "remote": "dist/w9xpopen.exe", "local": "../w9xpopen.exe" }
         ]
     }, {
         "repository": "printsrv",
-        "sha": "9ba410f",
+        "sha": "0af93a2",
         "files": [
+            { "remote": "printsrv.py", "local": "printsrv.py" },
             { "remote": "update.py", "local": "update.py" },
-            { "remote": "dist/w9xpopen.exe", "local": "../w9xpopen.exe" }
+            { "remote": "version.py", "local": "version.py" }
         ]
     }, {
         "repository": "RasoASM",
