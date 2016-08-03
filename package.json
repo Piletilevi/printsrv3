@@ -3,15 +3,16 @@
     "version": "0.2.0",
     "updateFiles": [{
         "repository": "printsrv",
-        "sha": "8f41793",
+        "sha": "9ba410f",
         "files": [
             { "remote": "dist/printsrv.exe", "local": "../printsrv.exe" },
             { "remote": "version.py", "local": "version.py" }
         ]
     }, {
         "repository": "printsrv",
-        "sha": "8f41793",
+        "sha": "9ba410f",
         "files": [
+            { "remote": "update.py", "local": "update.py" },
             { "remote": "dist/w9xpopen.exe", "local": "../w9xpopen.exe" }
         ]
     }, {
