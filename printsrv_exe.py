@@ -17,7 +17,7 @@
        and version = 'GitHub tag' is provided
        then update script gets invoked after RasoASM returns.
 """
-from os import environ, path, chdir
+from os import environ, path, chdir, execlp
 from sys import argv
 from subprocess import call
 from json import load as loadJSON
@@ -75,7 +75,7 @@ def call_update(plp_update_to_version):
     UPDATE_FILENAME = path.join(UPDATE_DIRNAME, 'update.py')
     chdir(UPDATE_DIRNAME)
     print('Invoke: {0}'.format(UPDATE_FILENAME))
-    call(['python', UPDATE_FILENAME])
+    execlp("python", "python", UPDATE_FILENAME)
 
 
 if (PLP_FILE_TYPE == 'ticket'):
