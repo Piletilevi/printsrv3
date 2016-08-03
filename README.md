@@ -17,9 +17,9 @@ Ticket printer driver
 ### Drivers
 
 - Download ticket printer drivers  
-  - [RasoASM-0.1.3.zip](https://github.com/Piletilevi/printsrv/files/399431/RasoASM-0.1.3.zip)
-  - [printsrv-0.2.1-lt-3.zip](https://github.com/Piletilevi/printsrv/files/399432/printsrv-0.2.1-lt-3.zip)
- 
+  - [RasoASM-0.1.3.zip](https://github.com/Piletilevi/RasoASM/archive/0.1.3.zip)
+  - [printsrv-0.2.1-lt-4.zip](https://github.com/Piletilevi/printsrv/archive/0.2.1-lt-4.zip)
+
 - Unpack the contents to C:\plevi folder  
 ```
 C:\plevi\printsrv  
