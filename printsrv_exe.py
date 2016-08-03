@@ -24,36 +24,37 @@ from json import load as loadJSON
 from re import match
 
 
-""" Set plp_language environment variable from persistent.ini """
+# Set plp_language environment variable from persistent.ini
 PERS_INI_FILE = 'C:\plevi\persistent.ini'
 LANGUAGE = None
 with open(PERS_INI_FILE, 'rU') as f:
-	for l in f:
-		if (match('my_id', l)):
-			LANGUAGE = l.split('=')[1].strip().split('_')[0]
-if (not LANGUAGE):
+    for l in f:
+        if match('my_id', l):
+            LANGUAGE = l.split('=')[1].strip().split('_')[0]
+if not LANGUAGE:
     raise Exception('Could not detect language from {0}.'.format(PERS_INI_FILE))
 print('Setting language to {0}'.format(LANGUAGE))
 environ['plp_language'] = LANGUAGE
 
 
-""" Set plp_filename environment variable from passed argument """
+# Set plp_filename environment variable from passed argument
 PLP_FILENAME = argv[1]
 environ['plp_filename'] = path.realpath(PLP_FILENAME)
 
 
 def validate_plp_json(plp_json_data):
-    if (not 'info' in plp_json_data):
+    """ Make sure plp file has required attributes. """
+    if not 'info' in plp_json_data:
         raise IndexError('Missing "info" field in plp file {0}.'.format(PLP_FILENAME))
-    if (plp_json_data['info'] not in ('fiscal', 'update')):
+    if plp_json_data['info'] not in ('fiscal', 'update'):
         raise ValueError('"info" must be either "fiscal" or "update" in {0}.'.format(PLP_FILENAME))
-    if (plp_json_data['info'] == 'fiscal'):
-        if (not 'operation' in plp_json_data):
+    if plp_json_data['info'] == 'fiscal':
+        if not 'operation' in plp_json_data:
             raise IndexError('Missing "operation" field in plp file {0}.'.format(PLP_FILENAME))
-        if (plp_json_data['operation'] not in ('sale', 'startshift', 'endshift')):
+        if plp_json_data['operation'] not in ('sale', 'startshift', 'endshift'):
             raise ValueError('"operation" must be one of "sale", "startshift", "endshift" in {0}.'.format(PLP_FILENAME))
-    if (plp_json_data['info'] == 'update'):
-        if (not 'version' in plp_json_data):
+    if plp_json_data['info'] == 'update':
+        if not 'version' in plp_json_data:
             print('Note: Missing "version" field in plp file {0}.'.format(PLP_FILENAME))
 
 
@@ -62,7 +63,7 @@ def validate_plp_json(plp_json_data):
 try:
     with open(PLP_FILENAME, 'rU') as plp_data_file:
         PLP_JSON_DATA = loadJSON(plp_data_file)
-except Exception as e:
+except:
     PLP_FILE_TYPE = 'ticket'
 else:
     validate_plp_json(PLP_JSON_DATA)
@@ -71,27 +72,27 @@ else:
 
 def call_update(plp_update_to_version):
     environ['plp_update_to_version'] = plp_update_to_version
-    UPDATE_DIRNAME = path.join(path.dirname(argv[0]), 'printsrv')
-    UPDATE_FILENAME = path.join(UPDATE_DIRNAME, 'update.py')
-    chdir(UPDATE_DIRNAME)
-    print('Invoke: {0}'.format(UPDATE_FILENAME))
-    execlp("python", "python", UPDATE_FILENAME)
+    update_dirname = path.join(path.dirname(argv[0]), 'printsrv')
+    update_filename = path.join(update_dirname, 'update.py')
+    chdir(update_dirname)
+    print('Invoke: {0}'.format(update_filename))
+    execlp("python", "python", update_filename)
 
 
-if (PLP_FILE_TYPE == 'ticket'):
+if PLP_FILE_TYPE == 'ticket':
     PRINTSRV_DIRNAME = path.join(path.dirname(argv[0]), 'printsrv')
     PRINTSRV_FILENAME = path.join(PRINTSRV_DIRNAME, 'printsrv.py')
     chdir(PRINTSRV_DIRNAME)
     print('Invoke: {0}'.format(PRINTSRV_FILENAME))
     call(['python', PRINTSRV_FILENAME])
-elif (PLP_FILE_TYPE == 'fiscal'):
+elif PLP_FILE_TYPE == 'fiscal':
     RASO_DIRNAME = path.join(path.dirname(argv[0]), 'RasoASM')
     RASO_FILENAME = path.join(RASO_DIRNAME, 'fiscal.py')
     chdir(RASO_DIRNAME)
     print('Invoke: {0}'.format(RASO_FILENAME))
     call(['python', RASO_FILENAME])
-    if (PLP_JSON_DATA['operation'] == 'endshift'):
-        if ('version' in PLP_JSON_DATA):
+    if PLP_JSON_DATA['operation'] == 'endshift':
+        if 'version' in PLP_JSON_DATA:
             call_update(PLP_JSON_DATA['version'])
-elif (PLP_FILE_TYPE == 'update'):
+elif PLP_FILE_TYPE == 'update':
     call_update(PLP_JSON_DATA['version'])
