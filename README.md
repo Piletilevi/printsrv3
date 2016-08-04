@@ -18,7 +18,7 @@ Ticket printer driver
 
 - Download ticket printer drivers  
   - [RasoASM-0.1.3.zip](https://github.com/Piletilevi/RasoASM/archive/0.1.3.zip)
-  - [printsrv-0.2.1-lt-4.zip](https://github.com/Piletilevi/printsrv/archive/0.2.1-lt-4.zip)
+  - [printsrv-0.2.1-lt-5.zip](https://github.com/Piletilevi/printsrv/archive/0.2.1-lt-5.zip)
 
 - Unpack the contents to C:\plevi folder  
 ```
@@ -31,7 +31,7 @@ There is an issue with IronPython installation. It doesnot register to windows p
 To verify, that IronPython is correctly set up, open cmd and run `PATH` command. It will return all the registered system paths - look, if **IronPython 2.7** is also there.  
 If it is not, then You have to open System Environment Variables from Control Panel and append to the end of PATH variable value `;%PROGRAMFILES%\IronPython 2.7`
 
-Also You should verify pip modules with 
+Also You should verify pip modules with
 `C:\Users\Kasa>pip list`
 and output should look like
 > fontname (0.2.0)  
@@ -52,7 +52,7 @@ WMI (1.4.9)
 - register .plp files in Windows to be opened automatically with `C:\plevi\printsrv.exe`  
 - Salespoint ID must be unique and written to `C:\plevi\persistent.ini` file with syntax 'LT_/salespoint_name/'
   example: my_id = LT_kauno_maxima_01
-- please make sure, that the ticket printer name in `C:\plevi\persistent.ini` and `C:\plevi\setup_lt.ini` is the same, as in Windows (Devices and printers) and page size in printer settings is 'Letter' 
+- please make sure, that the ticket printer name in `C:\plevi\persistent.ini` and `C:\plevi\setup_lt.ini` is the same, as in Windows (Devices and printers) and page size in printer settings is 'Letter'
 - make a test sale of ticket with successful transaction confirmation - then also the receipt is printed
 
 
