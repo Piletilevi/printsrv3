@@ -1,6 +1,6 @@
 {
     "name": "printsrv",
-    "version": "0.2.0",
+    "version": "0.2.1-lt-5",
     "updateFiles": [{
         "repository": "printsrv",
         "sha": "0af93a2",
