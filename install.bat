@@ -10,4 +10,9 @@ pip install qrcode
 pip install github3.py
 pip install wmi
 
+fonts/code128.ttf
+fonts/datamatrix.ttf
+fonts/ean13.ttf
+fonts/pdf417.ttf
+
 del install.bat
