@@ -25,7 +25,10 @@ Ticket printer driver
 C:\plevi\printsrv  
 C:\plevi\RasoASM  
 ```
-- execute `C:\plevi\printsrv\install.bat`  
+- execute `C:\plevi\printsrv\install.bat` from Explorer  
+  or from console:  
+  `> cd C:\plevi\printsrv` and from there  
+  `C:\plevi\printsrv> install.bat`
 
 There is an issue with IronPython installation. It doesnot register to windows path variable, so we included registration command into install.bat (that You just executed). Everything should be ok now, but on some windows systems it keeps forgetting the new path.  
 To verify, that IronPython is correctly set up, open cmd and run `PATH` command. It will return all the registered system paths - look, if **IronPython 2.7** is also there.  
