@@ -58,22 +58,22 @@ COULD_NOT_DOWNLOAD_URL_LAYOUT = 2 ** 20
 
 EXIT_STATUS = EXIT_OK
 
-device_context_handle = None # pylint: disable=C0103
-device_context = None # pylint: disable=C0103
+DEVICE_CONTEXT_HANDLE = None # pylint: disable=C0103
+DEVICE_CONTEXT = None # pylint: disable=C0103
 proxy = None
 
 class StreamToLogger(object):
-   """
-   Fake file-like stream object that redirects writes to a logger instance.
-   """
-   def __init__(self, logger, log_level=logging.INFO):
-      self.logger = logger
-      self.log_level = log_level
-      #self.linebuf = u""
+    """
+    Fake file-like stream object that redirects writes to a logger instance.
+    """
+    def __init__(self, logger, log_level=logging.INFO):
+        self.logger = logger
+        self.log_level = log_level
+        #self.linebuf = u""
 
-   def write(self, buf):
-      for line in buf.rstrip().splitlines():
-         self.logger.log(self.log_level, line.rstrip())
+    def write(self, buf):
+        for line in buf.rstrip().splitlines():
+            self.logger.log(self.log_level, line.rstrip())
 
 #################################################################
 def set_exit_status(status):
@@ -89,68 +89,69 @@ def translate_to_code128(chaine):
             if not i in string.digits:
                 return False
         return True
-    Code128=""
+    Code128 = ""
     tableB=True
-    i=0
-    while i<len(chaine):
-        if tableB==True:
-            #"B==1a"
-            if (i<len(chaine)-4):
+    i = 0
+    while i < len(chaine):
+        if tableB == True:
+            #"B == 1a"
+            if i < len(chaine) - 4:
                 if testnum(chaine[i:4]):
-                    if i==0:
+                    if i == 0:
                         #"START_C"
-                        Code128=chr(210) #f
+                        Code128 = chr(210) #f
                     else:
                         #"CODE_C"
-                        Code128=Code128+chr(204) #f
-                    tableB=False
+                        Code128 = Code128 + chr(204) #f
+                    tableB = False
                 else:
-                    if i==0:
+                    if i == 0:
                         #"START_B"
-                        Code128=chr(209) #f
-                        tableB=True
+                        Code128 = chr(209) #f
+                        tableB = True
             else:
-                if i==0:
+                if i == 0:
                     #"START_B"
-                    Code128=chr(209) #f
-                    tableB=True
-        if tableB==False:
-            #"B==0"
-            if testnum(chaine[i:i+2]) and i<=(len(chaine)-2):
-                dummy=int(chaine[i:i+2])
+                    Code128 = chr(209) #f
+                    tableB = True
+        if tableB == False:
+            #"B == 0"
+            if testnum(chaine[i:i+2]) and i <= (len(chaine) - 2):
+                dummy = int(chaine[i:i+2])
                 #"TABLE_C processing 2:%s"%chaine[i:i+2]
-                if dummy<95:
-                    dummy+=32
+                if dummy < 95:
+                    dummy += 32
                 else:
-                    dummy+=105 #f
-                Code128=Code128+chr(dummy)
-                i=i+2
+                    dummy += 105 #f
+                Code128 = Code128 + chr(dummy)
+                i = i + 2
             else:
                 #"TABLE_C->CODE_B"
-                Code128=Code128+chr(205) #f
-                tableB=True
-        if tableB==True:
+                Code128 = Code128 + chr(205) #f
+                tableB = True
+        if tableB == True:
             #"B==1b"
-            Code128=Code128+chaine[i]
-            i=i+1
+            Code128 = Code128 + chaine[i]
+            i = i + 1
     for i,dum in enumerate(Code128):
-        dummy=ord(dum)
-        if dummy<127:
-            dummy-=32
+        dummy = ord(dum)
+        if dummy < 127:
+            dummy -= 32
         else:
-            dummy-=105 #f
-        if i==0:
-            checksum=dummy
+            dummy -= 105 #f
+        if i == 0:
+            checksum = dummy
             #"init:%d"%checksum
-        checksum=(checksum + i*dummy)
-        while checksum>=103: # mod 103
-            checksum-=103
+        # checksum=(checksum + i*dummy)
+        checksum += i * dummy
+        while checksum >= 103: # mod 103
+            checksum -= 103
         #"iter:%d"%checksum
-    if checksum<95:
-        checksum+=32
+    if checksum < 95:
+        checksum += 32
     else:
-        checksum+=105 #f
-    Code128=Code128+chr(checksum)+chr(211)
+        checksum += 105 #f
+    Code128 = Code128 + chr(checksum) + chr(211)
     return Code128
 
 #################################################################
@@ -162,9 +163,9 @@ def translate_to_2_of_5(code):
     length = len(code)
     at = 0
     ret = ""
-    while (at < length):
+    while at < length:
         tmp = int("%s%s" % (code[at], code[at + 1]))
-        if (tmp < 94):
+        if tmp < 94:
             tmp = tmp + 33
         else:
             tmp = tmp + 101
@@ -177,8 +178,8 @@ def translate_to_2_of_5(code):
 def is_printer_online(printer_name):
     for wmi_printer in wmi.WMI().Win32_Printer ():
         # logger.info("printer_name {0} =? wmi_printer.caption {1}".format(printer_name, wmi_printer.caption))
-        if (printer_name == wmi_printer.caption):
-            if (wmi_printer.WorkOffline):
+        if printer_name == wmi_printer.caption:
+            if wmi_printer.WorkOffline:
                 logger.error("Printer {0} is offline.".format(printer_name))
                 return False
             else:
@@ -186,28 +187,27 @@ def is_printer_online(printer_name):
                 return True
 
 #################################################################
-def get_check_printer_msg_text(cfg):
-    # lang = get_lang(cfg)
-    if(language == "lv"):
+def get_check_printer_msg_text():
+    if language == "lv":
         return (u"Pārbaudiet printeri un tad spiediet OK!", u"Pārbaudiet printeri!")
-    elif(language == "ee"):
+    elif language == "ee":
         return (u"Check printer and click OK when ready!", u"Check printer!")
-    elif(language == "by"):
+    elif language == "by":
         return (u"Проверьте принтер и нажмите кнопку OK, когда будете готовы!", u"Проверьте принтер!")
     else:
         return (u"Check printer and click OK when ready!", u"Check printer!")
 
 #################################################################
 def start_new_document(cfg, is_first_document = False):
-    global device_context
-    global device_context_handle
+    global DEVICE_CONTEXT
+    global DEVICE_CONTEXT_HANDLE
     global EXIT_STATUS
 
     printer = cfg.get("DEFAULT", "printer_name")
     retry_times_left = 3
     # Display message box if printer is not online. Retry 3 times
     while not is_printer_online(printer):
-        msg, title = get_check_printer_msg_text(cfg)
+        msg, title = get_check_printer_msg_text()
         ret = windll.user32.MessageBoxW(0, msg, title, 0x40 | 0x0) #OK only
         retry_times_left -= 1
         if (retry_times_left <= 0):
@@ -232,7 +232,7 @@ def start_new_document(cfg, is_first_document = False):
     if (is_first_document):
         retry_times_left = 3
         while (len(printjobs)!=0):
-            msg, title = get_check_printer_msg_text(cfg)
+            msg, title = get_check_printer_msg_text()
             ret = windll.user32.MessageBoxW(0, msg, title, 0x40 | 0x0) #OK only
             retry_times_left -= 1
             if (retry_times_left<=0):
@@ -246,33 +246,33 @@ def start_new_document(cfg, is_first_document = False):
         logger.info("Setting orientation failed: {0}".format(sys.exc_info()[0]))
     try:
         logger.info("win32gui.CreateDC")
-        device_context_handle = win32gui.CreateDC("WINSPOOL", printer, devmode)
+        DEVICE_CONTEXT_HANDLE = win32gui.CreateDC("WINSPOOL", printer, devmode)
         logger.info("win32ui.CreateDCFromHandle")
-        device_context = win32ui.CreateDCFromHandle(device_context_handle)
+        DEVICE_CONTEXT = win32ui.CreateDCFromHandle(DEVICE_CONTEXT_HANDLE)
     except:
-        logger.error("exception while creating device_context")
+        logger.error("exception while creating DEVICE_CONTEXT")
         set_exit_status(COULD_NOT_CREATE_DC)
         sys.exit(EXIT_STATUS)
-    if(device_context==None):
-        logger.error("device_context not created")
+    if DEVICE_CONTEXT == None:
+        logger.error("DEVICE_CONTEXT not created")
         set_exit_status(DC_NOT_CREATED)
         sys.exit(EXIT_STATUS)
-    if(device_context_handle == None):
-        logger.error("device_context_handle not created")
+    if DEVICE_CONTEXT_HANDLE == None:
+        logger.error("DEVICE_CONTEXT_HANDLE not created")
         set_exit_status(HDC_NOT_CREATED)
         sys.exit(EXIT_STATUS)
 
-    logger.info("device_context.SetMapMode")
-    device_context.SetMapMode(int(cfg.get("DEFAULT", "map_mode")))
-    logger.info("device_context.StartDoc")
-    device_context.StartDoc(cfg.get("DEFAULT", "print_document_name"))
-    logger.info("device_context.StartPage")
-    device_context.StartPage()
+    logger.info("DEVICE_CONTEXT.SetMapMode")
+    DEVICE_CONTEXT.SetMapMode(int(cfg.get("DEFAULT", "map_mode")))
+    logger.info("DEVICE_CONTEXT.StartDoc")
+    DEVICE_CONTEXT.StartDoc(cfg.get("DEFAULT", "print_document_name"))
+    logger.info("DEVICE_CONTEXT.StartPage")
+    DEVICE_CONTEXT.StartPage()
     logger.info("win32ui.CreateFont");
     font = win32ui.CreateFont({"name": "Arial", "height": 16})
-    logger.info("device_context.SelectObject")
-    device_context.SelectObject(font)
-    logger.info("device_context.SelectObject DONE")
+    logger.info("DEVICE_CONTEXT.SelectObject")
+    DEVICE_CONTEXT.SelectObject(font)
+    logger.info("DEVICE_CONTEXT.SelectObject DONE")
 
 #################################################################
 def rgb2int(R, G, B):
@@ -280,19 +280,19 @@ def rgb2int(R, G, B):
 
 #################################################################
 def print_document():
-    device_context.EndPage()
-    device_context.EndDoc()
+    DEVICE_CONTEXT.EndPage()
+    DEVICE_CONTEXT.EndDoc()
 
 #################################################################
 def set_section_font_indirect(section_cfg, postfix = ""):
-    global device_context
-    global device_context_handle
+    global DEVICE_CONTEXT
+    global DEVICE_CONTEXT_HANDLE
     fonts=[section_cfg["font_name"+postfix]]
     def callback(font, tm, fonttype, fonts):
         if(font.lfFaceName == fonts[0]):
             fonts.append(font)
         return True
-    win32gui.EnumFontFamilies(device_context_handle, None, callback,fonts)
+    win32gui.EnumFontFamilies(DEVICE_CONTEXT_HANDLE, None, callback,fonts)
     # lf = win32gui.LOGFONT()
     try:
         log_font = fonts[1]
@@ -324,15 +324,15 @@ def set_section_font_indirect(section_cfg, postfix = ""):
     if not font_handle:
         raise StandardError("ERROR: Unable to create font")
     try:
-        device_context.SetTextColor(rgb2int(int(section_cfg["font_color_red"+postfix]), int(section_cfg["font_color_green"+postfix]), int(section_cfg["font_color_blue"+postfix])))
+        DEVICE_CONTEXT.SetTextColor(rgb2int(int(section_cfg["font_color_red"+postfix]), int(section_cfg["font_color_green"+postfix]), int(section_cfg["font_color_blue"+postfix])))
     except:
-        device_context.SetTextColor(rgb2int(0, 0, 0))
-    font_handle = win32gui.SelectObject(device_context_handle, font_handle)
+        DEVICE_CONTEXT.SetTextColor(rgb2int(0, 0, 0))
+    font_handle = win32gui.SelectObject(DEVICE_CONTEXT_HANDLE, font_handle)
 
 #################################################################
 def set_section_font(section_cfg,postfix=""):
-    global device_context
-    global device_context_handle
+    global DEVICE_CONTEXT
+    global DEVICE_CONTEXT_HANDLE
     font_params = {}
     font_params["name"] = section_cfg["font_name"+postfix]
     font_params["height"] = int(section_cfg["font_height"+postfix])
@@ -346,15 +346,15 @@ def set_section_font(section_cfg,postfix=""):
         pass
     font = win32ui.CreateFont(font_params)
     try:
-        device_context.SetTextColor(rgb2int(int(section_cfg["font_color_red"+postfix]), int(section_cfg["font_color_green"+postfix]), int(section_cfg["font_color_blue"+postfix])))
+        DEVICE_CONTEXT.SetTextColor(rgb2int(int(section_cfg["font_color_red"+postfix]), int(section_cfg["font_color_green"+postfix]), int(section_cfg["font_color_blue"+postfix])))
     except:
-        device_context.SetTextColor(rgb2int(0, 0, 0))
-    device_context.SelectObject(font)
+        DEVICE_CONTEXT.SetTextColor(rgb2int(0, 0, 0))
+    DEVICE_CONTEXT.SelectObject(font)
 
 #################################################################
 def print_text_value(section_cfg, value):
-    global device_context
-    global device_context_handle
+    global DEVICE_CONTEXT
+    global DEVICE_CONTEXT_HANDLE
 
     try:
         value = value.replace(section_cfg["replace_from"],section_cfg["replace_to"])
@@ -365,21 +365,7 @@ def print_text_value(section_cfg, value):
     except:
         logger.warning("can't decode:%s" % value)
         set_exit_status(CANT_DECODE_AS_UTF8)
-    # # value = value.encode("utf-8")
-    # value = value.encode("windows-1257")
-    # from Tkinter import *
-    # from collections import deque
-    # root = Tk()
-    # w = Label(root, text=value,font = ("freemono","80"))
-    # w.pack()
-    # root.mainloop()
-    # value = value.encode("mbcs")
 
-    # for v in value :
-    #     print "%d,"%ord(v)
-    # set_section_font(section_cfg,"")
-    # windll.gdi32.TextOutW( device_context_handle,int(section_cfg["x"]),int(section_cfg["y"]),value,len(value) )
-    # value="te"+u"\u2424"+value
     value_w = ""
     value_w1 = ""
     value_w2 = ""
@@ -397,11 +383,11 @@ def print_text_value(section_cfg, value):
     try:
         space = value.rfind(u" ",0,int(section_cfg["font_wrap"]))
         logger.info("wrap %d found at:%d"%(int(section_cfg["font_wrap"]),space))
-        if(space!=-1):
+        if space != -1:
             value_w = value[space+1:]
             value = value[0:space]
             space = value_w.rfind(u" ",0,int(section_cfg["font_wrap"]))
-            if(space!=-1):
+            if space!=-1:
                 value_ww = value_w[space+1:]
                 value_w = value_w[0:space]
     except:
@@ -410,11 +396,11 @@ def print_text_value(section_cfg, value):
     try:
         space1 = value1.rfind(u" ",0,int(section_cfg["font_wrap1"]))
         logger.info("wrap %d found at:%d"%(int(section_cfg["font_wrap1"]),space1))
-        if(space1!=-1):
+        if space1! =- 1:
             value_w1 = value1[space1+1:]
             value1 = value1[0:space1]
             space1 = value_w1.rfind(u" ",0,int(section_cfg["font_wrap1"]))
-            if(space1!=-1):
+            if space1 != -1:
                 value_ww1 = value_w1[space1+1:]
                 value_w1 = value_w1[0:space1]
     except:
@@ -423,11 +409,11 @@ def print_text_value(section_cfg, value):
     try:
         space2 = value2.rfind(u" ",0,int(section_cfg["font_wrap2"]))
         logger.info(" wrap %d found at:%d" % (int(section_cfg["font_wrap2"]),space2))
-        if(space2!=-1):
+        if space2 != -1:
             value_w2 = value2[space2+1:]
             value2 = value2[0:space2]
             space2 = value_w2.rfind(u" ",0,int(section_cfg["font_wrap2"]))
-            if(space2!=-1):
+            if space2 != -1:
                 value_ww2 = value_w2[space2+1:]
                 value_w2 = value_w2[0:space2]
     except:
@@ -436,7 +422,7 @@ def print_text_value(section_cfg, value):
     try:
         space3 = value3.rfind(u" ",0,int(section_cfg["font_wrap3"]))
         logger.info(" wrap %d found at:%d" % (int(section_cfg["font_wrap3"]),space3))
-        if(space3!=-1):
+        if space3 != -1:
             value_w3 = value3[space3+1:]
             value3 = value3[0:space3]
             space3 = value_w3.rfind(u" ",0,int(section_cfg["font_wrap3"]))
@@ -448,72 +434,72 @@ def print_text_value(section_cfg, value):
 
     try:
         set_section_font_indirect(section_cfg,"")
-        windll.gdi32.TextOutW( device_context_handle,
+        windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
             int(section_cfg["x"]),
             int(section_cfg["y"]),
             value, len(value) )
         try:
             set_section_font_indirect(section_cfg,"")
-            windll.gdi32.TextOutW( device_context_handle,
+            windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
                 int(section_cfg["x"]),
                 int(section_cfg["y"]) + int(section_cfg["font_height"]),
                 value_w, len(value_w) )
             set_section_font_indirect(section_cfg,"")
-            windll.gdi32.TextOutW( device_context_handle,
+            windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
                 int(section_cfg["x"]),
                 int(section_cfg["y"]) + 2 * int(section_cfg["font_height"]),
                 value_ww, len(value_ww) )
         except:
             pass
         set_section_font_indirect(section_cfg,"1")
-        windll.gdi32.TextOutW( device_context_handle,
+        windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
             int(section_cfg["x1"]),
             int(section_cfg["y1"]),
             value1, len(value1) )
         try:
             set_section_font_indirect(section_cfg,"1")
-            windll.gdi32.TextOutW( device_context_handle,
+            windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
                 int(section_cfg["x1"]),
                 int(section_cfg["y1"]) + int(section_cfg["font_height1"]),
                 value_w1, len(value_w1) )
             set_section_font_indirect(section_cfg,"1")
-            windll.gdi32.TextOutW( device_context_handle,
+            windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
                 int(section_cfg["x1"]),
                 int(section_cfg["y1"]) + 2 * int(section_cfg["font_height1"]),
                 value_ww1, len(value_ww1) )
         except:
             pass
         set_section_font_indirect(section_cfg,"2")
-        windll.gdi32.TextOutW( device_context_handle,
+        windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
             int(section_cfg["x2"]),
             int(section_cfg["y2"]),
             value2, len(value2) )
         try:
             set_section_font_indirect(section_cfg,"2")
-            windll.gdi32.TextOutW( device_context_handle,
+            windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
                 int(section_cfg["x2"]),
                 int(section_cfg["y2"]) + int(section_cfg["font_height2"]),
                 value_w2, len(value_w2) )
             set_section_font_indirect(section_cfg,"2")
-            windll.gdi32.TextOutW( device_context_handle,
+            windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
                 int(section_cfg["x2"]),
                 int(section_cfg["y2"]) + 2 * int(section_cfg["font_height2"]),
                 value_ww2, len(value_ww2) )
         except:
             pass
         set_section_font_indirect(section_cfg,"3")
-        windll.gdi32.TextOutW( device_context_handle,
+        windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
             int(section_cfg["x3"]),
             int(section_cfg["y3"]),
             value3, len(value3) )
         try:
             set_section_font_indirect(section_cfg,"3")
-            windll.gdi32.TextOutW( device_context_handle,
+            windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
                 int(section_cfg["x3"]),
                 int(section_cfg["y3"]) + int(section_cfg["font_height3"]),
                 value_w3, len(value_w3) )
             set_section_font_indirect(section_cfg,"3")
-            windll.gdi32.TextOutW( device_context_handle,
+            windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
                 int(section_cfg["x3"]),
                 int(section_cfg["y3"]) + 2 * int(section_cfg["font_height3"]),
                 value_ww3, len(value_ww3) )
@@ -525,9 +511,9 @@ def print_text_value(section_cfg, value):
         raise
 
 #################################################################
-def print_image(x, y, value, rotate=0):
-    global device_context
-    global device_context_handle
+def print_image(x, y, value, rotate = 0):
+    global DEVICE_CONTEXT
+    global DEVICE_CONTEXT_HANDLE
     try:
         bmp = Image.open(value)
     except:
@@ -536,11 +522,11 @@ def print_image(x, y, value, rotate=0):
         return None
     rotate = int(rotate)
     logger.info("rotate=%d" % rotate)
-    if(rotate==90):
+    if rotate == 90:
         bmp = bmp.transpose(Image.ROTATE_90)
-    if(rotate==180):
+    if rotate == 180:
         bmp = bmp.transpose(Image.ROTATE_180)
-    if(rotate==270):
+    if rotate == 270:
         bmp = bmp.transpose(Image.ROTATE_270)
 
     try:
@@ -549,12 +535,12 @@ def print_image(x, y, value, rotate=0):
         print "ERROR: Only jpg and bmp are supported"
         set_exit_status(UNSUPPORTED_IMAGE_FORMAT)
         return None
-    dib.draw(device_context.GetHandleOutput(), (int(x), int(y), int(x) + bmp.size[0], int(y) + bmp.size[1]))
+    dib.draw(DEVICE_CONTEXT.GetHandleOutput(), (int(x), int(y), int(x) + bmp.size[0], int(y) + bmp.size[1]))
 
 #################################################################
 def print_qmatrix(x, y, size, value):
-    global device_context
-    global device_context_handle
+    global DEVICE_CONTEXT
+    global DEVICE_CONTEXT_HANDLE
 
     factory = qrcode.image.pil.PilImage
 
@@ -572,15 +558,15 @@ def print_qmatrix(x, y, size, value):
     try:
         dib = ImageWin.Dib(im)
     except:
-        print "ERROR: unsupported image format in print_qmatrix"
+        print("ERROR: unsupported image format in print_qmatrix")
         set_exit_status(UNSUPPORTED_IMAGE_FORMAT)
         return None
-    dib.draw(device_context.GetHandleOutput(), (int(x), int(y), int(x) + int(size), int(y) + int(size)))
+    dib.draw(DEVICE_CONTEXT.GetHandleOutput(), (int(x), int(y), int(x) + int(size), int(y) + int(size)))
 
 #################################################################
 def print_qmatrix_value(section_cfg, value):
-    global device_context
-    global device_context_handle
+    global DEVICE_CONTEXT
+    global DEVICE_CONTEXT_HANDLE
     # try:
     print_qmatrix(section_cfg["x"], section_cfg["y"], section_cfg["size"], value)
     # except:
@@ -588,9 +574,11 @@ def print_qmatrix_value(section_cfg, value):
 
 #################################################################
 def print_image_value(section_cfg, value):
-    global device_context
-    global device_context_handle
-    """\n\tThis function prints image specified in ini file\n\tvalues are x position, y position and value which is full path to the jpg/bmp file\n\t"""
+    global DEVICE_CONTEXT
+    global DEVICE_CONTEXT_HANDLE
+    """ This function prints image specified in ini file
+        values are x position, y position and value which is full path to the jpg/bmp file
+    """
     try:
         try:
             print_image(section_cfg["x"], section_cfg["y"], value, section_cfg["orientation"])
@@ -617,8 +605,8 @@ def print_image_value(section_cfg, value):
 
 #################################################################
 def print_image_xml_value(section_cfg, value):
-    global device_context
-    global device_context_handle
+    global DEVICE_CONTEXT
+    global DEVICE_CONTEXT_HANDLE
     global proxy
     """
     This function prints image specified. if it is not available locally it downloads it from web.
@@ -697,17 +685,17 @@ def print_image_url_value(section_cfg, value):
 
 #################################################################
 def print_bar_2_of_5_value(section_cfg, value):
-    global device_context
-    global device_context_handle
+    global DEVICE_CONTEXT
+    global DEVICE_CONTEXT_HANDLE
     try:
         set_section_font_indirect(section_cfg,"")
-        device_context.TextOut(int(section_cfg["x"]), int(section_cfg["y"]), translate_to_2_of_5(value))
+        DEVICE_CONTEXT.TextOut(int(section_cfg["x"]), int(section_cfg["y"]), translate_to_2_of_5(value))
         set_section_font_indirect(section_cfg,"1")
-        device_context.TextOut(int(section_cfg["x1"]), int(section_cfg["y1"]), translate_to_2_of_5(value))
+        DEVICE_CONTEXT.TextOut(int(section_cfg["x1"]), int(section_cfg["y1"]), translate_to_2_of_5(value))
         set_section_font_indirect(section_cfg,"2")
-        device_context.TextOut(int(section_cfg["x2"]), int(section_cfg["y2"]), translate_to_2_of_5(value))
+        DEVICE_CONTEXT.TextOut(int(section_cfg["x2"]), int(section_cfg["y2"]), translate_to_2_of_5(value))
         set_section_font_indirect(section_cfg,"3")
-        device_context.TextOut(int(section_cfg["x3"]), int(section_cfg["y3"]), translate_to_2_of_5(value))
+        DEVICE_CONTEXT.TextOut(int(section_cfg["x3"]), int(section_cfg["y3"]), translate_to_2_of_5(value))
     except(KeyError):
         pass
     except:
@@ -716,17 +704,17 @@ def print_bar_2_of_5_value(section_cfg, value):
 
 #################################################################
 def print_bar_3_of_9_value(section_cfg, value):
-    global device_context
-    global device_context_handle
+    global DEVICE_CONTEXT
+    global DEVICE_CONTEXT_HANDLE
     try:
         set_section_font_indirect(section_cfg,"")
-        device_context.TextOut(int(section_cfg["x"]), int(section_cfg["y"]), translate_to_3_of_9(value))
+        DEVICE_CONTEXT.TextOut(int(section_cfg["x"]), int(section_cfg["y"]), translate_to_3_of_9(value))
         set_section_font_indirect(section_cfg,"1")
-        device_context.TextOut(int(section_cfg["x1"]), int(section_cfg["y1"]), translate_to_3_of_9(value))
+        DEVICE_CONTEXT.TextOut(int(section_cfg["x1"]), int(section_cfg["y1"]), translate_to_3_of_9(value))
         set_section_font_indirect(section_cfg,"2")
-        device_context.TextOut(int(section_cfg["x2"]), int(section_cfg["y2"]), translate_to_3_of_9(value))
+        DEVICE_CONTEXT.TextOut(int(section_cfg["x2"]), int(section_cfg["y2"]), translate_to_3_of_9(value))
         set_section_font_indirect(section_cfg,"3")
-        device_context.TextOut(int(section_cfg["x3"]), int(section_cfg["y3"]), translate_to_3_of_9(value))
+        DEVICE_CONTEXT.TextOut(int(section_cfg["x3"]), int(section_cfg["y3"]), translate_to_3_of_9(value))
     except(KeyError):
         pass
     except:
@@ -735,17 +723,17 @@ def print_bar_3_of_9_value(section_cfg, value):
 
 #################################################################
 def print_code128_value(section_cfg, value):
-    global device_context
-    global device_context_handle
+    global DEVICE_CONTEXT
+    global DEVICE_CONTEXT_HANDLE
     try:
         set_section_font_indirect(section_cfg,"")
-        device_context.TextOut(int(section_cfg["x"]), int(section_cfg["y"]), translate_to_code128(value))
+        DEVICE_CONTEXT.TextOut(int(section_cfg["x"]), int(section_cfg["y"]), translate_to_code128(value))
         set_section_font_indirect(section_cfg,"1")
-        device_context.TextOut(int(section_cfg["x1"]), int(section_cfg["y1"]), translate_to_code128(value))
+        DEVICE_CONTEXT.TextOut(int(section_cfg["x1"]), int(section_cfg["y1"]), translate_to_code128(value))
         set_section_font_indirect(section_cfg,"2")
-        device_context.TextOut(int(section_cfg["x2"]), int(section_cfg["y2"]), translate_to_code128(value))
+        DEVICE_CONTEXT.TextOut(int(section_cfg["x2"]), int(section_cfg["y2"]), translate_to_code128(value))
         set_section_font_indirect(section_cfg,"3")
-        device_context.TextOut(int(section_cfg["x3"]), int(section_cfg["y3"]), translate_to_code128(value))
+        DEVICE_CONTEXT.TextOut(int(section_cfg["x3"]), int(section_cfg["y3"]), translate_to_code128(value))
     except(KeyError):
         pass
     except:
@@ -754,8 +742,8 @@ def print_code128_value(section_cfg, value):
 
 #################################################################
 def font_tests():
-    global device_context
-    global device_context_handle
+    global DEVICE_CONTEXT
+    global DEVICE_CONTEXT_HANDLE
     arr = {}
     arr["x"] = 300
     arr["y"] = -300
@@ -766,7 +754,7 @@ def font_tests():
     #print type(text)
     #print type(text)
     set_section_font(arr,"")
-    device_context.TextOut(int(arr["x"]), int(arr["y"]), text)
+    DEVICE_CONTEXT.TextOut(int(arr["x"]), int(arr["y"]), text)
 
 #################################################################
 def print_static_text_value(cfg):
@@ -807,8 +795,8 @@ def read_param(line):
 
 #################################################################
 def read_plp_file(cfg, plp_filename, skip_file_delete):
-    global device_context
-    global device_context_handle
+    global DEVICE_CONTEXT
+    global DEVICE_CONTEXT_HANDLE
     global proxy
 
     document_open = 0
@@ -1210,10 +1198,10 @@ for o, a in opts:
         hprinter = win32print.OpenPrinter(tmp_printer)
         devmode = win32print.GetPrinter(hprinter, 2)["pDevMode"]
         printjobs = win32print.EnumJobs(hprinter, 0, 999)
-        device_context_handle = win32gui.CreateDC("WINSPOOL", tmp_printer, devmode)
-        device_context = win32ui.CreateDCFromHandle(device_context_handle)
+        DEVICE_CONTEXT_HANDLE = win32gui.CreateDC("WINSPOOL", tmp_printer, devmode)
+        DEVICE_CONTEXT = win32ui.CreateDCFromHandle(DEVICE_CONTEXT_HANDLE)
         fonts = []
-        win32gui.EnumFontFamilies(device_context_handle, None, font_list_callback,fonts)
+        win32gui.EnumFontFamilies(DEVICE_CONTEXT_HANDLE, None, font_list_callback,fonts)
         sys.exit(EXIT_STATUS)
     else:
         assert False, "unhandled option"
