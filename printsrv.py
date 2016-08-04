@@ -396,7 +396,7 @@ def print_text_value(section_cfg, value):
     try:
         space1 = value1.rfind(u" ",0,int(section_cfg["font_wrap1"]))
         logger.info("wrap %d found at:%d"%(int(section_cfg["font_wrap1"]),space1))
-        if space1! =- 1:
+        if space1 != -1:
             value_w1 = value1[space1+1:]
             value1 = value1[0:space1]
             space1 = value_w1.rfind(u" ",0,int(section_cfg["font_wrap1"]))
