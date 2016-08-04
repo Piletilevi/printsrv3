@@ -32,7 +32,7 @@ To verify, that IronPython is correctly set up, open cmd and run `PATH` command.
 If it is not, then You have to open System Environment Variables from Control Panel and append to the end of PATH variable value `;%PROGRAMFILES%\IronPython 2.7`
 
 Also You should verify pip modules with
-`C:\Users\Kasa>pip list`
+`> pip list`
 and output should look like
 > fontname (0.2.0)  
 freetype-py (1.0.2)  
