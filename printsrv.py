@@ -210,7 +210,7 @@ def start_new_document(cfg, is_first_document = False):
         msg, title = get_check_printer_msg_text()
         ret = windll.user32.MessageBoxW(0, msg, title, 0x40 | 0x0) #OK only
         retry_times_left -= 1
-        if (retry_times_left <= 0):
+        if retry_times_left <= 0:
             logger.error("Printer {0} is offline. Exiting.".format(printer))
             set_exit_status(PRINTER_IS_OFFLINE)
             sys.exit(EXIT_STATUS)
@@ -229,13 +229,13 @@ def start_new_document(cfg, is_first_document = False):
     # logger.info("Jobs: {0}".format(printjobs))
 
     # if this is first document then there should be no documents in printer queue
-    if (is_first_document):
+    if is_first_document:
         retry_times_left = 3
-        while (len(printjobs)!=0):
+        while len(printjobs) != 0:
             msg, title = get_check_printer_msg_text()
             ret = windll.user32.MessageBoxW(0, msg, title, 0x40 | 0x0) #OK only
             retry_times_left -= 1
-            if (retry_times_left<=0):
+            if retry_times_left <= 0:
                 logger.error("Printer has old jobs in queue. Exiting")
                 # set_exit_status(PRINTER_IS_OFFLINE)
                 sys.exit(EXIT_STATUS)
@@ -289,7 +289,7 @@ def set_section_font_indirect(section_cfg, postfix = ""):
     global DEVICE_CONTEXT_HANDLE
     fonts=[section_cfg["font_name"+postfix]]
     def callback(font, tm, fonttype, fonts):
-        if(font.lfFaceName == fonts[0]):
+        if font.lfFaceName == fonts[0]:
             fonts.append(font)
         return True
     win32gui.EnumFontFamilies(DEVICE_CONTEXT_HANDLE, None, callback,fonts)
@@ -426,7 +426,7 @@ def print_text_value(section_cfg, value):
             value_w3 = value3[space3+1:]
             value3 = value3[0:space3]
             space3 = value_w3.rfind(u" ",0,int(section_cfg["font_wrap3"]))
-            if(space3!=-1):
+            if space3!=-1:
                 value_ww3 = value_w3[space3+1:]
                 value_w3 = value_w3[0:space3]
     except:
@@ -627,7 +627,7 @@ def print_image_xml_value(section_cfg, value):
 
 
             # use proxy class wrap to urllib to download image if proxy is set
-            if(proxy == None):
+            if proxy == None:
                 logger.info("image_url:{0}, local_image_filename:{1}".format(image_url, local_image_filename))
                 ret = urllib.urlretrieve(image_url, local_image_filename)
             else:
@@ -655,14 +655,14 @@ def print_image_url_value(section_cfg, value):
     """
     images = value.split(";")
     for image in images:
-        if (len(image) != 0):
+        if len(image) != 0:
             image_params = image.split(",")
-            if (len(image_params) == 3):
+            if len(image_params) == 3:
                 image_url = image_params[0]
                 image_x = image_params[1]
                 image_y = image_params[2]
                 image_url_parts = urlparse.urlsplit(image_url)
-                if (len(image_url_parts) == 5):
+                if len(image_url_parts) == 5:
                     #local_image_filename = section_cfg["local_image_folder"] + image_url_parts[2].replace("/", "_")
                     local_image_filename = os.path.join(get_main_dir(), "img", image_url_parts[2].replace("/", "_"))
 
@@ -671,7 +671,7 @@ def print_image_url_value(section_cfg, value):
                             image_url = image_url.encode("utf-8")
                             local_image_filename = local_image_filename.encode("utf-8")
                             # use proxy class wrap to urllib to download image if proxy is set
-                            if(proxy == None):
+                            if proxy == None:
                                 ret = urllib.urlretrieve(image_url, local_image_filename)
                             else:
                                 urlprx = UrllibProxy(proxy)
@@ -760,12 +760,12 @@ def font_tests():
 def print_static_text_value(cfg):
     for section in cfg.sections():
         try:
-            if (cfg.get(section, "type") == "static_text"):
+            if cfg.get(section, "type") == "static_text":
                 text_value = cfg.get(section, "value")
                 text_value = text_value.decode("windows-1257")
                 text_value = text_value.encode("UTF-8")
                 print_text_value(dict(cfg.items(section)), text_value)
-            elif (cfg.get(section, "type") == "image"):
+            elif cfg.get(section, "type") == "image":
                 print_image_value(dict(cfg.items(section)), cfg.get(section, "value"))
         except:
             logger.info("no section type")
@@ -775,19 +775,19 @@ def read_param(line):
     if line.startswith(codecs.BOM_UTF8):
         line = line[3:]
     line = line.strip()
-    if (len(line) == 0):
+    if len(line) == 0:
         return False
 
-    if (line[:6] == "BEGIN "):
+    if line[:6] == "BEGIN ":
         return ("BEGIN", line)
-    elif (line[:4] == "END "):
+    elif line[:4] == "END ":
         return ("END", line)
 
     param = line.split("=")
-    if (len(param) != 2):
+    if len(param) != 2:
         logger.warning(message)
         return False
-    if (len(param[0]) == 0):
+    if len(param[0]) == 0:
         logger.warning(message)
         return False
     # logger.info("Param: {0}".format(param))
@@ -811,7 +811,7 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
             param_key, param_val = param
             # logger.info("key:val = {0}:{1}".format(param_key, param_val))
 
-            if (param_key == "BEGIN"):
+            if param_key == "BEGIN":
                 logger.info("start new document")
                 printer_cfg = cfg
                 # we check for old jobs in printer queue when starting first document
@@ -819,18 +819,18 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
                 # start_new_document(printer_cfg, is_first_document = (param_val == "BEGIN 1"))
                 document_open = 1
                 after_begin = True
-            elif (param_key == "END"):
+            elif param_key == "END":
                 print_static_text_value(layout_cfg)
                 print_document()
                 document_open = 0
             else:
-                if (document_open == 0):
+                if document_open == 0:
                     continue
-                if (after_begin):
+                if after_begin:
                     after_begin = False
-                    if (param_key == "layout"):
-                        if (cfg.has_option("DEFAULT", "layout")
-                            and cfg.get("DEFAULT", "layout") == "none"):
+                    if param_key == "layout":
+                        if cfg.has_option("DEFAULT", "layout")
+                            and cfg.get("DEFAULT", "layout") == "none":
                                 layout_cfg = cfg
                         else:
                             layout_cfg = get_layout_cfg(param_val)
@@ -838,23 +838,23 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
                 for postfix in ["", "_1", "_2", "_3"]: # this makes it possible to print out several types for one value
                     section_name = param_key + postfix
                     if layout_cfg.has_section(section_name):
-                        if   (layout_cfg.get(section_name, "type") == "text"):
+                        if layout_cfg.get(section_name, "type") == "text":
                             print_text_value(dict(layout_cfg.items(section_name)), param_val)
-                        elif (layout_cfg.get(section_name, "type") == "qmatrix"):
+                        elif layout_cfg.get(section_name, "type") == "qmatrix":
                             print_qmatrix_value(dict(layout_cfg.items(section_name)), param_val)
-                        elif (layout_cfg.get(section_name, "type") == "image_url"):
+                        elif layout_cfg.get(section_name, "type") == "image_url":
                             print_image_url_value(dict(layout_cfg.items(section_name)), param_val)
-                        elif (layout_cfg.get(section_name, "type") == "image_xml" and param_val != ""):
+                        elif layout_cfg.get(section_name, "type") == "image_xml" and param_val != "":
                             print_image_xml_value(dict(layout_cfg.items(section_name)), param_val)
-                        elif (layout_cfg.get(section_name, "type") == "bar_2_of_5"):
+                        elif layout_cfg.get(section_name, "type") == "bar_2_of_5":
                             print_bar_2_of_5_value(dict(layout_cfg.items(section_name)), param_val)
                             if layout_cfg.has_section("%s_text" % section_name):
                                 print_text_value(dict(layout_cfg.items("%s_text" % section_name)), param_val)
-                        elif (layout_cfg.get(section_name, "type") == "bar_3_of_9"):
+                        elif layout_cfg.get(section_name, "type") == "bar_3_of_9":
                             print_bar_3_of_9_value(dict(layout_cfg.items(section_name)), param_val)
                             if layout_cfg.has_section("%s_text" % section_name):
                                 print_text_value(dict(layout_cfg.items("%s_text" % section_name)), param_val)
-                        elif (layout_cfg.get(section_name, "type") == "bar_code128"):
+                        elif layout_cfg.get(section_name, "type") == "bar_code128":
                             print_code128_value(dict(layout_cfg.items(section_name)), param_val)
                             if layout_cfg.has_section("%s_text" % section_name):
                                 print_text_value(dict(layout_cfg.items("%s_text" % section_name)), param_val)
@@ -881,7 +881,7 @@ def read_ini_config(ini_file_full_path):
     cfg = ConfigParser.ConfigParser()
     logger.info("Read configuration from:\n- %s" % ini_file_full_path)
     ret = cfg.read(ini_file_full_path)
-    if(len(ret)==0):
+    if len(ret)==0:
         return None
     else:
         return cfg
@@ -910,7 +910,7 @@ def get_layout_cfg(file_url):
     logger.info("getting layout file:%s"%file_url)
 
     file_url_parts = urlparse.urlsplit(file_url)
-    if (len(file_url_parts) == 5):
+    if len(file_url_parts) == 5:
 
         local_file_filename = os.path.join(get_main_dir(), "layouts", file_url_parts[2].replace("/", "_"))
         logger.info("layouts file:%s"%local_file_filename)
@@ -922,7 +922,7 @@ def get_layout_cfg(file_url):
                 file_url = file_url.encode("utf-8")
                 local_file_filename = local_file_filename.encode("utf-8")
                 # use proxy class wrap to urllib to download image if proxy is set
-                if(proxy == None):
+                if proxy == None:
                     ret = urllib.urlretrieve(file_url, local_file_filename)
                 else:
                     urlprx = UrllibProxy(proxy)
@@ -957,11 +957,11 @@ def read_plp_in_cfg(plp_filename):
             if not param:
                 continue
             param_key, param_val = param
-            if (param_key == "BEGIN"):
+            if param_key == "BEGIN":
                 section = param_val
-                if (not cfg.has_section(section)):
+                if not cfg.has_section(section):
                     cfg.add_section(section)
-            elif (param_key == "END"):
+            elif param_key == "END":
                 continue
             else:
                 cfg.set(section, param_key, param_val)
@@ -978,7 +978,7 @@ def setup_proxy(cfg):
     except:
         logger.info("no http proxy set")
 
-    if(proxy!=None):
+    if proxy!=None:
         proxy_handler = urllib2.ProxyHandler({
             "http": proxy,
             "https": proxy
@@ -994,13 +994,13 @@ def auto_update_callback(data):
 
 #################################################################
 def override_cfg_values(cfg_1, cfg_2):
-    if(cfg_1 is None) and (cfg_2 is None):
+    if cfg_1 is None) and (cfg_2 is None:
         logger.error("cfg_1 = None and cfg_2 = None ")
         return None
-    if(cfg_1 is None):
+    if cfg_1 is None:
         logger.warning("cfg_1 = None")
         return cfg_2
-    if(cfg_2 is None):
+    if cfg_2 is None:
         logger.warning("cfg_2 = None")
         return cfg_1
 
@@ -1015,29 +1015,29 @@ def override_cfg_values(cfg_1, cfg_2):
     # logger.info("cfg_2_sections: %s" % cfg_2_sections)
     for section in cfg_2_sections:
         # each section can have disable_override value that lists parameters not to be overriden
-        if (cfg_1.has_option(section, "disable_override")):
+        if cfg_1.has_option(section, "disable_override"):
             disable_override_list = cfg_1.get(section, "disable_override").strip("\"").split(",")
         else:
             disable_override_list = []
         # logger.info("disable_override_list: %s" % disable_override_list)
 
-        if ((not cfg_1.has_section(section)) and section != "DEFAULT"):
+        if not cfg_1.has_section(section) and section != "DEFAULT":
             cfg_1.add_section(section)
 
         # cfg_2.options(section) fails if section="DEFAULT"
-        if (section=="DEFAULT"):
+        if section=="DEFAULT":
             option_list = cfg_2.defaults()
         else:
             option_list = cfg_2.options(section)
         for option in option_list:
             #"[%s](%s)"%(section,option)
-            if (cfg_1.has_option(section, option)):
+            if cfg_1.has_option(section, option):
                 old_value = cfg_1.get(section, option)
                 new_value = cfg_2.get(section, option)
-                if (old_value != new_value):
-                    if (option not in disable_override_list):
+                if old_value != new_value:
+                    if option not in disable_override_list:
                         # logger.info("overriding [%s](%s) from '%s' to '%s'" % (section,option,old_value,new_value))
-                        if (option == "disable_override"):
+                        if option == "disable_override":
                             # inherit disable_override params so that plp values does not override persistent.ini values
                             # if in setup.ini has own disable_override values
                             cfg_1.set(section, option, "%s,%s" % (cfg_1.get(section, option), cfg_2.get(section, option)))
@@ -1058,11 +1058,11 @@ def override_cfg_values(cfg_1, cfg_2):
 #################################################################
 def get_ready_for_update_msg_text(cfg, v1, v2):
     # lang = get_lang(cfg)
-    if(language == "lv"):
+    if language == "lv":
         return (u"Gatavi veikt printera programmas atjaunināšanu no %s uz %s?"%(v1,v2), u"Atjauninājums!")
-    elif(language == "ee"):
+    elif language == "ee":
         return (u"Ready for ticket printer update from %s to %s?"%(v1,v2), u"Update!")
-    elif(language == "by"):
+    elif language == "by":
         return (u"Готовы для обновления принтера билет от %s к %s?"%(v1,v2), u"Oбновления!")
     else:
         return (u"Ready for ticket printer update from %s to %s?"%(v1,v2), u"Update!")
@@ -1111,7 +1111,7 @@ def get_lang(cfg):
     return cfg.get("DEFAULT","my_id")[0:2].lower()
 
 def font_list_callback(font, tm, fonttype, fonts):
-    # if(font.lfFaceName == fonts[0]):
+    # if font.lfFaceName == fonts[0]:
     #     fonts.append(font)
     logger.info(" %s" % font.lfFaceName)
     return True
@@ -1205,10 +1205,10 @@ for o, a in opts:
         sys.exit(EXIT_STATUS)
     else:
         assert False, "unhandled option"
-if (len(args) == 1):
+if len(args) == 1:
     plp_filename = args[0].strip("\"")
     print("set plp file from args")
-elif ('plp_filename' in os.environ):
+elif 'plp_filename' in os.environ:
     print("set plp file from env")
     plp_filename = os.environ['plp_filename']
 else:
@@ -1226,7 +1226,7 @@ if not os.path.isfile(persistent_ini_path):
     sys.exit(EXIT_STATUS)
 cfg_persistent = read_ini_config(persistent_ini_path)
 
-if (ini_filename == False):
+if ini_filename == False:
     ini_filename = os.path.join(get_main_dir(), "..", "setup_%s.ini" % get_lang(cfg_persistent))
     logger.info("setting ini filename to:\n- %s" % ini_filename)
 
@@ -1251,7 +1251,7 @@ else:
     plp_file_type = plp_json_data["info"]
 logger.info("plp_file_type:%s\n" % plp_file_type)
 
-if (plp_file_type == "fiscal"):
+if plp_file_type == "fiscal":
     appexe = os.path.abspath(os.path.join("..", "RasoASM", "fiscal.py"))
     logger.info("Invoke: {0}".format(appexe))
     os.execlp("python", "python", appexe)
@@ -1265,14 +1265,14 @@ cfg = override_cfg_values(cfg, cfg_plp)
 
 proxy = setup_proxy(cfg)
 
-if (do_auto_update(cfg, version.VERSION, downgrade_version=downgrade_version, prev_version=prev_version)):
+if do_auto_update(cfg, version.VERSION, downgrade_version=downgrade_version, prev_version=prev_version):
     skip_file_delete = True
 
 # logger.debug("Print cfg before read_plp_file: {0}".format(cfg.defaults()))
 
-if (cfg_plp.has_option("DEFAULT", "info") and cfg_plp.get("DEFAULT", "info") == "fiscal"):
+if cfg_plp.has_option("DEFAULT", "info") and cfg_plp.get("DEFAULT", "info") == "fiscal":
     logger.info("Printing fiscal information.")
-    if (language == "ru"):
+    if language == "ru":
         shtrih_fp_f = ecr.ECR_Object()
         shtrih_fp_f.Connect(cfg)
         shtrih_fp_f.ParsePLP(cfg)
