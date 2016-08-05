@@ -133,7 +133,7 @@ def translate_to_code128(chaine):
             #"B==1b"
             Code128 = Code128 + chaine[i]
             i = i + 1
-    for i,dum in enumerate(Code128):
+    for i, dum in enumerate(Code128):
         dummy = ord(dum)
         if dummy < 127:
             dummy -= 32
@@ -141,12 +141,9 @@ def translate_to_code128(chaine):
             dummy -= 105 #f
         if i == 0:
             checksum = dummy
-            #"init:%d"%checksum
-        # checksum=(checksum + i*dummy)
         checksum += i * dummy
         while checksum >= 103: # mod 103
             checksum -= 103
-        #"iter:%d"%checksum
     if checksum < 95:
         checksum += 32
     else:
@@ -545,16 +542,16 @@ def print_qmatrix(x, y, size, value):
     factory = qrcode.image.pil.PilImage
 
     qr = qrcode.QRCode(
-        # version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_H,
-        # box_size=10,
-        # border=4,
+        # version = 1,
+        error_correction = qrcode.constants.ERROR_CORRECT_H,
+        # box_size = 10,
+        # border = 4,
     )
     qr.add_data(value)
-    qr.make(fit=True)
-    im = qr.make_image(image_factory=factory)
+    qr.make(fit = True)
+    im = qr.make_image(image_factory = factory)
 
-    # im = qrcode.make(value, image_factory=factory)
+    # im = qrcode.make(value, image_factory = factory)
     try:
         dib = ImageWin.Dib(im)
     except:
@@ -616,7 +613,7 @@ def print_image_xml_value(section_cfg, value):
 
     if not os.path.isfile(local_image_filename):
         try:
-            image_url=section_cfg["remote_image_url_folder"] + urllib.quote(value)
+            image_url = section_cfg["remote_image_url_folder"] + urllib.quote(value)
             logger.info(" %s" % image_url)
 
             # this gives error if value has non ascii chars.
@@ -829,9 +826,8 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
                 if after_begin:
                     after_begin = False
                     if param_key == "layout":
-                        if cfg.has_option("DEFAULT", "layout")
-                            and cfg.get("DEFAULT", "layout") == "none":
-                                layout_cfg = cfg
+                        if cfg.has_option("DEFAULT", "layout") and cfg.get("DEFAULT", "layout") == "none":
+                            layout_cfg = cfg
                         else:
                             layout_cfg = get_layout_cfg(param_val)
                     continue
