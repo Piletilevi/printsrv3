@@ -55,6 +55,7 @@ DC_NOT_CREATED                = 2 ** 17
 HDC_NOT_CREATED               = 2 ** 18
 HELP_MESSAGE                  = 2 ** 19
 COULD_NOT_DOWNLOAD_URL_LAYOUT = 2 ** 20
+PLP_FILENAME_NOT_IN_ENVIRON   = 2 ** 21
 
 EXIT_STATUS = EXIT_OK
 
@@ -1163,54 +1164,11 @@ skip_file_delete = True
 prev_version = False
 downgrade_version = False
 
-for o, a in opts:
-    if o in ("-v", "--verbose"):
-        verbose = True
-    elif o == "-V":
-        print version.VERSION
-        sys.exit(EXIT_STATUS)
-    elif o in ("-h", "--help"):
-        usage()
-        set_exit_status(HELP_MESSAGE)
-        sys.exit(EXIT_STATUS)
-    elif o in ("--ini_file"):
-        ini_filename = a
-        logger.info("found --ini_file= parameter with value:[%s]"%ini_filename)
-    elif o in ("--skip_file_delete"):
-        skip_file_delete = True
-        logger.info("found --skip_file_delete parameter")
-    elif o in ("--prev_version"):
-        # we have just started after upgrade
-        prev_version = a
-        skip_file_delete = True
-        logger.info("found --prev_version parameter with value:[%s]"%prev_version)
-    elif o in ("--downgrade_version"):
-        # we have just started after downgrade
-        downgrade_version = a
-        skip_file_delete = True
-        logger.info("found --downgrade_version parameter with value:[%s]"%downgrade_version)
-    elif o in ("--list_printer_fonts"):
-        tmp_printer = a
-        hprinter = win32print.OpenPrinter(tmp_printer)
-        devmode = win32print.GetPrinter(hprinter, 2)["pDevMode"]
-        printjobs = win32print.EnumJobs(hprinter, 0, 999)
-        DEVICE_CONTEXT_HANDLE = win32gui.CreateDC("WINSPOOL", tmp_printer, devmode)
-        DEVICE_CONTEXT = win32ui.CreateDCFromHandle(DEVICE_CONTEXT_HANDLE)
-        fonts = []
-        win32gui.EnumFontFamilies(DEVICE_CONTEXT_HANDLE, None, font_list_callback,fonts)
-        sys.exit(EXIT_STATUS)
-    else:
-        assert False, "unhandled option"
-if len(args) == 1:
-    plp_filename = args[0].strip("\"")
-    print("set plp file from args")
-elif 'plp_filename' in os.environ:
-    print("set plp file from env")
-    plp_filename = os.environ['plp_filename']
-else:
-    logger.error("File not specified as first argument\n")
-    set_exit_status(PLP_FILE_NOT_SPECIFIED)
+if 'plp_filename' not in os.environ:
+    set_exit_status(PLP_FILENAME_NOT_IN_ENVIRON)
     sys.exit(EXIT_STATUS)
+
+plp_filename = os.environ['plp_filename']
 logger.info("plp filename:\n- %s" % plp_filename)
 
 # things like proxy, my_id are stored in persistent.ini
