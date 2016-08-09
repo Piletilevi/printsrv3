@@ -990,7 +990,7 @@ def auto_update_callback(data):
 
 #################################################################
 def override_cfg_values(cfg_1, cfg_2):
-    if cfg_1 is None) and (cfg_2 is None:
+    if cfg_1 is None and cfg_2 is None:
         logger.error("cfg_1 = None and cfg_2 = None ")
         return None
     if cfg_1 is None:
