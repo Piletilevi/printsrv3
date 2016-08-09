@@ -63,7 +63,7 @@ def validate_plp_json(plp_json_data):
 try:
     with open(PLP_FILENAME, 'rU') as plp_data_file:
         PLP_JSON_DATA = loadJSON(plp_data_file)
-except:
+except ValueError:
     PLP_FILE_TYPE = 'ticket'
 else:
     validate_plp_json(PLP_JSON_DATA)
