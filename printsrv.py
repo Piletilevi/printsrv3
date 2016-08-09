@@ -875,9 +875,9 @@ def print_available_printers():
 #################################################################
 def read_ini_config(ini_file_full_path):
     cfg = ConfigParser.ConfigParser()
-    logger.info("Read configuration from:\n- %s" % ini_file_full_path)
+    logger.info("read_ini_config: Read configuration from:\n- %s" % ini_file_full_path)
     ret = cfg.read(ini_file_full_path)
-    if len(ret)==0:
+    if len(ret) == 0:
         return None
     else:
         return cfg
@@ -944,8 +944,8 @@ def read_plp_in_cfg(plp_filename):
     ret = {}
     section = "DEFAULT"
     cfg = ConfigParser.ConfigParser()
+    logger.info("read_plp_in_cfg: Read configuration from:\n- %s" % plp_filename)
 
-    print plp_filename
     with open(plp_filename, "rb") as infile:
         for line in infile:
             param = read_param(line)
