@@ -328,23 +328,23 @@ def set_section_font_indirect(section_cfg, postfix = ""):
     font_handle = win32gui.SelectObject(DEVICE_CONTEXT_HANDLE, font_handle)
 
 #################################################################
-def set_section_font(section_cfg,postfix=""):
+def set_section_font(section_cfg, postfix = ""):
     global DEVICE_CONTEXT
     global DEVICE_CONTEXT_HANDLE
     font_params = {}
-    font_params["name"] = section_cfg["font_name"+postfix]
-    font_params["height"] = int(section_cfg["font_height"+postfix])
+    font_params["name"] = section_cfg["font_name" + postfix]
+    font_params["height"] = int(section_cfg["font_height" + postfix])
     try:
-        font_params["width"] = int(section_cfg["font_width"+postfix])
+        font_params["width"] = int(section_cfg["font_width" + postfix])
     except:
         pass
     try:
-        font_params["weight"] = int(section_cfg["font_weight"+postfix])
+        font_params["weight"] = int(section_cfg["font_weight" + postfix])
     except:
         pass
     font = win32ui.CreateFont(font_params)
     try:
-        DEVICE_CONTEXT.SetTextColor(rgb2int(int(section_cfg["font_color_red"+postfix]), int(section_cfg["font_color_green"+postfix]), int(section_cfg["font_color_blue"+postfix])))
+        DEVICE_CONTEXT.SetTextColor(rgb2int(int(section_cfg["font_color_red" + postfix]), int(section_cfg["font_color_green" + postfix]), int(section_cfg["font_color_blue" + postfix])))
     except:
         DEVICE_CONTEXT.SetTextColor(rgb2int(0, 0, 0))
     DEVICE_CONTEXT.SelectObject(font)
@@ -355,7 +355,7 @@ def print_text_value(section_cfg, value):
     global DEVICE_CONTEXT_HANDLE
 
     try:
-        value = value.replace(section_cfg["replace_from"],section_cfg["replace_to"])
+        value = value.replace(section_cfg["replace_from"], section_cfg["replace_to"])
     except:
         pass
     try:
@@ -380,24 +380,24 @@ def print_text_value(section_cfg, value):
 
     try:
         space = value.rfind(u" ",0,int(section_cfg["font_wrap"]))
-        logger.info("wrap %d found at:%d"%(int(section_cfg["font_wrap"]),space))
+        logger.info("wrap %d found at:%d" % (int(section_cfg["font_wrap"]), space))
         if space != -1:
             value_w = value[space+1:]
             value = value[0:space]
-            space = value_w.rfind(u" ",0,int(section_cfg["font_wrap"]))
-            if space!=-1:
+            space = value_w.rfind(u" ", 0, int(section_cfg["font_wrap"]))
+            if space != -1:
                 value_ww = value_w[space+1:]
                 value_w = value_w[0:space]
     except:
         pass
 
     try:
-        space1 = value1.rfind(u" ",0,int(section_cfg["font_wrap1"]))
-        logger.info("wrap %d found at:%d"%(int(section_cfg["font_wrap1"]),space1))
+        space1 = value1.rfind(u" ", 0, int(section_cfg["font_wrap1"]))
+        logger.info("wrap %d found at:%d" % (int(section_cfg["font_wrap1"]), space1))
         if space1 != -1:
             value_w1 = value1[space1+1:]
             value1 = value1[0:space1]
-            space1 = value_w1.rfind(u" ",0,int(section_cfg["font_wrap1"]))
+            space1 = value_w1.rfind(u" ", 0, int(section_cfg["font_wrap1"]))
             if space1 != -1:
                 value_ww1 = value_w1[space1+1:]
                 value_w1 = value_w1[0:space1]
@@ -405,12 +405,12 @@ def print_text_value(section_cfg, value):
         pass
 
     try:
-        space2 = value2.rfind(u" ",0,int(section_cfg["font_wrap2"]))
-        logger.info(" wrap %d found at:%d" % (int(section_cfg["font_wrap2"]),space2))
+        space2 = value2.rfind(u" ", 0, int(section_cfg["font_wrap2"]))
+        logger.info(" wrap %d found at:%d" % (int(section_cfg["font_wrap2"]), space2))
         if space2 != -1:
             value_w2 = value2[space2+1:]
             value2 = value2[0:space2]
-            space2 = value_w2.rfind(u" ",0,int(section_cfg["font_wrap2"]))
+            space2 = value_w2.rfind(u" ", 0, int(section_cfg["font_wrap2"]))
             if space2 != -1:
                 value_ww2 = value_w2[space2+1:]
                 value_w2 = value_w2[0:space2]
@@ -418,85 +418,85 @@ def print_text_value(section_cfg, value):
         pass
 
     try:
-        space3 = value3.rfind(u" ",0,int(section_cfg["font_wrap3"]))
-        logger.info(" wrap %d found at:%d" % (int(section_cfg["font_wrap3"]),space3))
+        space3 = value3.rfind(u" ", 0, int(section_cfg["font_wrap3"]))
+        logger.info(" wrap %d found at:%d" % (int(section_cfg["font_wrap3"]), space3))
         if space3 != -1:
             value_w3 = value3[space3+1:]
             value3 = value3[0:space3]
-            space3 = value_w3.rfind(u" ",0,int(section_cfg["font_wrap3"]))
-            if space3!=-1:
+            space3 = value_w3.rfind(u" ", 0, int(section_cfg["font_wrap3"]))
+            if space3 != -1:
                 value_ww3 = value_w3[space3+1:]
                 value_w3 = value_w3[0:space3]
     except:
         pass
 
     try:
-        set_section_font_indirect(section_cfg,"")
+        set_section_font_indirect(section_cfg, "")
         windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
             int(section_cfg["x"]),
             int(section_cfg["y"]),
             value, len(value) )
         try:
-            set_section_font_indirect(section_cfg,"")
+            set_section_font_indirect(section_cfg, "")
             windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
                 int(section_cfg["x"]),
                 int(section_cfg["y"]) + int(section_cfg["font_height"]),
                 value_w, len(value_w) )
-            set_section_font_indirect(section_cfg,"")
+            set_section_font_indirect(section_cfg, "")
             windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
                 int(section_cfg["x"]),
                 int(section_cfg["y"]) + 2 * int(section_cfg["font_height"]),
                 value_ww, len(value_ww) )
         except:
             pass
-        set_section_font_indirect(section_cfg,"1")
+        set_section_font_indirect(section_cfg, "1")
         windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
             int(section_cfg["x1"]),
             int(section_cfg["y1"]),
             value1, len(value1) )
         try:
-            set_section_font_indirect(section_cfg,"1")
+            set_section_font_indirect(section_cfg, "1")
             windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
                 int(section_cfg["x1"]),
                 int(section_cfg["y1"]) + int(section_cfg["font_height1"]),
                 value_w1, len(value_w1) )
-            set_section_font_indirect(section_cfg,"1")
+            set_section_font_indirect(section_cfg, "1")
             windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
                 int(section_cfg["x1"]),
                 int(section_cfg["y1"]) + 2 * int(section_cfg["font_height1"]),
                 value_ww1, len(value_ww1) )
         except:
             pass
-        set_section_font_indirect(section_cfg,"2")
+        set_section_font_indirect(section_cfg, "2")
         windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
             int(section_cfg["x2"]),
             int(section_cfg["y2"]),
             value2, len(value2) )
         try:
-            set_section_font_indirect(section_cfg,"2")
+            set_section_font_indirect(section_cfg, "2")
             windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
                 int(section_cfg["x2"]),
                 int(section_cfg["y2"]) + int(section_cfg["font_height2"]),
                 value_w2, len(value_w2) )
-            set_section_font_indirect(section_cfg,"2")
+            set_section_font_indirect(section_cfg, "2")
             windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
                 int(section_cfg["x2"]),
                 int(section_cfg["y2"]) + 2 * int(section_cfg["font_height2"]),
                 value_ww2, len(value_ww2) )
         except:
             pass
-        set_section_font_indirect(section_cfg,"3")
+        set_section_font_indirect(section_cfg, "3")
         windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
             int(section_cfg["x3"]),
             int(section_cfg["y3"]),
             value3, len(value3) )
         try:
-            set_section_font_indirect(section_cfg,"3")
+            set_section_font_indirect(section_cfg, "3")
             windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
                 int(section_cfg["x3"]),
                 int(section_cfg["y3"]) + int(section_cfg["font_height3"]),
                 value_w3, len(value_w3) )
-            set_section_font_indirect(section_cfg,"3")
+            set_section_font_indirect(section_cfg, "3")
             windll.gdi32.TextOutW( DEVICE_CONTEXT_HANDLE,
                 int(section_cfg["x3"]),
                 int(section_cfg["y3"]) + 2 * int(section_cfg["font_height3"]),
@@ -739,22 +739,6 @@ def print_code128_value(section_cfg, value):
         raise
 
 #################################################################
-def font_tests():
-    global DEVICE_CONTEXT
-    global DEVICE_CONTEXT_HANDLE
-    arr = {}
-    arr["x"] = 300
-    arr["y"] = -300
-    arr["font_name"] = "Arial"
-    arr["font_height"] = 32
-    text = "jhg\xe2"
-    #print type(text)
-    #print type(text)
-    #print type(text)
-    set_section_font(arr,"")
-    DEVICE_CONTEXT.TextOut(int(arr["x"]), int(arr["y"]), text)
-
-#################################################################
 def print_static_text_value(cfg):
     for section in cfg.sections():
         try:
@@ -866,7 +850,6 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
 # Log available printer name on the system
 #################################################################
 def print_available_printers():
-    return
     logger.info("local printers: {0}".format(win32print.EnumPrinters(win32print.PRINTER_ENUM_LOCAL)))
     logger.info("network printers:{0}".format(win32print.EnumPrinters(win32print.PRINTER_ENUM_CONNECTIONS)))
     logger.info("default printer:{0}".format(win32print.GetDefaultPrinter()))
@@ -904,7 +887,7 @@ def strip_file_null_chars(fname):
 #################################################################
 def get_layout_cfg(file_url):
     global proxy
-    logger.info("getting layout file:%s"%file_url)
+    logger.info("getting layout file:%s" % file_url)
 
     file_url_parts = urlparse.urlsplit(file_url)
     if len(file_url_parts) == 5:
@@ -985,11 +968,6 @@ def setup_proxy(cfg):
     return proxy
 
 #################################################################
-def auto_update_callback(data):
-    #"auto_update_callback:", data["status"]
-    logger.info("auto_update_callback: {0}".format(data))
-
-#################################################################
 def override_cfg_values(cfg_1, cfg_2):
     if cfg_1 is None and cfg_2 is None:
         logger.error("cfg_1 = None and cfg_2 = None ")
@@ -1053,57 +1031,6 @@ def override_cfg_values(cfg_1, cfg_2):
     return cfg_1
 
 #################################################################
-def get_ready_for_update_msg_text(cfg, v1, v2):
-    # lang = get_lang(cfg)
-    if language == "lv":
-        return (u"Gatavi veikt printera programmas atjaunināšanu no %s uz %s?"%(v1,v2), u"Atjauninājums!")
-    elif language == "ee":
-        return (u"Ready for ticket printer update from %s to %s?"%(v1,v2), u"Update!")
-    elif language == "by":
-        return (u"Готовы для обновления принтера билет от %s к %s?"%(v1,v2), u"Oбновления!")
-    else:
-        return (u"Ready for ticket printer update from %s to %s?"%(v1,v2), u"Update!")
-
-#################################################################
-# This function gets used for both: update and rollback downgrade in case tickets did not print OK
-#################################################################
-def do_auto_update(cfg, current_version, downgrade = False, downgrade_version = False, prev_version=False):
-    return
-    # Set my_id to identify ourselves when requesting update
-    logger.info("getting my id")
-    try:
-        my_id = cfg.get("DEFAULT", "my_id").strip("\"")
-        logger.info("my_id:%s" % my_id)
-    except:
-        my_id = "MY_ID_NOT_SET"
-        logger.info("my_id not set. using default: %s" % my_id)
-
-    # Set updates_base_url where we will look for updates
-    try:
-        updates_base_url = cfg.get("DEFAULT", "updates_base_url").strip("\"")
-    except:
-        updates_base_url = r"http://www.4scan.lv/printsrv/updates/"
-        logger.warning("updates_base_url not set. using default")
-
-    ret_do_not_delete_plp_file = False
-
-#################################################################
-def usage():
-    print ""
-    print "Usage: %s [-V] [-v|verbose] [-h|--help] [--skip_file_delete] [--ini_file=filename] plp_file"%sys.argv[0]
-    print ""
-    print "Options:"
-    print "   -V                             print version and exit"
-    print "   -v --verbose                   be verbose"
-    print "   -h --help                      show usage"
-    print "   --skip_file_delete             skip plp file deletion after printing"
-    print "   --ini_file=<filename>          use alternate ini file than default setup.ini. must reside in the same folder"
-    print "   --prev_version=<version>       if printsrv is run for the first time with new version"
-    print "   --downgrade_version=<version>  we have just started after downgrade"
-    print "   --list_printer_fonts=<printer> list all fonts"
-    print ""
-
-#################################################################
 def get_lang(cfg):
     return cfg.get("DEFAULT","my_id")[0:2].lower()
 
@@ -1112,16 +1039,6 @@ def font_list_callback(font, tm, fonttype, fonts):
     #     fonts.append(font)
     logger.info(" %s" % font.lfFaceName)
     return True
-
-#################################################################
-# try to force file removal
-def handleRemoveReadonly(func, path, exc):
-    excvalue = exc[1]
-    if func in (os.rmdir, os.remove) and excvalue.errno == errno.EACCES:
-        os.chmod(path, stat.S_IRWXU| stat.S_IRWXG| stat.S_IRWXO) # 0777
-        func(path)
-    else:
-        raise
 
 
 ################################################################################
@@ -1145,21 +1062,9 @@ sys.stderr = sl
 logger = logging.getLogger("printsrv")
 
 logger.info("\n--------\nStarting version\n%s\n\n" % version.VERSION)
-print_available_printers()
+# print_available_printers()
 
 
-# Parse command line arguments
-try:
-    opts, args = getopt.gnu_getopt(sys.argv[1:], "hvV", ["help", "verbose", "skip_file_delete", "ini_file=", "prev_version=", "downgrade_version=", "list_printer_fonts="])
-except getopt.GetoptError as err:
-    # Output help information and exit:
-    logger.error(str(err)) # will print something like "option -a not recognized"
-    usage()
-    set_exit_status(HELP_MESSAGE)
-    sys.exit(EXIT_STATUS)
-
-verbose = False
-ini_filename = False
 skip_file_delete = True
 prev_version = False
 downgrade_version = False
@@ -1180,9 +1085,8 @@ if not os.path.isfile(persistent_ini_path):
     sys.exit(EXIT_STATUS)
 cfg_persistent = read_ini_config(persistent_ini_path)
 
-if ini_filename == False:
-    ini_filename = os.path.join(get_main_dir(), "..", "setup_%s.ini" % get_lang(cfg_persistent))
-    logger.info("setting ini filename to:\n- %s" % ini_filename)
+ini_filename = os.path.join(get_main_dir(), "..", "setup_%s.ini" % get_lang(cfg_persistent))
+logger.info("setting ini filename to:\n- %s" % ini_filename)
 
 # default layout
 cfg_setup = read_ini_config(ini_filename)
@@ -1218,9 +1122,6 @@ cfg_plp = read_plp_in_cfg(plp_filename)
 cfg = override_cfg_values(cfg, cfg_plp)
 
 proxy = setup_proxy(cfg)
-
-if do_auto_update(cfg, version.VERSION, downgrade_version=downgrade_version, prev_version=prev_version):
-    skip_file_delete = True
 
 # logger.debug("Print cfg before read_plp_file: {0}".format(cfg.defaults()))
 
