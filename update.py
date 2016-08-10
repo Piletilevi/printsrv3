@@ -34,7 +34,11 @@ if UPDATE_SHA == '':
 
 def version_info():
     with open('package.json', 'rU') as package_file:
-        local_package_json = loadJSON(package_file)
+        try:
+            local_package_json = loadJSON(package_file)
+        except ValueError:
+            print('WARNING: local package.json is damaged.')
+            local_package_json = {'version': 'N/A'}
     contents = PRINTSRV_REPO.file_contents('package.json', UPDATE_SHA).decoded
     try:
         remote_package_json = loadsJSON(contents)
