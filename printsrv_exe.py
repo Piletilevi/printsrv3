@@ -51,8 +51,8 @@ def validate_plp_json(plp_json_data):
     if plp_json_data['info'] == 'fiscal':
         if not 'operation' in plp_json_data:
             raise IndexError('Missing "operation" field in plp file {0}.'.format(PLP_FILENAME))
-        if plp_json_data['operation'] not in ('sale', 'startshift', 'endshift'):
-            raise ValueError('"operation" must be one of "sale", "startshift", "endshift" in {0}.'.format(PLP_FILENAME))
+        if plp_json_data['operation'] not in ('sale', 'refund', 'startshift', 'endshift'):
+            raise ValueError('"operation" must be one of "sale", "refund", "startshift", "endshift" in {0}.'.format(PLP_FILENAME))
     if plp_json_data['info'] == 'update':
         if not 'version' in plp_json_data:
             print('Note: Missing "version" field in plp file {0}.'.format(PLP_FILENAME))
