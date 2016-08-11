@@ -71,3 +71,19 @@ Even better
 
 Thank us later.  
 M-O-O-R
+
+
+## Testing
+
+### Pre-release testing
+
+Instructions above should be followed, only ticket printer drivers should be downloaded from
+- [RasoASM-0.2.0-test.zip](https://github.com/Piletilevi/RasoASM/archive/0.2.0-test.zip)  
+- [printsrv-0.3.0.zip](https://github.com/Piletilevi/printsrv/archive/0.3.0.zip)  
+
+
+### Developer testing
+
+Instructions above should be followed, only ticket printer drivers should be downloaded from
+- https://github.com/Piletilevi/RasoASM/archive/test.zip  
+- https://github.com/Piletilevi/printsrv/archive/test.zip  
