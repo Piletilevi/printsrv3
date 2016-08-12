@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from distutils.core import setup
-# import py2exe
+import py2exe
 
 CONSOLE = [
     {
