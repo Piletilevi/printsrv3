@@ -1,0 +1,21 @@
+{
+  "info": "fiscal",
+  "operation": "refund",
+  "salesPoint": "* Bilietai BO",
+  "payments": [
+    {
+      "type": "1",
+      "cost": 0.2,
+      "components": [
+        {
+          "type": "tickets",
+          "amount": 1,
+          "name": "Bilietai",
+          "cost": 0.2,
+          "kkm": true,
+          "vatPerc": 0
+        }
+      ]
+    }
+  ]
+}
