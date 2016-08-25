@@ -34,28 +34,6 @@ import qrcode.image.pil
 import errno, stat, shutil
 
 EXIT_OK = 0
-COULD_NOT_OPEN_PRINTER        = 2 ** 0
-COULD_NOT_CREATE_DC           = 2 ** 1
-NO_SUCH_FONT_AVAILABLE        = 2 ** 2
-UNABLE_TO_CREATE_FONT         = 2 ** 3
-CANT_DECODE_AS_UTF8           = 2 ** 4
-NO_IMAGE_BY_THAT_NAME         = 2 ** 5
-UNSUPPORTED_IMAGE_FORMAT      = 2 ** 6
-COULD_NOT_DOWNLOAD_XML_IMAGE  = 2 ** 7
-COULD_NOT_DOWNLOAD_URL_IMAGE  = 2 ** 8
-EXCEPTION_IN_2_OF_5           = 2 ** 9
-EXCEPTION_IN_3_OF_9           = 2 ** 10
-EXCEPTION_IN_CODE128          = 2 ** 11
-UNKNOWN_TYPE_FOR_SECTION      = 2 ** 12
-NO_SUCH_SECTION               = 2 ** 13
-COULD_NOT_DELETE_PLP          = 2 ** 14
-PLP_FILE_NOT_SPECIFIED        = 2 ** 15
-PRINTER_IS_OFFLINE            = 2 ** 16
-DC_NOT_CREATED                = 2 ** 17
-HDC_NOT_CREATED               = 2 ** 18
-HELP_MESSAGE                  = 2 ** 19
-COULD_NOT_DOWNLOAD_URL_LAYOUT = 2 ** 20
-PLP_FILENAME_NOT_IN_ENVIRON   = 2 ** 21
 
 EXIT_STATUS = EXIT_OK
 
