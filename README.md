@@ -31,7 +31,7 @@ C:\plevi\RasoASM
 
 There is an issue with IronPython installation. It doesnot register to windows path variable, so we included registration command into install.bat (that You just executed). Everything should be ok now, but on some windows systems it keeps forgetting the new path.  
 To verify, that IronPython is correctly set up, open cmd and run `PATH` command. It will return all the registered system paths - look, if **IronPython 2.7** is also there.  
-If it is not, then You have to open System Environment Variables from Control Panel and append to the end of PATH variable value `;%PROGRAMFILES%\IronPython 2.7`
+If it is not, then You have to open System Environment Variables from Control Panel and append to the end of PATH variable value `;C:\Program Files\IronPython 2.7`
 
 Also You should verify pip modules with
 `> pip list`
@@ -48,6 +48,8 @@ setuptools (20.10.1)
 six (1.10.0)  
 uritemplate.py (0.3.0)  
 WMI (1.4.9)  
+
+If this command fails, then you probably forgot to check the **[Add python.exe to path]** parameter in Python installer.
 
 ### Configuration
 
