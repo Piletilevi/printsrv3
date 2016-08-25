@@ -42,3 +42,13 @@ Package file has section "updateFiles" i.e.
 
 **Note**: package.json should not be included in "updateFiles.printsrv.files" lists. It gets
 downloaded and saved as a last thing when all other files are already updated.
+
+
+## To create a new release
+
+1. Commit all changes for new release
+2. Increment version number in package.json
+3. Also update dependencies in package.json
+3. Commit version increment with message `Release major.minor.patch`
+4. Create a release (copy content from previous one and update where relevant)
+5. Update and commit README.md to refer to new release
