@@ -33,9 +33,9 @@ There is an issue with IronPython installation. It doesnot register to windows p
 To verify, that IronPython is correctly set up, open cmd and run `PATH` command. It will return all the registered system paths - look, if **IronPython 2.7** is also there.  
 If it is not, then You have to open System Environment Variables from Control Panel and append to the end of PATH variable value `;C:\Program Files\IronPython 2.7`
 
-Also You should verify pip modules with
+Now open new command window and verify pip modules with
 `> pip list`
-and output should look like
+Output should look like
 > fontname (0.2.0)  
 freetype-py (1.0.2)  
 github3.py (0.9.5)  
