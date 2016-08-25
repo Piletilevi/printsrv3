@@ -40,5 +40,5 @@ Package file has section "updateFiles" i.e.
     }]
 ```
 
-**Note**: package.json should not be included in "printsrv" lists. It gets
+**Note**: package.json should not be included in "updateFiles.printsrv.files" lists. It gets
 downloaded and saved as a last thing when all other files are already updated.

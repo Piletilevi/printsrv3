@@ -1,6 +1,6 @@
 {
     "name": "printsrv",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "updateFiles": [{
         "repository": "printsrv",
         "sha": "3215b2c",
@@ -18,7 +18,7 @@
         ]
     }, {
         "repository": "RasoASM",
-        "sha": "b89fad8",
+        "sha": "e21cc3b6588de20d43170ea373b3706872ab17c0",
         "files": [
             { "remote": "update.py", "local": false },
             { "remote": "fiscal_lt.bat", "local": "fiscal_lt.bat" },
