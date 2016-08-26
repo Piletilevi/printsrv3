@@ -92,7 +92,7 @@ M-O-O-R
 
 To manually update existing drivers to latest version you need to:  
 
-1. Download **RasoASM** and **printsrv** archives from [latest release](https://github.com/Piletilevi/printsrv/releases/latest) and copy the contents (overwrite) to `C:\plevi\RasoASM` and `C:\plevi\printsrv`;
+1. Download **RasoASM-x.y.z.zip** and **printsrv-x.y.z.zip** archives from [latest release](https://github.com/Piletilevi/printsrv/releases/latest) and copy the contents (overwrite) to `C:\plevi\RasoASM` and `C:\plevi\printsrv`;
 2. Copy (overwrite) contents from `C:\plevi\printsrv\dist` to `C:\plevi\printsrv`.
 
 ### Testing
