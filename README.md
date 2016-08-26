@@ -2,7 +2,18 @@
 Ticket printer driver  
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/fd513dfbfcb645b1ac43bc381b4b5482)](https://www.codacy.com/app/mihkel-putrinsh/cardsrv?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Piletilevi/cardsrv&amp;utm_campaign=Badge_Grade)
 
-## Prerequisites checklist:
+### Contents:
+
+- [Prerequisites checklist](https://github.com/Piletilevi/printsrv/blob/master/README.md#Prerequisites-checklist)
+- [Drivers](https://github.com/Piletilevi/printsrv/blob/master/README.md#Drivers)
+- [Check](https://github.com/Piletilevi/printsrv/blob/master/README.md#Check)
+- [Configuration](https://github.com/Piletilevi/printsrv/blob/master/README.md#Configuration)
+- [Special note](https://github.com/Piletilevi/printsrv/blob/master/README.md#Special-note)
+- [Manual updating](https://github.com/Piletilevi/printsrv/blob/master/README.md#Manual-updating)
+- [Testing](https://github.com/Piletilevi/printsrv/blob/master/README.md#Testing)
+
+
+### Prerequisites checklist:
 
 1. Remember that in Python installer in step 2.,  
    on **Customize Python** screen,  
@@ -77,16 +88,23 @@ Thank us later.
 M-O-O-R
 
 
-## Testing
+### Manual updating
 
-### Pre-release testing
+To manually update existing drivers to latest version you need to:  
+
+1. Download from [latest release](https://github.com/Piletilevi/printsrv/releases/latest) **RasoASM** and **printsrv** archives and copy the contents (overwrite) to `C:\plevi\RasoASM` and `C:\plevi\printsrv`;
+2. Copy (overwrite) contents from `C:\plevi\printsrv\dist` to `C:\plevi\printsrv`.
+
+### Testing
+
+#### Pre-release testing
 
 Instructions above should be followed, only ticket printer drivers should be downloaded from
 - [RasoASM-0.2.0-test.zip](https://github.com/Piletilevi/RasoASM/archive/0.2.0-test.zip)  
 - [printsrv-0.3.0.zip](https://github.com/Piletilevi/printsrv/archive/0.3.0.zip)  
 
 
-### Developer testing
+#### Developer testing
 
 Instructions above should be followed, only ticket printer drivers should be downloaded from
 - https://github.com/Piletilevi/RasoASM/archive/test.zip  
