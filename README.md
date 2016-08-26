@@ -4,13 +4,13 @@ Ticket printer driver
 
 ### Contents:
 
-- [Prerequisites checklist](https://github.com/Piletilevi/printsrv/blob/master/README.md#Prerequisites-checklist)
-- [Drivers](https://github.com/Piletilevi/printsrv/blob/master/README.md#Drivers)
-- [Check](https://github.com/Piletilevi/printsrv/blob/master/README.md#Check)
-- [Configuration](https://github.com/Piletilevi/printsrv/blob/master/README.md#Configuration)
-- [Special note](https://github.com/Piletilevi/printsrv/blob/master/README.md#Special-note)
-- [Manual updating](https://github.com/Piletilevi/printsrv/blob/master/README.md#Manual-updating)
-- [Testing](https://github.com/Piletilevi/printsrv/blob/master/README.md#Testing)
+- [Prerequisites checklist](https://github.com/Piletilevi/printsrv/blob/master/README.md#prerequisites-checklist)
+- [Drivers](https://github.com/Piletilevi/printsrv/blob/master/README.md#drivers)
+- [Check](https://github.com/Piletilevi/printsrv/blob/master/README.md#check)
+- [Configuration](https://github.com/Piletilevi/printsrv/blob/master/README.md#donfiguration)
+- [Special note](https://github.com/Piletilevi/printsrv/blob/master/README.md#special-note)
+- [Manual updating](https://github.com/Piletilevi/printsrv/blob/master/README.md#manual-updating)
+- [Testing](https://github.com/Piletilevi/printsrv/blob/master/README.md#testing)
 
 
 ### Prerequisites checklist:
