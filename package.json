@@ -1,32 +1,4 @@
 {
     "name": "printsrv",
-    "version": "1.0.0-rc1.1",
-    "updateFiles": [{
-        "repository": "printsrv",
-        "sha": "75f9060b48def56083c9d6e4e7a98a2b53a7b819",
-        "files": [
-            { "remote": "dist/printsrv.exe", "local": "../printsrv.exe" },
-            { "remote": "dist/w9xpopen.exe", "local": "../w9xpopen.exe" }
-        ]
-    }, {
-        "repository": "printsrv",
-        "sha": "23c25e6bb62dbee495115a7bbe14a3ad64ecfc41",
-        "files": [
-            { "remote": "install.bat", "local": "install.bat" },
-            { "remote": "printsrv.py", "local": "printsrv.py" },
-            { "remote": "update.py", "local": "update.py" },
-            { "remote": "version.py", "local": "version.py" }
-        ]
-    }, {
-        "repository": "RasoASM",
-        "sha": "e21cc3b6588de20d43170ea373b3706872ab17c0",
-        "files": [
-            { "remote": "update.py", "local": false },
-            { "remote": "fiscal_lt.bat", "local": "fiscal_lt.bat" },
-            { "remote": "fiscal_lt.ipy", "local": "fiscal_lt.ipy" },
-            { "remote": "fiscal.py", "local": "fiscal.py" },
-            { "remote": "package.json", "local": "package.json" },
-            { "remote": "fiscal_lt.bat", "local": "fiscal_lt.bat" }
-        ]
-    }]
+    "version": "1.0.0-rc2"
 }
