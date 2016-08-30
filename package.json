@@ -3,16 +3,17 @@
     "version": "1.0.0-rc1",
     "updateFiles": [{
         "repository": "printsrv",
-        "sha": "3215b2c",
+        "sha": "75f9060b48def56083c9d6e4e7a98a2b53a7b819",
         "files": [
             { "remote": "dist/printsrv.exe", "local": "../printsrv.exe" },
             { "remote": "dist/w9xpopen.exe", "local": "../w9xpopen.exe" }
         ]
     }, {
         "repository": "printsrv",
-        "sha": "3215b2c",
+        "sha": "75f9060b48def56083c9d6e4e7a98a2b53a7b819",
         "files": [
             { "remote": "printsrv.py", "local": "printsrv.py" },
+            { "remote": "printsrv_exe.py", "local": "printsrv.py" },
             { "remote": "update.py", "local": "update.py" },
             { "remote": "version.py", "local": "version.py" }
         ]
