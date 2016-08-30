@@ -1,6 +1,5 @@
 {
   "info": "fiscal",
   "salesPoint": "* Bilietai BO",
-  "operation": "startshift",
-  "version": "0.3.0"
+  "operation": "startshift"
 }
