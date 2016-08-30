@@ -10,7 +10,7 @@
         ]
     }, {
         "repository": "printsrv",
-        "sha": "75f9060b48def56083c9d6e4e7a98a2b53a7b819",
+        "sha": "23c25e6bb62dbee495115a7bbe14a3ad64ecfc41",
         "files": [
             { "remote": "install.bat", "local": "install.bat" },
             { "remote": "printsrv.py", "local": "printsrv.py" },
