@@ -1,6 +1,6 @@
 {
     "name": "printsrv",
-    "version": "1.0.0-rc1",
+    "version": "1.0.0-rc1.1",
     "updateFiles": [{
         "repository": "printsrv",
         "sha": "75f9060b48def56083c9d6e4e7a98a2b53a7b819",
@@ -12,8 +12,8 @@
         "repository": "printsrv",
         "sha": "75f9060b48def56083c9d6e4e7a98a2b53a7b819",
         "files": [
+            { "remote": "install.bat", "local": "install.bat" },
             { "remote": "printsrv.py", "local": "printsrv.py" },
-            { "remote": "printsrv_exe.py", "local": "printsrv.py" },
             { "remote": "update.py", "local": "update.py" },
             { "remote": "version.py", "local": "version.py" }
         ]

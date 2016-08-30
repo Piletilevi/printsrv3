@@ -1,6 +1,9 @@
 # CHANGELOG
 
-### 1.0.0rc1 Breaking change
+### 1.0.0-rc1 Release candidate
+- 30/08/2016, Mihkel Putrinš
+
+### 0.2.0 Breaking change
 - 28/07/2016, Mihkel Putrinš
 - throwing out all stuff related to windows executables:
   - esky
