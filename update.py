@@ -1,7 +1,8 @@
 # coding: utf-8
 
 from os import environ, path, chdir
-import github3
+from github3 import login, GitHub
+
 from json import load as loadJSON
 from json import loads as loadsJSON
 from json import dumps as dumpsJSON
@@ -19,9 +20,9 @@ UPDATE_TO_TAG = environ['plp_update_to_version']
 if 'gh_token' in environ:
     GH_TOKEN = environ['gh_token']
     print('Access GitHub3 API via token {0}.'.format(GH_TOKEN))
-    GH3 = github3.login(token = GH_TOKEN)
+    GH3 = login(token = GH_TOKEN)
 else:
-    GH3 = github3
+    GH3 = GitHub()
 print('Rate limit remaining: {0}'.format(GH3.ratelimit_remaining))
 PRINTSRV_REPO = GH3.repository(GH_OWNER, GH_UPDATE_PROJECT)
 
