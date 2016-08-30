@@ -3,14 +3,17 @@
 from distutils.core import setup
 import py2exe
 
-CONSOLE = [
+OPTIONS = [
     {
         "script": "printsrv_exe.py",
-        "icon_resources": [(0, "favicon.ico")],
-        "dest_base" : "printsrv"
+        "dest_base": "printsrv"
     }]
 
-setup(console = CONSOLE)
+setup(
+    options = {'py2exe': {'bundle_files': 1}},
+    zipfile = None,
+    console = OPTIONS
+)
 
 # run
 # build_printsrv_exe.py py2exe
