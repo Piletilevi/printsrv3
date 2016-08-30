@@ -65,7 +65,7 @@ def update_files(repository):
             continue
         # local_file = path.join(repo_name, file['local'])
         local_file = path.realpath(path.join(repo_name, file['local']))
-        stdout.write('Updating {0}'.format(f))
+        stdout.write('Updating {0}'.format(local_file))
         with open(local_file, 'w+b') as write_file:
             try:
                 f_contents = gh_repo.file_contents(file['remote'], commit_sha)
