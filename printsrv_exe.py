@@ -72,11 +72,12 @@ else:
 
 def call_update(plp_update_to_version):
     environ['plp_update_to_version'] = plp_update_to_version
-    update_dirname = path.join(path.dirname(argv[0]), 'printsrv')
-    update_filename = path.join(update_dirname, 'update.py')
+    # update_dirname = path.join(path.dirname(argv[0]), 'printsrv')
+    update_dirname = path.join(path.dirname(argv[0]))
+    update_filename = path.join(update_dirname, 'update.exe')
     chdir(update_dirname)
     print('Invoke: {0}'.format(update_filename))
-    execlp("python", "python", update_filename)
+    call(update_filename)
 
 
 if PLP_FILE_TYPE == 'ticket':
@@ -90,7 +91,10 @@ elif PLP_FILE_TYPE == 'fiscal':
     RASO_FILENAME = path.join(RASO_DIRNAME, 'fiscal.py')
     chdir(RASO_DIRNAME)
     print('Invoke: {0}'.format(RASO_FILENAME))
-    call(['python', RASO_FILENAME])
+    try:
+        call(['python', RASO_FILENAME])
+    except Exception as err:
+        print 'Can not print fiscal', RASO_FILENAME, 'HTTP Error:', err.code
     if PLP_JSON_DATA['operation'] == 'endshift':
         if 'version' in PLP_JSON_DATA:
             call_update(PLP_JSON_DATA['version'])

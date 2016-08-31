@@ -6,7 +6,7 @@ from urllib2 import urlopen, URLError, HTTPError
 from json import load as loadJSON
 from json import loads as loadsJSON
 from json import dumps as dumpsJSON
-from sys import argv, stdout
+from sys import argv, stdout, exit
 
 from zipfile import ZipFile
 
@@ -19,21 +19,25 @@ def dlfile(url):
     # Open the url
     try:
         remote_file = urlopen(url)
-        print "downloading " + url
+        print 'downloading', url
 
         # Open our local file for writing
-        with open(path.basename(url), "wb") as local_file:
+        with open(path.basename(url), 'wb') as local_file:
             local_file.write(remote_file.read())
 
     #handle errors
     except HTTPError, err:
-        print "HTTP Error:", err.code, url
+        print 'Can not update to', UPDATE_TO_TAG, 'HTTP Error:', err.code, url
+        return False
     except URLError, err:
-        print "URL Error:", err.reason, url
+        print 'Can not update to', UPDATE_TO_TAG, 'URL Error:', err.reason, url
+        return False
+
+    return True
 
 
 def version_info():
-    with open('package.json', 'rU') as package_file:
+    with open(path.join(path.dirname(argv[0]), 'printsrv', 'package.json'), 'rU') as package_file:
         try:
             local_package_json = loadJSON(package_file)
         except ValueError:
@@ -48,7 +52,7 @@ if L_VER == UPDATE_TO_TAG:
     exit(0)
 
 
-print 'Update required: local:"{0}" <= remote: "{1}".'.format(L_VER, UPDATE_TO_TAG)
+print 'Update required: local:"{0}", remote: "{1}".'.format(L_VER, UPDATE_TO_TAG)
 
 
 REMOTE_PLEVI = 'https://github.com/Piletilevi/printsrv/releases/download/{0}/plevi_{0}.zip'.format(UPDATE_TO_TAG)
@@ -58,19 +62,25 @@ REMOTE_RASOASM = 'https://github.com/Piletilevi/printsrv/releases/download/{0}/R
 
 chdir('..')
 
-dlfile(REMOTE_PLEVI)
-with ZipFile('plevi_{0}.zip'.format(UPDATE_TO_TAG), "r") as z:
-    z.extractall()
-remove('plevi_{0}.zip'.format(UPDATE_TO_TAG))
+if dlfile(REMOTE_PLEVI):
+    with ZipFile('plevi_{0}.zip'.format(UPDATE_TO_TAG), "r") as z:
+        z.extractall()
+    remove('plevi_{0}.zip'.format(UPDATE_TO_TAG))
+else:
+    exit(1)
 
-dlfile(REMOTE_PRINTSRV)
-with ZipFile('printsrv_{0}.zip'.format(UPDATE_TO_TAG), "r") as z:
-    z.extractall('.\\printsrv')
-remove('printsrv_{0}.zip'.format(UPDATE_TO_TAG))
+if dlfile(REMOTE_PRINTSRV):
+    with ZipFile('printsrv_{0}.zip'.format(UPDATE_TO_TAG), "r") as z:
+        z.extractall('.\\printsrv')
+    remove('printsrv_{0}.zip'.format(UPDATE_TO_TAG))
+else:
+    exit(1)
 
-dlfile(REMOTE_RASOASM)
-with ZipFile('RasoASM_{0}.zip'.format(UPDATE_TO_TAG), "r") as z:
-    z.extractall('.\\RasoASM')
-remove('RasoASM_{0}.zip'.format(UPDATE_TO_TAG))
+if dlfile(REMOTE_RASOASM):
+    with ZipFile('RasoASM_{0}.zip'.format(UPDATE_TO_TAG), "r") as z:
+        z.extractall('.\\RasoASM')
+    remove('RasoASM_{0}.zip'.format(UPDATE_TO_TAG))
+else:
+    exit(1)
 
-print 'printsrv update finished.'
+print 'Drivers updated.'
