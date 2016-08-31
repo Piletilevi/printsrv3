@@ -63,7 +63,7 @@ Open new command window and verify pip modules with
 
 ### Special note
 
-Please make sure, that connected wires are connected in same order over all installations.
+Please make sure, that wires are connected in same order over all installations.
 Also make sure port mapping is identical everywhere.  
 
 Even better
