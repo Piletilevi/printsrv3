@@ -10,8 +10,6 @@ from sys import argv, stdout
 
 from zipfile import ZipFile
 
-print(argv)
-
 if not 'plp_update_to_version' in environ:
     raise IndexError('Missing "plp_update_to_version" in environment variables.')
 UPDATE_TO_TAG = environ['plp_update_to_version']
@@ -20,18 +18,18 @@ UPDATE_TO_TAG = environ['plp_update_to_version']
 def dlfile(url):
     # Open the url
     try:
-        f = urlopen(url)
+        remote_file = urlopen(url)
         print "downloading " + url
 
         # Open our local file for writing
         with open(path.basename(url), "wb") as local_file:
-            local_file.write(f.read())
+            local_file.write(remote_file.read())
 
     #handle errors
-    except HTTPError, e:
-        print "HTTP Error:", e.code, url
-    except URLError, e:
-        print "URL Error:", e.reason, url
+    except HTTPError, err:
+        print "HTTP Error:", err.code, url
+    except URLError, err:
+        print "URL Error:", err.reason, url
 
 
 def version_info():
@@ -39,18 +37,18 @@ def version_info():
         try:
             local_package_json = loadJSON(package_file)
         except ValueError:
-            print('WARNING: local package.json is damaged.')
+            print 'WARNING: local package.json is damaged.'
             local_package_json = {'version': 'N/A'}
     return local_package_json['version']
 
 
 L_VER = version_info()
 if L_VER == UPDATE_TO_TAG:
-    print('Already at {0} (tag:"{1}")'.format(L_VER, UPDATE_TO_TAG))
+    print 'Already at {0} (tag:"{1}")'.format(L_VER, UPDATE_TO_TAG)
     exit(0)
 
 
-print('Update required: local:"{0}" <= remote: "{1}".'.format(L_VER, UPDATE_TO_TAG))
+print 'Update required: local:"{0}" <= remote: "{1}".'.format(L_VER, UPDATE_TO_TAG)
 
 
 REMOTE_PLEVI = 'https://github.com/Piletilevi/printsrv/releases/download/{0}/plevi_{0}.zip'.format(UPDATE_TO_TAG)
@@ -75,4 +73,4 @@ with ZipFile('RasoASM_{0}.zip'.format(UPDATE_TO_TAG), "r") as z:
     z.extractall('.\\RasoASM')
 remove('RasoASM_{0}.zip'.format(UPDATE_TO_TAG))
 
-print('printsrv update finished.')
+print 'printsrv update finished.'
