@@ -17,8 +17,8 @@
        and version = 'GitHub tag' is provided
        then update script gets invoked after RasoASM returns.
 """
-from os import environ, path, chdir, execlp
-from sys import argv
+from os import environ, path, chdir, execl
+from sys import argv, exit
 from subprocess import call
 from json import load as loadJSON
 from re import match
@@ -77,12 +77,14 @@ def call_update(plp_update_to_version):
     update_filename = path.join(update_dirname, 'update.exe')
     chdir(update_dirname)
     print('Invoke: {0}'.format(update_filename))
-    call(update_filename)
+    # call(update_filename)
+    execl(update_filename, update_filename)
+    # exit(0)
 
 
 if PLP_FILE_TYPE == 'ticket':
     PRINTSRV_DIRNAME = path.join(path.dirname(argv[0]), 'printsrv')
-    PRINTSRV_FILENAME = path.join(PRINTSRV_DIRNAME, 'printsrv.py')
+    PRINTSRV_FILENAME = path.join(PRINTSRV_DIRNAME, 'print_ticket.py')
     chdir(PRINTSRV_DIRNAME)
     print('Invoke: {0}'.format(PRINTSRV_FILENAME))
     call(['python', PRINTSRV_FILENAME])
@@ -92,7 +94,8 @@ elif PLP_FILE_TYPE == 'fiscal':
     chdir(RASO_DIRNAME)
     print('Invoke: {0}'.format(RASO_FILENAME))
     try:
-        call(['python', RASO_FILENAME])
+        pass
+        # call(['python', RASO_FILENAME])
     except Exception as err:
         print 'Can not print fiscal', RASO_FILENAME, 'HTTP Error:', err.code
     if PLP_JSON_DATA['operation'] == 'endshift':
