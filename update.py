@@ -81,11 +81,11 @@ if dlfile(REMOTE_PRINTSRV, LOCAL_PRINTSRV):
 else:
     exit(1)
 
-if dlfile(REMOTE_RASOASM, LOCAL_RASOASM):
-    with ZipFile(LOCAL_RASOASM, 'r') as z:
-        z.extractall(path.join(path.dirname(argv[0]), 'RasoASM'))
-    remove(LOCAL_RASOASM)
-else:
-    exit(1)
+# if dlfile(REMOTE_RASOASM, LOCAL_RASOASM):
+#     with ZipFile(LOCAL_RASOASM, 'r') as z:
+#         z.extractall(path.join(path.dirname(argv[0]), 'RasoASM'))
+#     remove(LOCAL_RASOASM)
+# else:
+#     exit(1)
 
 print 'Drivers updated.'

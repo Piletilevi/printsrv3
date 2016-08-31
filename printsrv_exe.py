@@ -89,13 +89,14 @@ if PLP_FILE_TYPE == 'ticket':
     print('Invoke: {0}'.format(PRINTSRV_FILENAME))
     call(['python', PRINTSRV_FILENAME])
 elif PLP_FILE_TYPE == 'fiscal':
-    RASO_DIRNAME = path.join(path.dirname(argv[0]), 'RasoASM')
-    RASO_FILENAME = path.join(RASO_DIRNAME, 'fiscal.py')
+    # RASO_DIRNAME = path.join(path.dirname(argv[0]), 'RasoASM')
+    RASO_DIRNAME = path.join(path.dirname(argv[0]))
+    RASO_FILENAME = path.join(RASO_DIRNAME, 'print_fiscal_{0}.exe'.format(LANGUAGE))
     chdir(RASO_DIRNAME)
     print('Invoke: {0}'.format(RASO_FILENAME))
     try:
+        call([RASO_FILENAME])
         pass
-        # call(['python', RASO_FILENAME])
     except Exception as err:
         print 'Can not print fiscal', RASO_FILENAME, 'HTTP Error:', err.code
     if PLP_JSON_DATA['operation'] == 'endshift':
