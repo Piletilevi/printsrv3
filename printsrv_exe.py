@@ -23,6 +23,8 @@ from subprocess import call
 from json import load as loadJSON
 from re import match
 
+from plp2json import read_plp_file
+
 
 # Set plp_language environment variable from persistent.ini
 PERS_INI_FILE = 'C:\plevi\persistent.ini'
@@ -42,7 +44,7 @@ PLP_FILENAME = argv[1]
 environ['plp_filename'] = path.realpath(PLP_FILENAME)
 
 
-def validate_plp_json(plp_json_data):
+def validate_fiscal_json(plp_json_data):
     """ Make sure plp file has required attributes. """
     if not 'info' in plp_json_data:
         raise IndexError('Missing "info" field in plp file {0}.'.format(PLP_FILENAME))
@@ -59,15 +61,29 @@ def validate_plp_json(plp_json_data):
 
 
 # Detect plp file type.
-# If valid JSON, read file type from 'info' field, otherwise assume it's for a ticket
+# If valid JSON, read file type from 'info' field, otherwise assume it's for tickets
 try:
     with open(PLP_FILENAME, 'rU') as plp_data_file:
         PLP_JSON_DATA = loadJSON(plp_data_file)
 except ValueError:
-    PLP_FILE_TYPE = 'ticket'
+    PLP_JSON_DATA = read_plp_file(plp_data_file)
+    # print dumpsJSON(PLP_JSON_DATA, indent=4, ensure_ascii=False, separators=(',', ': '))
+    PLP_FILE_TYPE = 'flat'
 else:
-    validate_plp_json(PLP_JSON_DATA)
-    PLP_FILE_TYPE = PLP_JSON_DATA['info']
+    validate_fiscal_json(PLP_JSON_DATA)
+    PLP_FILE_TYPE = 'json'
+
+if 'info' not in PLP_JSON_DATA: # Backward compatible
+    PLP_JSON_DATA['info'] = 'tickets'
+
+PLP_CONTENT_TYPE = PLP_JSON_DATA['info']
+
+if 'ticketPrinterType' in PLP_JSON_DATA:
+    PLP_PRINTER_TYPE = PLP_JSON_DATA['ticketPrinterType']
+elif 'fiscalPrinterType' in PLP_JSON_DATA:
+    PLP_PRINTER_TYPE = PLP_JSON_DATA['fiscalPrinterType']
+else:
+    PLP_PRINTER_TYPE = PLP_CONTENT_TYPE
 
 
 def call_update(plp_update_to_version):
@@ -82,17 +98,18 @@ def call_update(plp_update_to_version):
     # exit(0)
 
 
-if PLP_FILE_TYPE == 'ticket':
+if PLP_PRINTER_TYPE == 'tickets':
     PRINTSRV_DIRNAME = path.join(path.dirname(argv[0]), 'printsrv')
     # PRINTSRV_FILENAME = path.join(PRINTSRV_DIRNAME, 'print_ticket.py')
     PRINTSRV_FILENAME = 'print_ticket.py'
     chdir(PRINTSRV_DIRNAME)
     print('Invoke: {0}'.format(PRINTSRV_FILENAME))
     call(['python', PRINTSRV_FILENAME])
-elif PLP_FILE_TYPE == 'fiscal':
+
+elif PLP_PRINTER_TYPE == 'fiscal':
     RASO_DIRNAME = path.join(path.dirname(argv[0]), 'RasoASM')
     # RASO_FILENAME = path.join(RASO_DIRNAME, 'print_fiscal_{0}.ipy'.format(LANGUAGE))
-    RASO_FILENAME = 'print_fiscal_{0}.ipy'.format(LANGUAGE)
+    RASO_FILENAME = 'print_{0}_{1}.ipy'.format(PLP_CONTENT_TYPE, LANGUAGE)
     chdir(RASO_DIRNAME)
     print('Invoke: {0}'.format(RASO_FILENAME))
     try:
@@ -103,5 +120,5 @@ elif PLP_FILE_TYPE == 'fiscal':
     if PLP_JSON_DATA['operation'] == 'endshift':
         if 'version' in PLP_JSON_DATA:
             call_update(PLP_JSON_DATA['version'])
-elif PLP_FILE_TYPE == 'update':
+elif PLP_CONTENT_TYPE == 'update':
     call_update(PLP_JSON_DATA['version'])

@@ -28,8 +28,8 @@ def read_param(line):
     return param
 
 def read_plp_file(plp_filename):
-    plp_data = { 'documents': [] }
-    head_ref = plp_data
+    plp_json_data = { 'documents': [] }
+    head_ref = plp_json_data
     with open(plp_filename, 'r', encoding='utf-8') as infile:
         for line in infile:
             param = read_param(line)
@@ -41,16 +41,18 @@ def read_plp_file(plp_filename):
 
             if param_key == 'BEGIN':
                 print 'start new document'
-                plp_data['documents'].append({})
-                head_ref = plp_data['documents'][len(plp_data['documents'])-1]
+                plp_json_data['documents'].append({})
+                head_ref = plp_json_data['documents'][len(plp_json_data['documents'])-1]
 
             elif param_key == 'END':
-                head_ref = plp_data
+                head_ref = plp_json_data
 
             else:
                 head_ref[param_key] = param_val
-    print dumpsJSON(plp_data, indent=4, ensure_ascii=False, separators=(',', ': '))
-    with open('{0}.json'.format(plp_filename), 'w', encoding='utf-8') as outfile:
-        outfile.write(unicode(dumpsJSON(plp_data, ensure_ascii=False, indent=4, separators=(',', ': '), sort_keys=True)))
+    return plp_json_data
 
-read_plp_file(PLP_FILENAME)
+# PLP_JSON_DATA = read_plp_file(PLP_FILENAME)
+#
+# print dumpsJSON(PLP_JSON_DATA, indent=4, ensure_ascii=False, separators=(',', ': '))
+# with open('{0}.json'.format(PLP_FILENAME), 'w', encoding='utf-8') as outfile:
+#     outfile.write(unicode(dumpsJSON(PLP_JSON_DATA, ensure_ascii=False, indent=4, separators=(',', ': '), sort_keys=True)))
