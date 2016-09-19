@@ -1,5 +1,8 @@
 {
   "info": "fiscal",
+  "fiscalPrinter": "", 
+  "fiscalPrinterType": "", 
+  "printingDriverVersion": "",
   "operation": "sale",
   "salesPoint": "* Bilietai BO",
   "payments": [
