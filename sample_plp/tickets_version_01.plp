@@ -1,5 +1,5 @@
 info = tickets
-ticketPrinter = Godex DT4x
+ticketPrinter = Citizen
 ticketPrinterType = fiscal
 printingDriverVersion= 1.0.0
 
