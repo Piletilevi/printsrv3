@@ -16,7 +16,9 @@ def read_param(line):
         return ('END', line)
 
     message = 'Cannot parse parameter from line [%s]' % line
-    param = line.split('=')
+    param = []
+    for part in line.split('='):
+        param.append(part.strip())
     if len(param) != 2:
         logger.warning(message)
         return False
@@ -26,7 +28,6 @@ def read_param(line):
     return param
 
 def read_plp_file(plp_filename):
-
     plp_data = { 'documents': [] }
     head_ref = plp_data
     with open(plp_filename, 'r', encoding='utf-8') as infile:
