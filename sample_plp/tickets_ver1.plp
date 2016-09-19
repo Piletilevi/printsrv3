@@ -1,7 +1,7 @@
 info = tickets
-ticketPrinter = 
-ticketPrinterType = 
-printingDriverVersion=
+ticketPrinter = Godex DT4x
+ticketPrinterType = fiscal
+printingDriverVersion= 1.0.0
 
 BEGIN 1
 layout=http://www.piletilevi.ee/layouts/default.pla
