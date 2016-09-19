@@ -84,21 +84,22 @@ def call_update(plp_update_to_version):
 
 if PLP_FILE_TYPE == 'ticket':
     PRINTSRV_DIRNAME = path.join(path.dirname(argv[0]), 'printsrv')
-    PRINTSRV_FILENAME = path.join(PRINTSRV_DIRNAME, 'print_ticket.py')
+    # PRINTSRV_FILENAME = path.join(PRINTSRV_DIRNAME, 'print_ticket.py')
+    PRINTSRV_FILENAME = 'print_ticket.py'
     chdir(PRINTSRV_DIRNAME)
     print('Invoke: {0}'.format(PRINTSRV_FILENAME))
     call(['python', PRINTSRV_FILENAME])
 elif PLP_FILE_TYPE == 'fiscal':
-    # RASO_DIRNAME = path.join(path.dirname(argv[0]), 'RasoASM')
-    RASO_DIRNAME = path.join(path.dirname(argv[0]))
-    RASO_FILENAME = path.join(RASO_DIRNAME, 'print_fiscal_{0}.exe'.format(LANGUAGE))
+    RASO_DIRNAME = path.join(path.dirname(argv[0]), 'RasoASM')
+    # RASO_FILENAME = path.join(RASO_DIRNAME, 'print_fiscal_{0}.ipy'.format(LANGUAGE))
+    RASO_FILENAME = 'print_fiscal_{0}.ipy'.format(LANGUAGE)
     chdir(RASO_DIRNAME)
     print('Invoke: {0}'.format(RASO_FILENAME))
     try:
-        call([RASO_FILENAME])
+        call(['ipy', RASO_FILENAME])
         pass
     except Exception as err:
-        print 'Can not print fiscal', RASO_FILENAME, 'HTTP Error:', err.code
+        print 'Can not print fiscal', RASO_FILENAME, 'Error:', err.code
     if PLP_JSON_DATA['operation'] == 'endshift':
         if 'version' in PLP_JSON_DATA:
             call_update(PLP_JSON_DATA['version'])
