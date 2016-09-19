@@ -1,8 +1,7 @@
-printer_name=Godex DT4x
-printer_ip=
-driver_version=0.1.1
-driver_force_upgrade=no
-blank_type=B_balt_152x70
+info = tickets
+ticketPrinter = 
+ticketPrinterType = 
+printingDriverVersion=
 
 BEGIN 1
 layout=http://www.piletilevi.ee/layouts/default.pla
