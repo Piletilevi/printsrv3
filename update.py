@@ -5,7 +5,6 @@ from urllib2 import urlopen, URLError, HTTPError
 
 from json import load as loadJSON
 from json import loads as loadsJSON
-from json import dumps as dumpsJSON
 from sys import argv, stdout, exit
 
 from zipfile import ZipFile
