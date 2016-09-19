@@ -14,12 +14,10 @@ if not 'plp_update_to_version' in environ:
     raise IndexError('Missing "plp_update_to_version" in environment variables.')
 
 UPDATE_TO_TAG = environ['plp_update_to_version']
-REMOTE_PLEVI = 'https://github.com/Piletilevi/printsrv/releases/download/{0}/plevi_{0}.zip'.format(UPDATE_TO_TAG)
-REMOTE_PRINTSRV = 'https://github.com/Piletilevi/printsrv/releases/download/{0}/printsrv_{0}.zip'.format(UPDATE_TO_TAG)
-REMOTE_RASOASM = 'https://github.com/Piletilevi/printsrv/releases/download/{0}/RasoASM_{0}.zip'.format(UPDATE_TO_TAG)
-LOCAL_PLEVI = path.join(path.dirname(argv[0]), path.basename(REMOTE_PLEVI))
-LOCAL_PRINTSRV = path.join(path.dirname(argv[0]), path.basename(REMOTE_PRINTSRV))
-LOCAL_RASOASM = path.join(path.dirname(argv[0]), path.basename(REMOTE_RASOASM))
+REMOTE_PLEVI = 'https://github.com/Piletilevi/printsrv/releases/download/{0}/plevi_update_{0}.zip'.format(UPDATE_TO_TAG)
+LOCAL_PLEVI = path.join(path.dirname(path.abspath(argv[0])), path.basename(REMOTE_PLEVI))
+print 'path.abspath(argv[0]): {0}'.format(path.abspath(argv[0]))
+print 'LOCAL_PLEVI: {0}'.format(LOCAL_PLEVI)
 
 def dlfile(remote_filename, local_filename):
     print remote_filename, '-->', local_filename
@@ -69,23 +67,9 @@ chdir('..')
 
 if dlfile(REMOTE_PLEVI, LOCAL_PLEVI):
     with ZipFile(LOCAL_PLEVI, 'r') as z:
-        z.extractall(path.join(path.dirname(argv[0])))
+        z.extractall(path.join(path.dirname(LOCAL_PLEVI)))
     remove(LOCAL_PLEVI)
 else:
     exit(1)
-
-if dlfile(REMOTE_PRINTSRV, LOCAL_PRINTSRV):
-    with ZipFile(LOCAL_PRINTSRV, 'r') as z:
-        z.extractall(path.join(path.dirname(argv[0]), 'printsrv'))
-    remove(LOCAL_PRINTSRV)
-else:
-    exit(1)
-
-# if dlfile(REMOTE_RASOASM, LOCAL_RASOASM):
-#     with ZipFile(LOCAL_RASOASM, 'r') as z:
-#         z.extractall(path.join(path.dirname(argv[0]), 'RasoASM'))
-#     remove(LOCAL_RASOASM)
-# else:
-#     exit(1)
 
 print 'Drivers updated.'
