@@ -25,6 +25,7 @@ from re import match
 
 from plp2json import read_plp_file
 
+BASEDIR = path.realpath(path.dirname(argv[0]))
 
 # Set plp_language environment variable from persistent.ini
 PERS_INI_FILE = 'C:\plevi\persistent.ini'
@@ -88,18 +89,16 @@ else:
 
 def call_update(plp_update_to_version):
     environ['plp_update_to_version'] = plp_update_to_version
-    # update_dirname = path.join(path.dirname(argv[0]), 'printsrv')
-    update_dirname = path.join(path.dirname(argv[0]))
-    update_filename = path.join(update_dirname, 'update.exe')
-    chdir(update_dirname)
+    update_filename = path.join(BASEDIR, 'update.exe')
+    chdir(BASEDIR)
     print('Invoke: {0}'.format(update_filename))
     # call(update_filename)
-    execl(update_filename, update_filename)
     # exit(0)
+    execl(update_filename, update_filename)
 
 
 if PLP_PRINTER_TYPE == 'tickets':
-    PRINTSRV_DIRNAME = path.join(path.dirname(argv[0]), 'printsrv')
+    PRINTSRV_DIRNAME = path.join(BASEDIR, 'printsrv')
     # PRINTSRV_FILENAME = path.join(PRINTSRV_DIRNAME, 'print_ticket.py')
     PRINTSRV_FILENAME = 'print_ticket.py'
     chdir(PRINTSRV_DIRNAME)
@@ -107,7 +106,7 @@ if PLP_PRINTER_TYPE == 'tickets':
     call(['python', PRINTSRV_FILENAME])
 
 elif PLP_PRINTER_TYPE == 'fiscal':
-    RASO_DIRNAME = path.join(path.dirname(argv[0]), 'RasoASM')
+    RASO_DIRNAME = path.join(BASEDIR, 'RasoASM')
     # RASO_FILENAME = path.join(RASO_DIRNAME, 'print_fiscal_{0}.ipy'.format(LANGUAGE))
     RASO_FILENAME = 'print_{0}_{1}.ipy'.format(PLP_CONTENT_TYPE, LANGUAGE)
     chdir(RASO_DIRNAME)
@@ -120,5 +119,6 @@ elif PLP_PRINTER_TYPE == 'fiscal':
     if PLP_JSON_DATA['operation'] == 'endshift':
         if 'version' in PLP_JSON_DATA:
             call_update(PLP_JSON_DATA['version'])
-elif PLP_CONTENT_TYPE == 'update':
+
+if PLP_CONTENT_TYPE == 'update':
     call_update(PLP_JSON_DATA['version'])
