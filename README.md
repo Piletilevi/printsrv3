@@ -19,17 +19,13 @@ Ticket printer driver
    on **Customize Python** screen,  
    You must select **[Will be installed on local hard drive]** for **[Add python.exe to path]**
 2. download, extract, and install [python-2.7.12](https://github.com/Piletilevi/printsrv/files/391929/python-2.7.12.zip)  
-3. ~~download, extract, and install [IronPython-2.7.5](https://github.com/Piletilevi/printsrv/files/391931/IronPython-2.7.5.zip)~~  
-4. download, extract, and install [PIL-1.1.7.win32-py2.7](https://github.com/Piletilevi/printsrv/files/391901/PIL-1.1.7.win32-py2.7.zip)  
-5. download, extract, and install [pywin32-220.win32-py2.7](https://github.com/Piletilevi/printsrv/files/391897/pywin32-220.win32-py2.7.zip)
+3. download, extract, and install [PIL-1.1.7.win32-py2.7](https://github.com/Piletilevi/printsrv/files/391901/PIL-1.1.7.win32-py2.7.zip)  
+4. download, extract, and install [pywin32-220.win32-py2.7](https://github.com/Piletilevi/printsrv/files/391897/pywin32-220.win32-py2.7.zip)
 
 
 ### Drivers
 
-1. Download ticket printer drivers  
-  - ~~[RasoASM-0.2.1.zip](https://github.com/Piletilevi/RasoASM/archive/0.2.1.zip)~~
-  - [plevi-1.0.0.zip](https://github.com/Piletilevi/printsrv/releases/download/1.0.0/plevi_1.0.0.zip)
-
+1. Download ticket printer drivers [plevi-1.0.1.zip](https://github.com/Piletilevi/printsrv/releases/download/1.0.1/plevi_1.0.1.zip)
 2. Unpack the contents into C:\plevi folder
 3. Execute `C:\plevi\install.bat`
 
@@ -82,17 +78,3 @@ To manually update existing drivers:
 1. Update version name in `C:\plevi\printsrv\update.plp`;
 2. Execute `C:\plevi\printsrv\update.plp`.
 
-### Testing
-
-#### Pre-release testing
-
-Instructions above should be followed, only ticket printer drivers should be downloaded from
-- [RasoASM-0.2.0-test.zip](https://github.com/Piletilevi/RasoASM/archive/0.2.0-test.zip)  
-- [printsrv-0.3.0.zip](https://github.com/Piletilevi/printsrv/archive/0.3.0.zip)  
-
-
-#### Developer testing
-
-Instructions above should be followed, only ticket printer drivers should be downloaded from
-- https://github.com/Piletilevi/RasoASM/archive/test.zip  
-- https://github.com/Piletilevi/printsrv/archive/test.zip  
