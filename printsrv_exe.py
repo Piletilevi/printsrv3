@@ -18,11 +18,13 @@
        then update script gets invoked after RasoASM returns.
 """
 from os import environ, path, chdir, execl
+from io import open as ioOpen
 from sys import argv, exit
 from subprocess import call
-from json import load as loadJSON
+from json import load as loadJSON, dumps as dumpsJSON
 from re import match
 
+# from json import load as loadJSON, dumps as dumpsJSON, dump as dumpJSON
 from plp2json import read_plp_file
 
 BASEDIR = path.realpath(path.dirname(argv[0]))
@@ -49,8 +51,8 @@ def validate_fiscal_json(plp_json_data):
     """ Make sure plp file has required attributes. """
     if not 'info' in plp_json_data:
         raise IndexError('Missing "info" field in plp file {0}.'.format(PLP_FILENAME))
-    if plp_json_data['info'] not in ('fiscal', 'update'):
-        raise ValueError('"info" must be either "fiscal" or "update" in {0}.'.format(PLP_FILENAME))
+    if plp_json_data['info'] not in ('fiscal', 'tickets', 'update'):
+        raise ValueError('"info" must be either "fiscal", "tickets" or "update" in {0}.'.format(PLP_FILENAME))
     if plp_json_data['info'] == 'fiscal':
         if not 'operation' in plp_json_data:
             raise IndexError('Missing "operation" field in plp file {0}.'.format(PLP_FILENAME))
@@ -67,8 +69,18 @@ try:
     with open(PLP_FILENAME, 'rU') as plp_data_file:
         PLP_JSON_DATA = loadJSON(plp_data_file)
 except ValueError:
-    PLP_JSON_DATA = read_plp_file(plp_data_file)
+    PLP_JSON_DATA = read_plp_file(PLP_FILENAME)
+    PLP_JSON_FILENAME = '{0}.json'.format(PLP_FILENAME)
+    with ioOpen(PLP_JSON_FILENAME, 'w', encoding='utf-8') as outfile:
+        outfile.write(unicode(dumpsJSON(
+            PLP_JSON_DATA,
+            ensure_ascii=False,
+            indent=4,
+            separators=(',', ': '),
+            sort_keys=True
+        )))
     # print dumpsJSON(PLP_JSON_DATA, indent=4, ensure_ascii=False, separators=(',', ': '))
+    environ['plp_filename'] = PLP_JSON_FILENAME
     PLP_FILE_TYPE = 'flat'
 else:
     validate_fiscal_json(PLP_JSON_DATA)
