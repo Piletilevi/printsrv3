@@ -10,7 +10,6 @@ Ticket printer driver
 - [Configuration](https://github.com/Piletilevi/printsrv/blob/master/README.md#donfiguration)
 - [Special note](https://github.com/Piletilevi/printsrv/blob/master/README.md#special-note)
 - [Manual updating](https://github.com/Piletilevi/printsrv/blob/master/README.md#manual-updating)
-- [Testing](https://github.com/Piletilevi/printsrv/blob/master/README.md#testing)
 
 
 ### Prerequisites checklist:
