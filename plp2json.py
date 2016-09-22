@@ -1,6 +1,4 @@
-from os import environ, path, chdir
-import codecs
-from json import load as loadJSON, dumps as dumpsJSON, dump as dumpJSON
+from os import environ
 from io import open
 
 PLP_FILENAME = environ['plp_filename']
