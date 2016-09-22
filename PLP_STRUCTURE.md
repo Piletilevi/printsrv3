@@ -4,10 +4,27 @@ Two types of PLP files are supported
 
 ## PLP with fiscal data
 
-**Example**
+**Example fiscal end shift**
+    {
+        "info": "fiscal",
+        "salesPoint": "* Bilietai BO",
+        "operation": "endshift",
+        "version": "1.0.2"
+    }
+
+**Example fiscal start shift**
+    {
+        "info": "fiscal",
+        "salesPoint": "* Bilietai BO",
+        "operation": "startshift",
+        "version": "1.0.2"
+    }
+
+**Example fiscal data**
 
     {
         "info": "fiscal",
+        "version": "1.0.2",
         "printerName": "COM4",
         "printerType": "fiscal",
         "operation": "sale",
@@ -66,7 +83,7 @@ Two types of PLP files are supported
         "operation": "sale",
         "salesPoint": "* Bilietai BO",
         "blankType": "B_balt_152x70",
-        "driverVersion": "1.0.1",
+        "version": "1.0.2",
         "documents": [
             {
                 "aeg": "9. september 2011",
