@@ -13,7 +13,7 @@
           "name": "Bilietai",
           "cost": 0.2,
           "kkm": true,
-          "vatPerc": 0.0
+          "vatPerc": 21.0
         },
         {
           "type": "service fee",
