@@ -83,7 +83,6 @@ except ValueError:
     environ['plp_filename'] = PLP_JSON_FILENAME
     PLP_FILE_TYPE = 'flat'
 else:
-    validate_fiscal_json(PLP_JSON_DATA)
     PLP_FILE_TYPE = 'json'
 
 if 'info' not in PLP_JSON_DATA: # Backward compatible
@@ -118,8 +117,8 @@ if PLP_PRINTER_TYPE == 'tickets':
     call(['python', PRINTSRV_FILENAME])
 
 elif PLP_PRINTER_TYPE == 'fiscal':
+    validate_fiscal_json(PLP_JSON_DATA)
     RASO_DIRNAME = path.join(BASEDIR, 'RasoASM')
-    # RASO_FILENAME = path.join(RASO_DIRNAME, 'print_fiscal_{0}.ipy'.format(LANGUAGE))
     RASO_FILENAME = 'print_{0}_{1}.ipy'.format(PLP_CONTENT_TYPE, LANGUAGE)
     chdir(RASO_DIRNAME)
     print('Invoke: {0}'.format(RASO_FILENAME))
@@ -128,9 +127,8 @@ elif PLP_PRINTER_TYPE == 'fiscal':
         pass
     except Exception as err:
         print 'Can not print fiscal', RASO_FILENAME, 'Error:', err.code
-    if PLP_JSON_DATA['operation'] == 'endshift':
-        if 'version' in PLP_JSON_DATA:
-            call_update(PLP_JSON_DATA['version'])
+    if 'version' in PLP_JSON_DATA:
+        call_update(PLP_JSON_DATA['version'])
 
 if PLP_CONTENT_TYPE == 'update':
     call_update(PLP_JSON_DATA['version'])
