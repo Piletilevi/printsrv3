@@ -24,7 +24,7 @@ Ticket printer driver
 
 ### Drivers
 
-1. Download ticket printer drivers [plevi-1.0.0.zip](https://github.com/Piletilevi/printsrv/releases/download/1.0.0/plevi_1.0.0.zip)
+1. Download ticket printer drivers [plevi-1.0.2.zip](https://github.com/Piletilevi/printsrv/releases/download/1.0.2/plevi_1.0.2.zip) (or [plevi-1.0.2-sf3.zip](https://github.com/Piletilevi/printsrv/releases/download/1.0.2-sf3/plevi_1.0.2-sf3.zip) for fixed service fee vat code = 3)
 2. Unpack the contents into C:\plevi folder
 3. Execute `C:\plevi\install.bat`
 
