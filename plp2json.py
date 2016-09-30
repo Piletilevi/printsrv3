@@ -1,8 +1,6 @@
 from os import environ
 from io import open
 
-PLP_FILENAME = environ['plp_filename']
-
 def read_param(line):
     line = line.strip()
     if len(line) == 0:
@@ -48,9 +46,3 @@ def read_plp_file(plp_filename):
             else:
                 head_ref[param_key] = param_val
     return plp_json_data
-
-# PLP_JSON_DATA = read_plp_file(PLP_FILENAME)
-#
-# print dumpsJSON(PLP_JSON_DATA, indent=4, ensure_ascii=False, separators=(',', ': '))
-# with open('{0}.json'.format(PLP_FILENAME), 'w', encoding='utf-8') as outfile:
-#     outfile.write(unicode(dumpsJSON(PLP_JSON_DATA, ensure_ascii=False, indent=4, separators=(',', ': '), sort_keys=True)))

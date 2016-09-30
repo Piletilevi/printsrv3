@@ -1,0 +1,29 @@
+{
+  "info": "fiscal",
+  "operation": "sale",
+  "salesPoint": "Bilietai test salespoint",
+  "payments": [
+    {
+      "type": "1",
+      "cost": 29.4,
+      "components": [
+        {
+          "type": "tickets",
+          "amount": 2,
+          "name": "Bilietai",
+          "cost": 27.8,
+          "kkm": true,
+          "vatPerc": 0.0
+        },
+        {
+          "type": "service fee",
+          "amount": 2,
+          "name": "Paslaugos mokestis 0.80",
+          "cost": 1.6,
+          "kkm": true,
+          "vatPerc": 21.0
+        }
+      ]
+    }
+  ]
+}
