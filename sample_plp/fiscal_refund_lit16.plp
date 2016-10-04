@@ -1,0 +1,40 @@
+{
+  "info": "fiscal",
+  "printer": "Fiscal printer",
+  "printerType": "fiscal",
+  "printingDriverVersion": "1.0.2",
+  "operation": "refund",
+  "salesPoint": "Bilietai test salespoint",
+  "payments": [
+    {
+      "type": "1",
+      "cost": 0.12,
+      "components": [
+        {
+          "type": "tickets",
+          "amount": 3,
+          "name": "Bilietai",
+          "cost": 0.06,
+          "kkm": true,
+          "vatPerc": 0.0
+        },
+        {
+          "type": "service fee",
+          "amount": 3,
+          "name": "Paslaugos mokestis 1.00",
+          "cost": 0.03,
+          "kkm": true,
+          "vatPerc": 21.0
+        },
+        {
+          "type": "service fee",
+          "amount": 3,
+          "name": "Zalgirio arenos mokestis",
+          "cost": 0.03,
+          "kkm": true,
+          "vatPerc": 21.0
+        }
+      ]
+    }
+  ]
+}
