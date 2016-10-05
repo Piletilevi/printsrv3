@@ -56,6 +56,7 @@ HDC_NOT_CREATED               = 2 ** 18 #   262 144
 HELP_MESSAGE                  = 2 ** 19 #   524 288
 COULD_NOT_DOWNLOAD_URL_LAYOUT = 2 ** 20 # 1 048 576
 PLP_FILENAME_NOT_IN_ENVIRON   = 2 ** 21 # 2 097 152
+PLP_FILE_WITHOUT_INFO         = 2 ** 22 # 4 194 304
 
 EXIT_STATUS = EXIT_OK
 
@@ -1096,20 +1097,24 @@ cfg = override_cfg_values(cfg_persistent, cfg_setup)
 language = get_lang(cfg)
 os.environ['plp_language'] = language
 os.environ['plp_filename'] = os.path.abspath(plp_filename)
-os.environ['plp_devmode'] = "TRUE" if os.path.splitext(sys.argv[0])[1] == ".py" else "FALSE"
+os.environ['plp_devmode'] = "TRUE" if os.path.splitext(sys.argv[0])[1] == '.py' else 'FALSE'
 
 # Detect plp file type.
-# If valid JSON, read file type from "info" field, otherwise assume it's for a ticket
+# If valid JSON, read file type from 'info' field, otherwise assume it's for a ticket
 try:
-    with open(plp_filename, "rU") as plp_data_file:
+    with open(plp_filename, 'rU') as plp_data_file:
         plp_json_data = json.load(plp_data_file)
 except Exception as e:
-    plp_file_type = "ticket"
+    plp_file_type = 'ticket'
 else:
-    plp_file_type = plp_json_data["info"]
-logger.info("plp_file_type:%s\n" % plp_file_type)
+    if 'info' not in plp_json_data:
+        logger.info('PLP_FILE_WITHOUT_INFO')
+        set_exit_status(PLP_FILE_WITHOUT_INFO)
+        sys.exit(EXIT_STATUS)
+    plp_file_type = plp_json_data['info']
+logger.info('plp_file_type:%s\n' % plp_file_type)
 
-if plp_file_type == "fiscal":
+if plp_file_type == 'fiscal':
     appexe = os.path.abspath(os.path.join("..", "RasoASM", "fiscal.py"))
     logger.info("Invoke: {0}".format(appexe))
     os.execlp("python", "python", appexe)
@@ -1125,18 +1130,7 @@ proxy = setup_proxy(cfg)
 
 # logger.debug("Print cfg before read_plp_file: {0}".format(cfg.defaults()))
 
-if cfg_plp.has_option("DEFAULT", "info") and cfg_plp.get("DEFAULT", "info") == "fiscal":
-    logger.info("Printing fiscal information.")
-    if language == "ru":
-        shtrih_fp_f = ecr.ECR_Object()
-        shtrih_fp_f.Connect(cfg)
-        shtrih_fp_f.ParsePLP(cfg)
-        shtrih_fp_f.Close()
-        del shtrih_fp_f
-    else:
-        logger.error('Fiscal .plp file should be in JSON')
-else:
-   read_plp_file(cfg, plp_filename, skip_file_delete)
+read_plp_file(cfg, plp_filename, skip_file_delete)
 
 logger.info("exit status:%d" % EXIT_STATUS)
 sys.exit(EXIT_STATUS)
