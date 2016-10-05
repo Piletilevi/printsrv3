@@ -31,15 +31,17 @@
         RasoASM/print_tickets.ipy or
         RasoASM/print_fiscal_LANG.ipy or gets executed
 """
-from os import environ, path, chdir, execl
+from os import environ, path, chdir, execl, makedirs, remove
 from io import open as ioOpen
 from sys import argv, exit
 from subprocess import call
 from json import load as loadJSON, dumps as dumpsJSON
 from re import match
+from urllib2 import urlopen, URLError, HTTPError
+from zipfile import ZipFile
 
 # To convert "old-good-flat" style plp to JSON data structure
-from plp2json import read_plp_file
+from helpers import read_plp_file, cd
 
 BASEDIR = path.realpath(path.dirname(argv[0]))
 
@@ -52,7 +54,7 @@ with open(PERS_INI_FILE, 'rU') as f:
             LANGUAGE = l.split('=')[1].strip().split('_')[0]
 if not LANGUAGE:
     raise Exception('Could not detect language from {0}.'.format(PERS_INI_FILE))
-print('Setting language to {0}'.format(LANGUAGE))
+# print('Setting language to {0}'.format(LANGUAGE))
 environ['plp_language'] = LANGUAGE
 
 
@@ -90,7 +92,6 @@ except ValueError:
 else:
     pass
 
-
 PLP_CONTENT_TYPE = PLP_JSON_DATA['info']
 PLP_PRINTER_TYPE = (PLP_JSON_DATA['printerType'] if 'printerType' in PLP_JSON_DATA else PLP_CONTENT_TYPE)
 
@@ -106,25 +107,73 @@ if PLP_PRINTER_TYPE == 'fiscal':
     environ['plp_filename'] = PLP_JSON_FILENAME
 
 
-def call_update(plp_update_to_version):
-    environ['plp_update_to_version'] = plp_update_to_version
-    update_filename = path.join(BASEDIR, 'update.exe')
-    chdir(BASEDIR)
-    print('Invoke: {0}'.format(update_filename))
-    # call(update_filename)
-    # exit(0)
-    execl(update_filename, update_filename)
+def dlfile(remote_filename, local_filename):
+    try:
+        remote_file = urlopen(remote_filename)
+        print 'downloading', remote_filename, '-->', local_filename
+        with open(local_filename, 'wb') as local_file:
+            local_file.write(remote_file.read())
 
+    #handle errors
+    except HTTPError, err:
+        print 'Can not update:', 'HTTP Error:', err.code, remote_filename
+        return False
+    except URLError, err:
+        print 'Can not update:', 'URL Error:', err.reason, remote_filename
+        return False
+    except IOError, err:
+        print 'Can not update:', 'IO Error:', err, local_filename
+        return False
+
+    return True
+
+
+def ensure_dir(_directory):
+    if not path.exists(_directory):
+        makedirs(_directory)
+
+
+def call_update(plp_update_to_version):
+    print '\n\nupdate({0})'.format(plp_update_to_version)
+    REMOTE_PLEVI = 'https://github.com/Piletilevi/printsrv/releases/download/{0}/plevi_{0}.zip'.format(plp_update_to_version)
+    update_dir = path.join(BASEDIR, 'update')
+    LOCAL_PLEVI = path.join(update_dir, path.basename(REMOTE_PLEVI))
+    ensure_dir(update_dir)
+
+    with open('update.bat', 'w') as infile:
+        infile.write('cd /d {0}\n'.format(update_dir))
+        infile.write('for %%i in (*) do move "%%i" ..\n')
+        infile.write('for /d %%i in (*) do rmdir "../%%i" /s /q\n')
+        infile.write('for /d %%i in (*) do move "%%i" ..\n')
+        infile.write('cd ..\n')
+        infile.write('rmdir update /s /q\n')
+        infile.write('printsrv.exe {0}\n'.format(PLP_FILENAME))
+        infile.write('del update.bat\n'.format(PLP_FILENAME))
+
+    with cd(update_dir):
+        if dlfile(REMOTE_PLEVI, LOCAL_PLEVI):
+            print 'Unpacking {0}'.format(LOCAL_PLEVI)
+            with ZipFile(LOCAL_PLEVI, 'r') as z:
+                z.extractall(path.join(path.dirname(LOCAL_PLEVI)))
+            remove(LOCAL_PLEVI)
+        else:
+            exit(1)
+
+    execl('update.bat', 'update.bat')
+
+
+with open(path.join(BASEDIR, 'printsrv', 'package.json'), 'rU') as package_json_file:
+    PACKAGE_JSON_DATA = loadJSON(package_json_file)
 
 if 'printingDriverVersion' in PLP_JSON_DATA:
-    with open(path.join(BASEDIR, 'printsrv', 'package.json'), 'rU') as package_json_file:
-        PACKAGE_JSON_DATA = loadJSON(package_json_file)
-        if PACKAGE_JSON_DATA['version'] != PLP_JSON_DATA['printingDriverVersion']:
-            call_update(PLP_JSON_DATA['printingDriverVersion'])
+    if PACKAGE_JSON_DATA['version'] != PLP_JSON_DATA['printingDriverVersion']:
+        call_update(PLP_JSON_DATA['printingDriverVersion'])
 
 if PLP_CONTENT_TYPE == 'update':
     if PACKAGE_JSON_DATA['version'] != PLP_JSON_DATA['version']:
         call_update(PLP_JSON_DATA['version'])
+    else:
+        print 'Allready up to date at {0}.'.format(PACKAGE_JSON_DATA['version'])
 
 if PLP_PRINTER_TYPE == 'tickets':
     PRINTSRV_DIRNAME = path.join(BASEDIR, 'printsrv')

@@ -1,5 +1,19 @@
-from os import environ
+from os import environ, path, getcwd, chdir
 from io import open
+
+
+class cd:
+    """Context manager for changing the current working directory"""
+    def __init__(self, newPath):
+        self.newPath = path.expanduser(newPath)
+
+    def __enter__(self):
+        self.savedPath = getcwd()
+        chdir(self.newPath)
+
+    def __exit__(self, etype, value, traceback):
+        chdir(self.savedPath)
+
 
 def read_param(line):
     line = line.strip()
