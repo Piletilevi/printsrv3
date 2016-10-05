@@ -778,9 +778,11 @@ def read_param(line):
     param = line.split("=")
     if len(param) != 2:
         logger.warning(message)
+        exit(1)
         return False
     if len(param[0]) == 0:
         logger.warning(message)
+        exit(1)
         return False
     # logger.info("Param: {0}".format(param))
     return param
