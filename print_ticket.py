@@ -602,6 +602,13 @@ def print_image_value(section_cfg, value):
     except:
         raise
 
+
+#################################################################
+def ensure_dir(_path):
+    _directory = os.path.dirname(_path)
+    if not os.path.exists(_directory):
+        os.makedirs(_directory)
+
 #################################################################
 def print_image_xml_value(section_cfg, value):
     global DEVICE_CONTEXT
@@ -611,7 +618,9 @@ def print_image_xml_value(section_cfg, value):
     This function prints image specified. if it is not available locally it downloads it from web.
     """
     #local_image_filename = section_cfg["local_image_folder"] + value
-    local_image_filename = os.path.join(get_main_dir(), "img", value)
+    # local_image_filename = os.path.join(get_main_dir(), "img", value)
+    ensure_dir(section_cfg["local_image_folder"])
+    local_image_filename = os.path.join(section_cfg["local_image_folder"], value)
 
     if not os.path.isfile(local_image_filename):
         try:
