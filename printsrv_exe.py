@@ -39,6 +39,7 @@ from json import load as loadJSON, dumps as dumpsJSON
 from re import match
 from urllib2 import urlopen, URLError, HTTPError
 from zipfile import ZipFile
+from distutils.version import LooseVersion
 
 # To convert "old-good-flat" style plp to JSON data structure
 from helpers import read_plp_file, cd
@@ -134,7 +135,23 @@ def ensure_dir(_directory):
 
 
 def call_update(plp_update_to_version):
-    print '\n\nupdate({0})'.format(plp_update_to_version)
+    if LooseVersion(plp_update_to_version) == LooseVersion(PACKAGE_JSON_DATA['version']):
+        print '\n\nRefusing to update. Allready at {0}'.format(PACKAGE_JSON_DATA['version'])
+        return
+    if LooseVersion(plp_update_to_version) < LooseVersion('1.0.4'):
+        print '\n\nRefusing to {2} from {0} to {1}. Anything less than 1.0.4 is just not acceptable.'.format(
+            PACKAGE_JSON_DATA['version'],
+            plp_update_to_version,
+            'downgrade' if LooseVersion(plp_update_to_version) < LooseVersion(PACKAGE_JSON_DATA['version']) else 'upgrade'
+        )
+        return
+
+    print '\n\n{2}grading from {0} to {1}.'.format(
+        PACKAGE_JSON_DATA['version'],
+        plp_update_to_version,
+        'Down' if LooseVersion(plp_update_to_version) < LooseVersion(PACKAGE_JSON_DATA['version']) else 'Up'
+    )
+
     REMOTE_PLEVI = 'https://github.com/Piletilevi/printsrv/releases/download/{0}/plevi_{0}.zip'.format(plp_update_to_version)
     update_dir = path.join(BASEDIR, 'update')
     LOCAL_PLEVI = path.join(update_dir, path.basename(REMOTE_PLEVI))
@@ -160,20 +177,17 @@ def call_update(plp_update_to_version):
             exit(1)
 
     execl('update.bat', 'update.bat')
+    exit(0) # Will not reach this line, but for sake of readability.
 
 
 with open(path.join(BASEDIR, 'printsrv', 'package.json'), 'rU') as package_json_file:
     PACKAGE_JSON_DATA = loadJSON(package_json_file)
 
 if 'printingDriverVersion' in PLP_JSON_DATA:
-    if PACKAGE_JSON_DATA['version'] != PLP_JSON_DATA['printingDriverVersion']:
-        call_update(PLP_JSON_DATA['printingDriverVersion'])
+    call_update(PLP_JSON_DATA['printingDriverVersion'])
 
 if PLP_CONTENT_TYPE == 'update':
-    if PACKAGE_JSON_DATA['version'] != PLP_JSON_DATA['version']:
-        call_update(PLP_JSON_DATA['version'])
-    else:
-        print 'Allready up to date at {0}.'.format(PACKAGE_JSON_DATA['version'])
+    call_update(PLP_JSON_DATA['version'])
 
 if PLP_PRINTER_TYPE == 'tickets':
     PRINTSRV_DIRNAME = path.join(BASEDIR, 'printsrv')
