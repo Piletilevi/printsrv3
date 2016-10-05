@@ -116,6 +116,16 @@ def call_update(plp_update_to_version):
     execl(update_filename, update_filename)
 
 
+if 'printingDriverVersion' in PLP_JSON_DATA:
+    with open(path.join(BASEDIR, 'printsrv', 'package.json'), 'rU') as package_json_file:
+        PACKAGE_JSON_DATA = loadJSON(package_json_file)
+        if PACKAGE_JSON_DATA['version'] != PLP_JSON_DATA['printingDriverVersion']:
+            call_update(PLP_JSON_DATA['printingDriverVersion'])
+
+if PLP_CONTENT_TYPE == 'update':
+    if PACKAGE_JSON_DATA['version'] != PLP_JSON_DATA['version']:
+        call_update(PLP_JSON_DATA['version'])
+
 if PLP_PRINTER_TYPE == 'tickets':
     PRINTSRV_DIRNAME = path.join(BASEDIR, 'printsrv')
     # PRINTSRV_FILENAME = path.join(PRINTSRV_DIRNAME, 'print_ticket.py')
@@ -135,12 +145,3 @@ elif PLP_PRINTER_TYPE == 'fiscal':
         pass
     except Exception as err:
         print 'Can not print fiscal', RASO_FILENAME, 'Error:', err.code
-
-if 'printingDriverVersion' in PLP_JSON_DATA:
-    with open(path.join(BASEDIR, 'printsrv', 'package.json'), 'rU') as package_json_file:
-        PACKAGE_JSON_DATA = loadJSON(package_json_file)
-        if PACKAGE_JSON_DATA['version'] != PLP_JSON_DATA['printingDriverVersion']:
-            call_update(PLP_JSON_DATA['printingDriverVersion'])
-
-if PLP_CONTENT_TYPE == 'update':
-    call_update(PLP_JSON_DATA['version'])
