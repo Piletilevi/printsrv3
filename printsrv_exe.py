@@ -85,6 +85,7 @@ def validate_fiscal_json(plp_json_data):
 try:
     with open(PLP_FILENAME, 'rU') as plp_data_file:
         PLP_JSON_DATA = loadJSON(plp_data_file)
+        PLP_JSON_FILENAME = PLP_FILENAME
 except ValueError:
     PLP_JSON_DATA = read_plp_file(PLP_FILENAME)
     # Backward compatible
