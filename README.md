@@ -9,7 +9,7 @@ Ticket printer driver
 - [Check](https://github.com/Piletilevi/printsrv/blob/master/README.md#check)
 - [Configuration](https://github.com/Piletilevi/printsrv/blob/master/README.md#donfiguration)
 - [Special note](https://github.com/Piletilevi/printsrv/blob/master/README.md#special-note)
-- [Manual updating](https://github.com/Piletilevi/printsrv/blob/master/README.md#manual-updating)
+- [Updating](https://github.com/Piletilevi/printsrv/blob/master/README.md#manual-updating)
 
 
 ### Prerequisites checklist:
@@ -74,8 +74,6 @@ M-O-O-R
 
 
 # Updating
-
-### Through BO
 
 ### Manual updating
 
