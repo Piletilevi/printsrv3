@@ -165,7 +165,7 @@ def call_update(plp_update_to_version):
         infile.write('for /d %%i in (*) do move "%%i" ..\n')
         infile.write('cd ..\n')
         infile.write('rmdir update /s /q\n')
-        infile.write('printsrv.exe {0}\n'.format(PLP_FILENAME))
+        infile.write('printsrv.exe "{0}"\n'.format(PLP_FILENAME))
         infile.write('del update.bat\n'.format(PLP_FILENAME))
 
     with cd(update_dir):
