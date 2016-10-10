@@ -26,7 +26,7 @@ Ticket printer driver
 
 1. Download ticket printer drivers [plevi_2.0.0.zip](https://github.com/Piletilevi/printsrv/releases/download/2.0.0/plevi_2.0.0.zip)
 2. Unpack the contents into C:\plevi folder
-3. Execute `C:\plevi\install.bat`
+3. Execute `C:\plevi\printsrv\install.bat`
 
 ### Configure
 Update RasoASM/vat_table_lt.yaml and RasoASM/payment_methods_lt.yaml if needed
