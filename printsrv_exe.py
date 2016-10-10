@@ -158,27 +158,28 @@ def call_update(plp_update_to_version):
     LOCAL_PLEVI = path.join(update_dir, path.basename(REMOTE_PLEVI))
     ensure_dir(update_dir)
 
-    with open('update.bat', 'w') as infile:
-        infile.write('cd /d {0}\n'.format(update_dir))
-        infile.write('for %%i in (*) do move "%%i" ..\n')
-        infile.write('for /d %%i in (*) do rmdir "../%%i" /s /q\n')
-        infile.write('for /d %%i in (*) do move "%%i" ..\n')
-        infile.write('cd ..\n')
-        infile.write('rmdir update /s /q\n')
-        infile.write('printsrv.exe "{0}"\n'.format(PLP_FILENAME))
-        infile.write('del update.bat\n'.format(PLP_FILENAME))
+    with cd(BASEDIR):
+        with open('update.bat', 'w') as infile:
+            infile.write('cd /d {0}\n'.format(update_dir))
+            infile.write('for %%i in (*) do move "%%i" ..\n')
+            infile.write('for /d %%i in (*) do rmdir "../%%i" /s /q\n')
+            infile.write('for /d %%i in (*) do move "%%i" ..\n')
+            infile.write('cd ..\n')
+            infile.write('rmdir update /s /q\n')
+            infile.write('printsrv.exe "{0}"\n'.format(PLP_FILENAME))
+            infile.write('del update.bat\n'.format(PLP_FILENAME))
 
-    with cd(update_dir):
-        if dlfile(REMOTE_PLEVI, LOCAL_PLEVI):
-            print 'Unpacking {0}'.format(LOCAL_PLEVI)
-            with ZipFile(LOCAL_PLEVI, 'r') as z:
-                z.extractall(path.join(path.dirname(LOCAL_PLEVI)))
-            remove(LOCAL_PLEVI)
-        else:
-            exit(1)
+        with cd(update_dir):
+            if dlfile(REMOTE_PLEVI, LOCAL_PLEVI):
+                print 'Unpacking {0}'.format(LOCAL_PLEVI)
+                with ZipFile(LOCAL_PLEVI, 'r') as z:
+                    z.extractall(path.join(path.dirname(LOCAL_PLEVI)))
+                remove(LOCAL_PLEVI)
+            else:
+                exit(1)
 
-    execl('update.bat', 'update.bat')
-    exit(0) # Will not reach this line, but for sake of readability.
+        execl('update.bat', 'update.bat')
+        exit(0) # Will not reach this line, but for sake of readability.
 
 
 with open(path.join(BASEDIR, 'printsrv', 'package.json'), 'rU') as package_json_file:
