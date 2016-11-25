@@ -31,7 +31,8 @@
         RasoASM/print_tickets.ipy or
         RasoASM/print_fiscal_LANG.ipy or gets executed
 """
-from os import environ, path, chdir, execl, makedirs, remove
+from os import environ, path, chdir, execl, makedirs, remove, chmod
+from stat import S_IWRITE
 from io import open as ioOpen
 from sys import argv, exit
 from subprocess import call
@@ -86,6 +87,7 @@ try:
     with open(PLP_FILENAME, 'rU') as plp_data_file:
         PLP_JSON_DATA = loadJSON(plp_data_file)
         PLP_JSON_FILENAME = PLP_FILENAME
+        chmod(PLP_JSON_FILENAME, S_IWRITE)
 except ValueError:
     PLP_JSON_DATA = read_plp_file(PLP_FILENAME)
     # Backward compatible
