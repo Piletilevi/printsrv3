@@ -11,13 +11,20 @@
                 {
                     "properties": {
                         "payments": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "$ref": "plpPayment.json"
+                            }
                         }
                     },
-                    "required": ["payments"]
+                    "required": [
+                        "payments"
+                    ]
                 }
             ]
         }
     },
-    "required": ["fiscalData"]
+    "required": [
+        "fiscalData"
+    ]
 }

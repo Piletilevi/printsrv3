@@ -9,7 +9,17 @@
                     "$ref": "plpFiscalData.json"
                 },
                 {
-                    "required": "payments"
+                    "properties": {
+                        "payments": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "plpPayment.json"
+                            }
+                        }
+                    },
+                    "required": [
+                        "payments"
+                    ]
                 }
             ]
         },

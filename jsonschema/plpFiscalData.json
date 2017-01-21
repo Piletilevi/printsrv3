@@ -75,13 +75,6 @@
                 "printerName"
             ]
         },
-        "payments": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "$ref": "plpPayment.json"
-            }
-        },
         "cashAmount": {"type":"number"}
     },
     "required": [
