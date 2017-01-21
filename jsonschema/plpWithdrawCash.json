@@ -10,14 +10,23 @@
                 },
                 {
                     "properties": {
+                        "operation": {
+                            "type": "string",
+                            "enum": [
+                                "withdrawcash"
+                            ]
+                        },
                         "cashAmount": {
                             "type": "number"
                         }
                     },
-                    "required": ["cashAmount"]
+                    "required": [
+                        "operation",
+                        "cashAmount"
+                    ]
                 }
             ]
-        },
+        }
     },
     "required": [
         "fiscalData"

@@ -4,7 +4,24 @@
     "type": "object",
     "properties": {
         "fiscalData": {
-            "$ref": "plpFiscalData.json"
+            "allOf": [
+                {
+                    "$ref": "plpFiscalData.json"
+                },
+                {
+                    "properties": {
+                        "operation": {
+                            "type": "string",
+                            "enum": [
+                                "xreport"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "operation"
+                    ]
+                }
+            ]
         }
     },
     "required": [

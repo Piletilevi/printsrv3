@@ -13,7 +13,7 @@
                         "operation": {
                             "type": "string",
                             "enum": [
-                                "cut"
+                                "endshift"
                             ]
                         }
                     },

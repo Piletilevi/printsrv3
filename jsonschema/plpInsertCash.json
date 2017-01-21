@@ -10,11 +10,20 @@
                 },
                 {
                     "properties": {
+                        "operation": {
+                            "type": "string",
+                            "enum": [
+                                "insertcash"
+                            ]
+                        },
                         "cashAmount": {
                             "type": "number"
                         }
                     },
-                    "required": ["cashAmount"]
+                    "required": [
+                        "operation",
+                        "cashAmount"
+                    ]
                 }
             ]
         }

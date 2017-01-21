@@ -10,6 +10,12 @@
                 },
                 {
                     "properties": {
+                        "operation": {
+                            "type": "string",
+                            "enum": [
+                                "refund"
+                            ]
+                        },
                         "payments": {
                             "type": "array",
                             "items": {
@@ -18,6 +24,7 @@
                         }
                     },
                     "required": [
+                        "operation",
                         "payments"
                     ]
                 }
