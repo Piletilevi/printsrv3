@@ -10,7 +10,9 @@
             "type": "string"
         },
         "cost": {
-            "type": "number"
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMinimum": true
         },
         "components": {
             "type": "array",

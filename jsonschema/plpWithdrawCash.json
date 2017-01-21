@@ -17,7 +17,9 @@
                             ]
                         },
                         "cashAmount": {
-                            "type": "number"
+                            "type": "number",
+                            "minimum": 0,
+                            "exclusiveMinimum": true
                         }
                     },
                     "required": [

@@ -37,10 +37,14 @@
                     "type": "string"
                 },
                 "readTimeout": {
-                    "type": "number"
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true
                 },
                 "writeTimeout": {
-                    "type": "number"
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true
                 },
                 "adminPw": {
                     "type": "string"
@@ -60,7 +64,9 @@
                 "printerName"
             ]
         },
-        "cashAmount": {"type":"number"}
+        "cashAmount": {
+            "type": "number"
+        }
     },
     "required": [
         "printerData"
