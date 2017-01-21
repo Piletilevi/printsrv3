@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "https://raw.githubusercontent.com/Piletilevi/printsrv/json/jsonschema/plpRefund.json",
+    "type": "object",
+    "properties": {
+        "fiscalData": {
+            "allOf": [
+                {
+                    "$ref": "plpFiscalData.json"
+                },
+                {
+                    "required": "payments"
+                }
+            ]
+        }
+    },
+    "required": ["fiscalData"]
+}

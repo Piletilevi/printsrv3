@@ -1,5 +1,6 @@
 python -m pip install --upgrade pip
 pip install fontname
+pip install jsonschema
 pip install qrcode
 pip install wmi
 

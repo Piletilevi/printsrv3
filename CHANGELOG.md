@@ -1,5 +1,15 @@
 # CHANGELOG
 
+### 3.0.0 JSON
+- xx/02/2017, Mihkel Putrinš
+- BO provides complete fiscal and ticket information in single JSON
+
+...
+
+### 2.0.0
+
+...
+
 ### 1.0.0-rc1 Release candidate
 - 30/08/2016, Mihkel Putrinš
 
