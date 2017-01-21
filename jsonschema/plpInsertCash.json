@@ -6,8 +6,7 @@
         "fiscalData": {
             "allOf": [
                 {"$ref": "plpFiscalData.json"},
-                {"properties": {"cashAmount":{}}},
-                {"required": "cashAmount"}
+                {"properties": {"cashAmount":{"type":"number"}}}
             ]
         },
     },
