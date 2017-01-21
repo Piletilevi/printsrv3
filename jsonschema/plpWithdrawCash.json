@@ -9,7 +9,12 @@
                     "$ref": "plpFiscalData.json"
                 },
                 {
-                    "required": "cashAmount"
+                    "properties": {
+                        "cashAmount": {
+                            "type": "number"
+                        }
+                    },
+                    "required": ["cashAmount"]
                 }
             ]
         },

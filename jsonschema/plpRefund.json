@@ -9,7 +9,12 @@
                     "$ref": "plpFiscalData.json"
                 },
                 {
-                    "required": "payments"
+                    "properties": {
+                        "payments": {
+                            "type": "object"
+                        }
+                    },
+                    "required": ["payments"]
                 }
             ]
         }
