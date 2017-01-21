@@ -20,8 +20,8 @@
                 "type": {
                     "type": "string",
                     "enum": [
-                        "fiscal",
-                        "anotherFiscal?"
+                        "fiscal_raso",
+                        "fiscal_shtrihm"
                     ]
                 },
                 "printerName": {
