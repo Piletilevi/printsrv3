@@ -11,10 +11,7 @@
                 {
                     "properties": {
                         "operation": {
-                            "type": "string",
-                            "enum": [
-                                "withdrawcash"
-                            ]
+                            "type": "string"
                         },
                         "cashAmount": {
                             "type": "number"
