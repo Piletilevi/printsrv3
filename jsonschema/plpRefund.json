@@ -11,7 +11,7 @@
                 {
                     "properties": {
                         "payments": {
-                            "type": "object"
+                            "type": "array"
                         }
                     },
                     "required": ["payments"]
