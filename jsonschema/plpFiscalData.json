@@ -3,21 +3,6 @@
     "id": "https://raw.githubusercontent.com/Piletilevi/printsrv/json/jsonschema/plpFiscalData.json",
     "type": "object",
     "properties": {
-        "operation": {
-            "type": "string",
-            "enum": [
-                "cut",
-                "endshift",
-                "feed",
-                "insertcash",
-                "open_cashreg",
-                "refund",
-                "sale",
-                "startshift",
-                "withdrawcash",
-                "xreport"
-            ]
-        },
         "cardPaymentUnitSettings": {
             "type": "object",
             "properties": {
@@ -78,7 +63,6 @@
         "cashAmount": {"type":"number"}
     },
     "required": [
-        "operation",
         "printerData"
     ]
 }
