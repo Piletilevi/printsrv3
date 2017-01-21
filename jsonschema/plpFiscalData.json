@@ -37,10 +37,10 @@
                     "type": "string"
                 },
                 "readTimeout": {
-                    "type": "boolean"
+                    "type": "number"
                 },
                 "writeTimeout": {
-                    "type": "boolean"
+                    "type": "number"
                 },
                 "adminPw": {
                     "type": "string"
