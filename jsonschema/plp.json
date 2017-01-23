@@ -46,10 +46,19 @@
         "feedbackUrl": {
             "type": "string"
         },
+        "busnId": {
+            "type": "string"
+        },
         "printingDriverVersion": {
             "type": "string"
         },
         "printingDriverVersionURL": {
+            "type": "string"
+        },
+        "salesPointText": {
+            "type": "string"
+        },
+        "salesPointCountry": {
             "type": "string"
         },
         "salesPoint": {
@@ -58,6 +67,7 @@
     },
     "required": [
         "plpVersion",
-        "printingDriverVersion"
+        "printingDriverVersion",
+        "salesPointCountry"
     ]
 }
