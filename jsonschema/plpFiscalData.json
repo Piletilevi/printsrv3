@@ -20,8 +20,7 @@
                 "type": {
                     "type": "string",
                     "enum": [
-                        "fiscal_raso",
-                        "fiscal_shtrihm"
+                        "fiscal"
                     ]
                 },
                 "printerName": {
@@ -31,10 +30,10 @@
                     "type": "string"
                 },
                 "comPortNumber": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "comPortBaudRate": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "readTimeout": {
                     "type": "integer",

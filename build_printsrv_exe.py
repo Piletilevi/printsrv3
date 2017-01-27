@@ -16,4 +16,4 @@ setup(
 )
 
 # run
-# build_printsrv_exe.py py2exe
+# python build_printsrv_exe.py py2exe

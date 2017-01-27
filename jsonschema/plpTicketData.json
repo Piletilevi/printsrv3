@@ -13,9 +13,7 @@
                 "type": {
                     "type": "string",
                     "enum": [
-                        "ticket_ps",
-                        "fiscal_raso",
-                        "fiscal_shtrihm"
+                        "ticket"
                     ]
                 },
                 "printerName": {
