@@ -1,0 +1,73 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "https://raw.githubusercontent.com/Piletilevi/printsrv/json/jsonschema/plp.json",
+    "title": "PiletiLevi Printing",
+    "description": "Tickets and fiscal data from backoffice to POS",
+    "type": "object",
+    "oneOf": [
+        {
+            "$ref": "plpCut.json"
+        },
+        {
+            "$ref": "plpEndShift.json"
+        },
+        {
+            "$ref": "plpFeed.json"
+        },
+        {
+            "$ref": "plpInsertCash.json"
+        },
+        {
+            "$ref": "plpOpenCashReg.json"
+        },
+        {
+            "$ref": "plpRefund.json"
+        },
+        {
+            "$ref": "plpSale.json"
+        },
+        {
+            "$ref": "plpStartShift.json"
+        },
+        {
+            "$ref": "plpWithdrawCash.json"
+        },
+        {
+            "$ref": "plpXReport.json"
+        }
+    ],
+    "properties": {
+        "plpVersion": {
+            "type": "string"
+        },
+        "feedbackToken": {
+            "type": "string"
+        },
+        "feedbackUrl": {
+            "type": "string"
+        },
+        "busnId": {
+            "type": "string"
+        },
+        "printingDriverVersion": {
+            "type": "string"
+        },
+        "printingDriverVersionURL": {
+            "type": "string"
+        },
+        "salesPointText": {
+            "type": "string"
+        },
+        "salesPointCountry": {
+            "type": "string"
+        },
+        "salesPoint": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "plpVersion",
+        "printingDriverVersion",
+        "salesPointCountry"
+    ]
+}
