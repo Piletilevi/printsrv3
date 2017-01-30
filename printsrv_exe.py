@@ -9,8 +9,7 @@ from io import open as ioOpen
 from sys import argv, exit
 from subprocess import call
 from json import load as loadJSON, dumps as dumpsJSON
-from jsonschema import exceptions as JSCHExceptions
-from jsonschema import validate as validateJSON
+import jsonschema
 from re import match
 from urllib2 import urlopen, URLError, HTTPError
 from zipfile import ZipFile
@@ -29,8 +28,9 @@ with open(path.join(BASEDIR, 'printsrv', 'jsonschema', 'plp.json'), 'rU') as sch
 with open(PLP_FILENAME, 'rU') as plp_data_file:
     PLP_JSON_DATA = loadJSON(plp_data_file)
 try:
-    validateJSON(PLP_JSON_DATA, schema)
-except JSCHExceptions.ValidationError as ve:
+    print('Validating against {0}: {1}').format(path.join(BASEDIR, 'printsrv', 'jsonschema', 'plp.json'), PLP_FILENAME)
+    jsonschema.validate(PLP_JSON_DATA, schema)
+except jsonschema.exceptions.ValidationError as ve:
     sys.stderr.write("JSON validation ERROR\n")
     sys.stderr.write( "{0}\n".format(ve))
     raise ve
