@@ -14,6 +14,7 @@ from re import match
 from urllib2 import urlopen, URLError, HTTPError
 from zipfile import ZipFile
 from distutils.version import LooseVersion
+from helpers import cd
 
 BASEDIR = path.realpath(path.dirname(argv[0]))
 
