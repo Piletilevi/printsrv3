@@ -65,18 +65,21 @@ def connect():
 
 def closeShift():
     global v
-    print "performing PrintReportWithCleaning() (Press ENTER)"
-    stdin.readline()
+    # print "performing PrintReportWithCleaning() (Press ENTER)"
+    # stdin.readline()
     insist(v.PrintReportWithCleaning, USER_ADM)
+    prc()
+
+
+def xReport():
+    global v
+    # print "performing PrintReportWithoutCleaning() (Press ENTER)"
+    insist(v.PrintReportWithoutCleaning, USER_ADM)
     prc()
 
 
 def openShift():
     global v
-    print "performing PrintReportWithoutCleaning() (Press ENTER)"
-    stdin.readline()
-    insist(v.PrintReportWithoutCleaning, USER_ADM)
-    prc()
     insist(v.OpenSession, USER_ADM)
     prc()
     # Shift will be actually opened with first recipe
@@ -92,7 +95,7 @@ def setMode2():
     global v
     timecount = 0
 
-    print "Initial ECRMode " + ecr_mode_string(v.ECRMode)
+    # print "Initial ECRMode " + ecr_mode_string(v.ECRMode)
 
     if v.ECRMode == 8:
         insist(v.Beep, USER_KASSIR)
@@ -229,6 +232,11 @@ def insertCash(amount, password = USER_KASSIR):
 def withdrawCash(amount, password = USER_KASSIR):
     setattr(v, 'Summ1', amount)
     insist(v.CashOutcome, password)
+
+
+def openCashRegister(drawer = 0, password = USER_KASSIR):
+    setattr(v, 'DrawerNumber', drawer)
+    insist(v.OpenDrawer, password)
 
 
 oo = Type.GetTypeFromProgID('Addin.DrvFR')

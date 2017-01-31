@@ -126,9 +126,9 @@ elif operation == 'endshift':
 elif operation == 'feed':
     cm.feed()
 elif operation == 'insertcash':
-    pass
+    cm.insertCash(plp_json_data['fiscalData']['cashAmount'])
 elif operation == 'open_cashreg':
-    pass
+    cm.openCashRegister()
 elif operation == 'refund':
     sale()
 elif operation == 'sale':
@@ -136,9 +136,9 @@ elif operation == 'sale':
 elif operation == 'startshift':
     cm.openShift()
 elif operation == 'withdrawcash':
-    pass
+    cm.withdrawCash(plp_json_data['fiscalData']['cashAmount'])
 elif operation == 'xreport':
-    pass
+    cm.xReport()
 else:
     raise ValueError('"operation" must be one of {0} in plp file.'.format(VALID_OPERATIONS))
 
