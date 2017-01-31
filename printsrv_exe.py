@@ -32,8 +32,8 @@ try:
     print('Validating against {0}: {1}').format(path.join(BASEDIR, 'printsrv', 'jsonschema', 'plp.json'), PLP_FILENAME)
     jsonschema.validate(PLP_JSON_DATA, schema)
 except jsonschema.exceptions.ValidationError as ve:
-    sys.stderr.write("JSON validation ERROR\n")
-    sys.stderr.write( "{0}\n".format(ve))
+    print("JSON validation ERROR\n")
+    # print( "{0}\n".format(ve))
     raise ve
 
 with open(path.join(BASEDIR, 'printsrv', 'package.json'), 'rU') as package_json_file:
@@ -119,7 +119,7 @@ call_update()
 
 
 if PLP_JSON_DATA['fiscalData']:
-    PRINTSRV_DIRNAME = path.join(BASEDIR, 'printers', 'fiscal_{0}'.format(PLP_JSON_DATA['salesPointCountry']))
+    PRINTSRV_DIRNAME = path.join(BASEDIR, 'printers', PLP_JSON_DATA['fiscalData']['printerData']['printerName'])
     PRINTSRV_FILENAME = 'print_fiscal.ipy'
     chdir(PRINTSRV_DIRNAME)
     print('Invoke: {0}'.format(PRINTSRV_FILENAME))

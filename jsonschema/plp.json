@@ -93,7 +93,7 @@
                     "type": "string"
                 },
                 "vatGroup": {
-                    "type": "number"
+                    "type": "string"
                 }
             },
             "required": [
