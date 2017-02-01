@@ -201,11 +201,15 @@ def returnSale(sales_options, payment_options, password = USER_KASSIR):
 
 
 def printLine(string = ' '):
-    setattr(v, 'UseReceiptRibbon', True)
-    setattr(v, 'UseJournalRibbon', False)
-    setattr(v, 'StringForPrinting', string.decode(encoding='UTF-8'))
-    print ('Printing on receipt: "{0}"'.format(string.decode(encoding='UTF-8')))
-    insist(v.PrintString, USER_KASSIR)
+    if len(string) > 36:
+        printLine(string[:36])
+        printLine(string[36:])
+    else:
+        setattr(v, 'UseReceiptRibbon', True)
+        setattr(v, 'UseJournalRibbon', False)
+        setattr(v, 'StringForPrinting', string.decode(encoding='UTF-8'))
+        print ('Printing on receipt: "{0}"'.format(string.decode(encoding='UTF-8')))
+        insist(v.PrintString, USER_KASSIR)
 
 
 def feed(feedLineCount = 4):
