@@ -1,0 +1,1923 @@
+********************************************************************************
+
+  Project    : Fiscal printer driver
+  Company    : SHTRIH-M, www.shtrih-m.ru (495) 787-6090
+
+********************************************************************************
+
+  DrvFR_4.12_467.exe
+  03 June 2015 18:00
+
+  [-] Fixed work with 1C
+  
+********************************************************************************
+
+  DrvFR_4.12_466.exe
+  31 May 2015 19:00
+
+  [-] Minor fixes
+  
+********************************************************************************
+
+  DrvFR_4.12_465.exe
+  30 May 2015 18:00
+
+  [+] Added "FN" commands
+  
+********************************************************************************
+
+  DrvFR_4.12_464.exe
+  30 May 2015 18:00
+
+  [-] Fixed TCP connection error when using 1C
+  
+********************************************************************************
+
+  DrvFR_4.12_463.exe
+  27 May 2015 18:00
+
+  [+] 
+  
+********************************************************************************
+
+  DrvFR_4.12_462.exe
+  26 May 2015 17:00
+
+  [+] Added "FN" commands
+  
+********************************************************************************
+
+  DrvFR_4.12_461.exe
+  24 May 2015 18:00
+
+  [-] Deleted automatic tax calculation field adjustment with 1C
+  
+********************************************************************************
+
+  DrvFR_4.12_460.exe
+  20 May 2015 20:00
+
+  [+] Added send of FN data to OFD server
+  
+********************************************************************************
+
+  DrvFR_4.12_459.exe
+  13 May 2015 18:00
+
+  [-] Fixed work with 1C
+  
+********************************************************************************
+
+  DrvFR_4.12_458.exe
+  11 May 2015 20:00
+
+  [-] Enhanced work with TCP connection
+  
+********************************************************************************
+
+  DrvFR_4.12_457.exe
+  06 May 2015 20:00
+
+  [+] Added QR print using graphic in 1C
+  
+********************************************************************************
+
+  DrvFR_4.12_456.exe
+  22 April 2015 19:30
+
+  [+] Added receipt printing using "FN" commandss in driver test
+  
+********************************************************************************
+
+  DrvFR_4.12_455.exe
+  21 April 2015 19:30
+
+  [+] Added "FN" commandss
+  
+********************************************************************************
+
+  DrvFR_4.12_454.exe
+  21 April 2015 19:00
+
+  [-] Minor fixes
+  
+********************************************************************************
+
+  DrvFR_4.12_453.exe
+  21 April 2015 18:00
+
+  [-] Fixed "FN" commands
+  
+********************************************************************************
+
+  DrvFR_4.12_452.exe
+  20 April 2015 17:00
+
+  [+] Added "FN" commands
+  
+********************************************************************************
+
+  DrvFR_4.12_451.exe
+  18 April 2015 19:00
+
+  [+] Added sqlite3.dll library
+  
+********************************************************************************
+
+  DrvFR_4.12_450.exe
+  11 April 2015 20:00
+
+  [+] Added thread synchronization
+  
+********************************************************************************
+
+  DrvFR_4.12_449.exe
+  11 April 2015 19:00
+
+  [+] Added "FN" commands
+  
+********************************************************************************
+
+  DrvFR_4.12_448.exe
+  11 April 2015 18:00
+
+  [+] Added receipt copies database storage
+  
+********************************************************************************
+
+  DrvFR_4.12_447.exe
+  04 April 2015 19:00
+
+  [+] Added "FN" commands
+  
+********************************************************************************
+
+  DrvFR_4.12_446.exe
+  31 March 2015 16:00
+
+  [-] Changes in "FN" commands
+  
+********************************************************************************
+
+  DrvFR_4.12_445.exe
+  29 March 2016 18:00
+
+  [+] Added "FN" commands
+ 
+********************************************************************************
+
+  DrvFR_4.12_444.exe
+  24 March 2015 16:00
+
+  [-] Fixed "FN" commands
+  
+********************************************************************************
+
+  DrvFR_4.12_443.exe
+  23 March 2015 16:00
+
+  [-] Fixed "FN" commands
+  
+********************************************************************************
+
+  DrvFR_4.12_442.exe
+  22 March 2015 18:00
+
+  [+] Added "FN" commands
+  
+********************************************************************************
+  DrvFR_4.12_441.exe
+  21 March 2015 18:00
+
+  [-] Changes in FN commands
+  
+********************************************************************************
+
+  DrvFR_4.12_440.exe
+  17 March 2015 19:00
+
+  [-] Fixed get ECR status command for belorussian ECR
+  
+********************************************************************************
+
+  DrvFR_4.12_439.exe
+  17 March 2015 17:00
+
+  [+] Added modem parameters desctiption in driver test
+  
+********************************************************************************
+
+  DrvFR_4.12_438.exe
+  11 March 2015 18:00
+
+  [-] Fixed file writing when "XML receipt file" is used
+  
+********************************************************************************
+
+  DrvFR_4.12_437.exe
+  03 March 2015 19:00
+
+  [-] Fixed display of document number when option 
+      "TXT receipt file" is used
+  
+********************************************************************************
+
+  DrvFR_4.12_436.exe
+  03 March 2015 17:00
+
+  [+] Added "SHTRIH-M-FR-K (57 mm)" model support
+  
+********************************************************************************
+
+  DrvFR_4.12_435.exe
+  01 March 2015 15:00
+
+  [-] Minor fixes
+  
+********************************************************************************
+
+  DrvFR_4.12_434.exe
+  29 February 2015 20:00
+
+  [+] Added "FN" commands
+  
+********************************************************************************
+
+  DrvFR_4.12_433.exe
+  26 February 2015 20:00
+
+  [+] Added "FN" commands
+  
+********************************************************************************
+
+  DrvFR_4.12_432.exe
+  19 February 2015 18:00
+
+  [-] Fixed display of nonclearable amounts in report when option 
+      "TXT receipt file" is used
+  
+********************************************************************************
+
+  DrvFR_4.12_431.exe
+  17 February 2015 18:00
+
+  [+] Added option "Write reports data only" for "Receipt file", 
+      "TXT receipt file", "Electronic report", "XML receipt file" parameters
+  [-] Fixed QR Code printing with graphics
+  
+********************************************************************************
+
+  DrvFR_4.12_430.exe
+  17 February 2015 14:00
+
+  [+] Added "FN" commands
+  
+********************************************************************************
+
+  DrvFR_4.12_429.exe
+  11 February 2015 18:00
+
+  [+] Added parameter "Delay on synchronization with Protocol 2.0"
+  
+********************************************************************************
+
+  DrvFR_4.12_428.exe
+  11 February 2015 16:00
+
+  [-] Fixed 1C receipt printing
+  
+********************************************************************************
+
+  DrvFR_4.12_427.exe
+  10 February 2015 16:00
+
+  [-] Fixed display of long serial number
+  
+********************************************************************************
+
+  DrvFR_4.12_426.exe
+  03 February 2015 18:30
+
+  [-] Fixed error with 1C
+  
+********************************************************************************
+
+  DrvFR_4.12_425.exe
+  25 January 2015 14:30
+
+  [+] Added registers reading for saving data in XML format
+  
+********************************************************************************
+
+  DrvFR_4.12_424.exe
+  20 January 2015 18:00
+
+  [-] Fixed line printing command
+ 
+********************************************************************************
+
+  DrvFR_4.12_423.exe
+  30 December 2015 14:00
+
+  [-] Fixed SKNO Unique Identifier request
+ 
+********************************************************************************
+
+  DrvFR_4.12_422.exe
+  28 December 2015 19:00
+
+  [-] Fixed error of Windows shutdown blocking
+ 
+********************************************************************************
+
+  DrvFR_4.12_421.exe
+  28 December 2015 16:00
+
+  [-] Fixed "Get Status" command for some models
+  [-] Fixed 2D Barcode printing for SHTRIH-M-PTK model
+ 
+********************************************************************************
+
+  DrvFR_4.12_420.exe
+  22 December 2015 19:00
+
+  [-] Fixed 2D Barcode printing for Retail-01K model
+ 
+********************************************************************************
+
+  DrvFR_4.12_419.exe
+  15 December 2015 18:00
+
+  [-] Fixed non-fiscal strings printing in 1C
+ 
+********************************************************************************
+
+  DrvFR_4.12_418.exe
+  14 December 2015 18:00
+
+  [-] Minor fixes in Driver Test
+ 
+********************************************************************************
+
+  DrvFR_4.12_417.exe
+  14 December 2015 17:00
+
+  [-] Changed saving receipts and reports in text file
+ 
+********************************************************************************
+
+  DrvFR_4.12_415.exe
+  09 December 2015 20:00
+
+  [+] Added plugin for save X and Z reports into a text file
+
+********************************************************************************
+
+  DrvFR_4.12_414.exe
+  04 December 2015 19:00
+
+  [+] Added command line params for "Server FR"
+
+********************************************************************************
+
+  DrvFR_4.12_413.exe
+  04 December 2015 17:00
+
+  [-] Fixed QR Code printing
+
+********************************************************************************
+
+  DrvFR_4.12_412.exe
+  27 November 2015 17:00
+
+  [-] Minor fixes
+
+********************************************************************************
+
+  DrvFR_4.12_411.exe
+  26 November 2015 18:00
+
+  [-] Fixed Kazakh characters printing
+
+********************************************************************************
+
+  DrvFR_4.12_410.exe
+  25 November 2015 17:00
+
+  [+] Added support of Kazakh Codepage
+
+********************************************************************************
+
+  DrvFR_4.12_409.exe
+  06 November 2015 17:00
+
+  [-] Minor fixes
+
+********************************************************************************
+
+  DrvFR_4.12_408.exe
+  29 October 2015 17:00
+
+  [-] Fixed translation
+
+********************************************************************************
+
+  DrvFR_4.12_407.exe
+  23 October 2015 17:00
+
+  [-] Fixed 512 graphics printing
+
+********************************************************************************
+
+  DrvFR_4.12_406.exe
+  20 October 2015 17:00
+
+  [+] Added QR Code printing using graphics 512
+
+********************************************************************************
+
+
+  DrvFR_4.12_405.exe
+  13 October 2015 20:00
+
+  [-] Fixed 512 graphics printing errors
+
+********************************************************************************
+
+  DrvFR_4.12_404.exe
+  09 October 2015 21:00
+
+  [+] Added print and load 512 graphics commands
+
+********************************************************************************
+
+  DrvFR_4.12_403.exe
+  30 September 2015 21:00
+
+  [-] Minor fixes
+
+********************************************************************************
+
+  DrvFR_4.12_402.exe
+  09 September 2015 21:00
+
+  [-] Fixed errors for 1C
+
+********************************************************************************
+
+  DrvFR_4.12_401.exe
+  19 August 2015 19:00
+
+  [-] Fixed QR Code printing
+
+********************************************************************************
+
+  DrvFR_4.12_400.exe
+  28 July 2015 20:00
+
+  [+] Added SKNO commands
+
+********************************************************************************
+
+  DrvFR_4.12_399.exe
+  27 July 2015 16:00
+
+  [+] Added tax rates programming by session opening for 1C
+
+********************************************************************************
+
+  DrvFR_4.12_398.exe
+  22 July 2015 16:00
+
+  [-] Fixed 1C component version
+
+********************************************************************************
+
+  DrvFR_4.12_397.exe
+  15 July 2015 16:00
+
+  [+] Added writing receipt data to XML file
+
+********************************************************************************
+
+  DrvFR_4.12_396.exe
+  08 July 2015 20:00
+
+  [+] Added support of 1C v1.4 requirements
+
+********************************************************************************
+
+  DrvFR_4.12_395.exe
+  11 June 2015 18:00
+  
+  [+] Added "SHTRIH-FR-RK" model support
+  [-] Fixed error with QR Code printing
+
+********************************************************************************
+
+  DrvFR_4.12_394.exe
+  04 June 2015 18:00
+  
+  [+] Added support of 1C v1.4 requirements
+
+********************************************************************************
+
+  DrvFR_4.12_393.exe
+  01 June 2015 16:00
+  
+  [+] Added QR Code printing with graphics
+  [+] Added "YARUS-MD" model support
+
+********************************************************************************
+
+  DrvFR_4.12_392.exe
+  14 May 2015 16:00
+  
+  [+] Fixed barcode line printing for "SHTRIH-MINI-PTK" model
+
+********************************************************************************
+
+  DrvFR_4.12_391.exe
+  13 May 2015 19:00
+  
+  [+] Added "SHTRIH-MINI-PTK" model support
+
+********************************************************************************
+
+  DrvFR_4.12_390.exe
+  24 April 2015 15:00
+  
+  [+] Updated "OKassa" connection wizard
+
+********************************************************************************
+
+  DrvFR_4.12_389.exe
+  15 April 2015 16:00
+  
+  [+] Added tab "Belarus (SKNO)"
+
+********************************************************************************
+
+  DrvFR_4.12_388.exe
+  10 April 2015 16:00
+  
+  [-] Fixed errors for "OKassa" service
+
+********************************************************************************
+
+  DrvFR_4.12_387.exe
+  08 April 2015 19:00
+  
+  [+] Added "OKassa" connection wizard into distributive
+
+********************************************************************************
+
+  DrvFR_4.12_386.exe
+  06 April 2015 20:00
+  
+  [-] Fixed storage path for "Cloud cashdesk"
+
+********************************************************************************
+
+  DrvFR_4.12_385.exe
+  03 April 2015 20:00
+  
+  [-] Fixed test receipt sending for "Cloud cashdesk"
+
+********************************************************************************
+
+  DrvFR_4.12_384.exe
+  23 March 2015 20:00
+  
+  [-] Fixed error in tax officer program
+
+********************************************************************************
+
+  DrvFR_4.12_383.exe
+  19 March 2015 18:00
+  
+  [+] Added field "SKNO ZN" for Belarus FR
+
+********************************************************************************
+
+  DrvFR_4.12_382.exe
+  17 March 2015 18:00
+  
+  [-] Fixed "Cloud cashdesk" registration
+
+********************************************************************************
+
+  DrvFR_4.12_381.exe
+  12 March 2015 16:00
+  
+  [-] Fixed error printing of test registration by "SHTHIH-MOBILE-PTK"
+
+********************************************************************************
+
+  DrvFR_4.12_380.exe
+  10 March 2015 18:00
+  
+  [-] Fixed null receipt for GNIVC
+
+********************************************************************************
+
+  DrvFR_4.12_379.exe
+  26 February 2015 18:00
+  
+  [+] Added methods for "Cloud cashdesk"
+  [+] Added SSL libraries to the distributive
+
+********************************************************************************
+
+  DrvFR_4.12_378.exe
+  18 February 2015 18:00
+  
+  [+] Added support of "SHTRIH-FR-PTK" model
+
+********************************************************************************
+
+  DrvFR_4.12_377.exe
+  17 February 2015 15:00
+  
+  [+] Added new version of GNIVC library
+  [-] Minor fixes
+
+********************************************************************************
+
+  DrvFR_4.12_376.exe
+  13 February 2015 18:00
+  
+  [-] Fixed work with receipt server
+
+********************************************************************************
+
+  DrvFR_4.12_375.exe
+  12 February 2015 16:00
+  
+  [+] Added libraries to installator
+
+********************************************************************************
+
+  DrvFR_4.12_374.exe
+  10 February 2015 19:00
+  
+  [-] Fixed work with "OFD GNIVC"
+
+********************************************************************************
+
+  DrvFR_4.12_373.exe
+  03 February 2015 15:00
+  
+  [+] Added Cleaf report buffer command
+
+********************************************************************************
+
+  DrvFR_4.12_372.exe
+  22 January 2015 19:00
+  
+  [-] Fixed work with "RRx" models
+
+********************************************************************************
+
+  DrvFR_4.12_371.exe
+  16 January 2015 17:00
+  
+  [-] Fixed some errors
+
+********************************************************************************
+
+  DrvFR_4.12_370.exe
+  29 December 2014 15:00
+  
+  [-] Added handle of "RR-01K" error 
+
+********************************************************************************
+
+  DrvFR_4.12_369.exe
+  24 December 2014 15:00
+  
+  [-] Added handle of error "200"
+
+********************************************************************************
+
+  DrvFR_4.12_368.exe
+  22 December 2014 16:00
+  
+  [-] Исправлено закрытие чека для 1С
+
+********************************************************************************
+
+  DrvFR_4.12_367.exe
+  19 December 2014 16:00
+  
+  [-] Fixed errors for "YARUS-01K"
+
+********************************************************************************
+
+  DrvFR_4.12_366.exe
+  17 December 2014 18:00
+  
+  [-] Fixed error printing in "YARUS-01K"
+
+********************************************************************************
+
+  DrvFR_4.12_365.exe
+  12 December 2014 20:00
+  
+  [-] Fixed installator
+
+********************************************************************************
+
+  DrvFR_4.12_364.exe
+  09 December 2014 17:00
+  
+  [-] Fixed translation
+
+********************************************************************************
+
+  DrvFR_4.12_363.exe
+  04 December 2014 17:00
+  
+  [-] Fixed work with 1C by Server FR
+
+********************************************************************************
+
+  DrvFR_4.12_362.exe
+  27 November 2014 20:00
+  
+  [+] Extended command "GetECRParams"
+
+********************************************************************************
+
+  DrvFR_4.12_361.exe
+  25 November 2014 16:00
+  
+  [-] Fixed some errors
+
+********************************************************************************
+
+  DrvFR_4.12_360.exe
+  14 November 2014 19:00
+  
+  [+] Added support of "RRxx" models
+
+********************************************************************************
+
+  DrvFR_4.12_359.exe
+  11 November 2014 15:00
+  
+  [-] Fixed communication error with "YARUS" models
+
+********************************************************************************
+
+  DrvFR_4.12_358.exe
+  23 October 2014 17:00
+
+  [+] Added model descriptions
+  [+] Added "EReport" plugin
+
+********************************************************************************
+
+  DrvFR_4.12_356.exe
+  15 October 2014 13:00
+
+  [-] Added error codes
+
+********************************************************************************
+
+  DrvFR_4.12_355.exe
+  10 October 2014 16:00
+
+  [-] Fixed transfer bytes view when CashCore error
+
+********************************************************************************
+
+  DrvFR_4.12_354.exe
+  07 October 2014 16:00
+
+  [-] Changed MFP activization command
+
+********************************************************************************
+
+  DrvFR_4.12_353.exe
+  06 October 2014 16:00
+
+  [-] Changed MFP activization command
+
+********************************************************************************
+
+  DrvFR_4.12_352.exe
+  30 Septemper 2014 16:00
+
+  [+] Fixed command "Prepare MFP activization"
+
+********************************************************************************
+
+  DrvFR_4.12_351.exe
+  29 Septemper 2014 16:00
+
+  [+] Added commands working with "MFP"
+
+********************************************************************************
+
+  DrvFR_4.12_350.exe
+  25 Septemper 2014 19:00
+
+  [+] Added command "Extended close check" (CloseCheckEx)
+  [+] Added payment types 5 - 16
+
+********************************************************************************
+
+  DrvFR_4.12_349.exe
+  23 Septemper 2014 17:00
+
+  [+] Added work with "OFD GNIVC"
+
+********************************************************************************
+
+  DrvFR_4.11_348.exe
+  11 Septemper 2014 17:00
+
+  [-] Fixed work with 1C
+
+********************************************************************************
+
+  DrvFR_4.11_347.exe
+  02 Septemper 2014 18:00
+
+  [-] Fixed work with 1C
+
+********************************************************************************
+
+  DrvFR_4.11_346.exe
+  29 August 2014 18:00
+
+  [-] Fixed work with KKT 2.0 protocol
+
+********************************************************************************
+
+  DrvFR_4.11_345.exe
+  21 August 2014 18:00
+
+  [-] Fixed dump request for CashCore
+
+********************************************************************************
+
+  DrvFR_4.11_344.exe
+  14 August 2014 15:00
+
+  [-] Fixed block graphics loading in driver test
+
+********************************************************************************
+
+  DrvFR_4.11_343.exe
+  14 August 2014 15:00
+
+  [+] Property BlockDataHex is used now as resulting data in GetData method
+
+********************************************************************************
+
+  DrvFR_4.11_342.exe
+  25 July 2014 15:00
+
+  [-] Fixed errors working with 1C
+
+********************************************************************************
+
+  DrvFR_4.11_341.exe
+  21 July 2014 17:00
+
+  [-] Fixed error with 1C in foreign localized Windows
+
+********************************************************************************
+
+  DrvFR_4.11_340.exe
+  03 July 2014 17:00
+
+  [-] Fixed error of exchange protocol changing
+
+********************************************************************************
+
+  DrvFR_4.11_339.exe
+  01 July 2014 18:00
+
+  [-] Fixed work with "SHTRIH-MOBILE-PTK"
+
+********************************************************************************
+
+  DrvFR_4.11_338.exe
+  30 June 2014 19:00
+
+  [-] Fixed work with TCP interface
+  [-] Fixed work with "Service" page
+
+********************************************************************************
+
+  DrvFR_4.11_337.exe
+  24 June 2014 19:00
+
+  [-] Changed driver settings dialog for 1C
+  [-] Fixed translation
+
+********************************************************************************
+
+  DrvFR_4.11_336.exe
+  23 June 2014 20:00
+
+  [-] Fixed work by TCP
+  [-] Fixed translation
+  [+] Added "TCP connection timeout" parameter
+
+********************************************************************************
+
+  DrvFR_4.11_335.exe
+  19 June 2014 14:30
+
+  [+] Added payment information to receipt for receipt server
+  [+] Added butten "Register on server"
+  [-] Minor changes
+
+********************************************************************************
+
+  DrvFR_4.11_333.exe
+  16 June 2014 17:00
+
+  [-] Fixed line printing
+
+********************************************************************************
+
+  DrvFR_4.11_332.exe
+  11 June 2014 17:00
+
+  [-] Fixed work with NCR-001K 
+
+********************************************************************************
+
+  DrvFR_4.11_331.exe
+  09 June 2014 20:30
+
+  [+] Added receipt file support
+  [-] Fixed error in models descriptions
+
+********************************************************************************
+
+  DrvFR_4.11_330.exe
+  04 June 2014 18:00
+
+  [+] Added support of 1C v1.2 requirements
+  [+] Added parameter names of 2d barcode printing in driver test
+ 
+********************************************************************************
+  
+  DrvFR_4.10_329.exe
+  02 June 2014 20:00
+
+  [-] Fixed error with saving receipt data to file
+ 
+********************************************************************************
+  
+  DrvFR_4.10_328.exe
+  30 may 2014 20:00
+
+  [+] Added model parameter CapRecSensorVert (Vertical roll sensor)
+ 
+********************************************************************************
+
+  DrvFR_4.10_327.exe
+  29 may 2014 20:00
+
+  [+] Added saving receipt to file and on receipt server
+ 
+********************************************************************************
+
+  DrvFR_4.10_326.exe
+  19 may 2014 19:00
+
+  [+] Driver enchances for corresponding to 1C 1.2 requirements
+ 
+********************************************************************************
+
+  DrvFR_4.10_325.exe
+  30 April 2014 19:00
+
+  [+] Added receipt text writing to text file
+ 
+********************************************************************************
+
+  DrvFR_4.10_324.exe
+  25 April 2014 20:00
+
+  [-] Fixed error desctiption reading function  
+ 
+********************************************************************************
+
+  DrvFR_4.10_323.exe
+  18 April 2014 20:00
+
+  [+] Tax Officer program enhanced for belorussian FR
+  [+] Added button "Continue print" on "Registration" page
+  [+] Enhanced device search. Added device search timeout parameter.   
+  [+] Added FR state to "Initialize FR" page in "Service" item on Driver 
+      property page
+  [+] Also added "Set max speed" button on "Initialize FR" page
+ 
+********************************************************************************
+   
+  DrvFR_4.10_322.exe
+  31 March 2014 18:00
+
+  [+] System administrator default password is obtaining with search 
+   
+********************************************************************************
+
+  DrvFR_4.10_321.exe
+  13 March 2014 17:00
+
+  [-] Fixed error of printing discounts and charges in 1C driver interface
+  [+] Print barcode with graphics command can be used now with FirstLineNumber
+      property
+   
+********************************************************************************
+
+  DrvFR_4.10_320.exe
+  11 March 2014 18:00
+
+  [-] Minor changes
+   
+********************************************************************************
+
+  DrvFR_4.10_319.exe
+  07 March 2014 16:00
+
+  [+] Added property PayType4: Double in IDrvFR1C interface. property is used
+      in CloseCheck method as fourth payment type.
+   
+********************************************************************************
+
+  DrvFR_4.10_318.exe
+  27 February 2014 18:00
+
+  [-] Fixed ECR 2.0 protocol connection error
+   
+********************************************************************************
+
+  DrvFR_4.10_317.exe
+  25 February 2014 17:00
+
+  [-] Fixed test driver interface errors
+  [-] Device messages translation now is stored in files "DevMessages.*"  
+  [+] Added driver option "Automatic correction sensor values depend on it 
+      presence"
+   
+********************************************************************************
+
+  DrvFR_4.10_316.exe
+  21 February 2014 13:00
+
+  [-] Changed service disconnect timeout from 180 seconds to 1 second
+
+********************************************************************************
+
+  DrvFR_4.10_315.exe
+  20 February 2014 18:00
+
+  [-] Fixed errors in PrintFiscalString method
+  [+] Added method PrintJournal to do journal operations
+      Method executes command 0xDF.
+      Method uses properties:
+      - OperationType: Integer; 
+        Valid values are:
+          - 0x00, Print journal 
+	  - 0x01, Clear journal
+      Method changes properties:
+      - OperatorNumber: Integer;
+
+********************************************************************************
+
+
+********************************************************************************
+
+  DrvFR_4.10_312.exe
+  02 February 2014 20:00
+
+  [-] Fixed errors in Driver Test
+  [+] Added support of block graphics loading
+  [+] Added support of graphic printing flags
+  [+] Added support of model "Retail-01K"
+  [+] Added ability of last print result obtaining in short status request 
+      (for models with Cash Core support) 
+
+********************************************************************************
+
+  DrvFR_4.10_312.exe
+  28 Jenuary 2014 13:20
+
+  [+] Added discount and charge printing for driver 1C
+      Discount printing: &discount;Amount;Tax1;Tax2;Tax3;Tax4;Text;
+      Discount print line: &discount;1.23;0;0;0;0;BONUS;
+      Charge printing: &charge;Amount;Tax1;Tax2;Tax3;Tax4;Text;
+      Charge print line: &charge;1.23;0;0;0;0;BONUS;
+
+********************************************************************************
+
+  DrvFR_4.10_311.exe
+  20 January 2014 16:00
+
+  [-] Fixed model parameters reading
+  [-] Fixed some errors
+
+********************************************************************************
+
+  DrvFR_4.10_310.exe
+  16 January 2014 18:00
+
+  [-] Changed Driver Property Page
+  [-] Fixed translation
+
+********************************************************************************
+
+  DrvFR_4.10_310.exe
+  16 January 2014 18:00
+
+  [-] Changed Driver Property Page
+  [-] Fixed translation
+
+********************************************************************************
+
+  DrvFR_4.10_309.exe
+  14 January 2014 19:00
+
+  [-] Fixed errors with "Server FR"
+
+********************************************************************************
+
+  DrvFR_4.10_307.exe
+  26 December 2013 16:30
+
+  [+] Added low-level protocol KKT 2.0 support
+  [-] Fixed errors with 1C
+
+********************************************************************************
+
+  DrvFR_4.10_306.exe
+  19 November 2013 14:15
+
+  [-] Changed samples for Delphi 7
+
+********************************************************************************
+
+  DrvFR_4.10_305.exe
+  14 November 2013 11:45
+
+  [-] Fixed error with driver registration
+  [+] Added model description for model "YARUS-01K 45mm"
+
+********************************************************************************
+
+  DrvFR_4.10_303.exe
+  16 October 2013 14:00
+
+  [-] Fixed error with discount 0.01 in 1C component
+
+********************************************************************************
+
+  DrvFR_4.10_302.exe
+  08 October 2013 16:0
+
+  [-] Fixed errors with 1C
+
+********************************************************************************
+
+  DrvFR_4.10_301.exe
+  04 October 2013 19:15
+
+  [+] Added property BarcodeHex
+
+********************************************************************************
+
+  DrvFR_4.10_300.exe
+  02 October 2013 15:00
+
+  [-] Fixed errors in PosControl
+
+********************************************************************************
+
+  DrvFR_4.10_299.exe
+  17 September 2013 18:00
+
+  [-] Fixed errors in 1C interface
+
+********************************************************************************
+
+  DrvFR_4.10_298.exe
+  17 Sepbember 2013 14:40
+
+  [+] Added timeout to TCP connection
+
+********************************************************************************
+
+  DrvFR_4.10_297.exe
+  16 September 2013 11:00
+
+  [-] Fixed errors in driver 1C
+
+********************************************************************************
+
+  DrvFR_4.10_296.exe
+  13 September 2013 13:00
+
+  [-] Fixed errors in driver 1C
+  [-] Connection type "Print server" is no longer supported
+
+********************************************************************************
+
+  DrvFR_4.10_295.exe
+  09 September 2013 19:00
+
+  [+] Added open check command in CashControl
+  [+] Added all connection types in 1C interface
+
+********************************************************************************
+
+  DrvFR_4.10_294.exe
+  30 August 2013 18:30
+
+  [-] Fixed errors with test driver build
+
+********************************************************************************
+
+  DrvFR_4.10_293.exe
+  06 August 2013 15:00
+
+  [+] Added Integration library for 1C
+  [-] Fixed errors
+
+********************************************************************************
+
+  DrvFR_4.10_292.exe
+  3 July 2013 18:00
+
+  [-] Changed valid COM port number range to 1..256
+
+********************************************************************************
+
+  DrvFR_4.10_290.exe
+  27 May 2013 18:00
+
+  [-] Fixed values storage in driver test
+
+********************************************************************************
+
+  DrvFR_4.10_289.exe
+  26 April 2013 18:00
+
+  [-] Fixed work with 1C
+
+********************************************************************************
+
+  DrvFR_4.10_288.exe
+  24 April 2013 20:30
+
+  [-] Fixed error with field length check
+
+********************************************************************************
+
+  DrvFR_4.10_287.exe
+  17 April 2013 11:30
+
+  [-] Changed driver version for 1C application
+  [+] Added port closing on serial device remove
+
+********************************************************************************
+
+  DrvFR_4.10_286.exe
+  09 April 2013 15:00
+
+  [+] Added CheckConnection method
+  [+] Added flags of FM and EJ connection check in driver test
+
+********************************************************************************
+
+  DrvFR_4.10_285.exe
+  22 March 2013 19:00
+
+  [-] Changed "TCP socket interface" setting
+  [-] Fixed work with Cash Core
+
+********************************************************************************
+
+  DrvFR_4.10_284.exe
+  21 March 2013 15:00
+
+  [-] Fixed some errors
+
+********************************************************************************
+
+  DrvFR_4.10_283.exe
+  20 March 2013 16:00
+
+  [-] Fixed work with TCP socket interface
+
+********************************************************************************
+
+  DrvFR_4.10_282.exe
+  15 March 2013 17:00
+
+  [+] Added method InitEEPROM to initialize EEPROM for Belurussian fiscal printer
+      Method sends command FFh 16h
+
+********************************************************************************
+
+  DrvFR_4.10_281.exe
+  7 March 2013 16:40
+
+  [-] Changed TaxProg2 utility
+
+********************************************************************************
+
+  DrvFR_4.10_280.exe
+  5 March 2013 16:40
+
+  [+] Fixed error in device search
+
+********************************************************************************
+
+  DrvFR_4.10_278.exe
+  27 February 2013 14:40
+
+  [+] Changed TaxProg2 utility
+
+********************************************************************************
+
+  DrvFR_4.10_276.exe
+  25 February 2013 17:20
+
+  [+] Added "BluetoothTableNumber" model parameter
+
+********************************************************************************
+
+  DrvFR_4.10_274.exe
+  12 February 2013 17:20
+
+  [-] Fixed error in "Tax inpector 2" utility
+
+********************************************************************************
+
+  DrvFR_4.10_273.exe
+  29 January 2012 18:40
+
+  [-] Fixed error with sale in driver test
+  [-] Fixed page creation in driver test
+
+********************************************************************************
+
+  DrvFR_4.10_271.exe
+  24 January 2012 18:00
+
+  [+] Changed cash and amount totalizers description for model
+      SHTRIH_FR_F (Belorussia), ModelID=8
+
+  [-] Fixed error with read parameters
+
+********************************************************************************
+
+  DrvFR_4.10_267.exe
+  24 December 2012 19:00
+
+  [+] Added property BytesSwapMode, bytes swap mode
+      Valid values are:
+      SwapBytesModeSwap       = 0, swap bytes
+      SwapBytesModeNoSwap     = 1, do not swap bytes
+      SwapBytesModeProp       = 2, use property LineSwapBytes
+      SwapBytesModeModel      = 3, use printer model description
+
+  [+] Added page "Barcode" on page "Parameters"
+
+********************************************************************************
+
+  DrvFR_4.10_266.exe
+  19 December, 2012 15:00
+
+  [-] Minor fixes in driver test
+
+********************************************************************************
+
+  DrvFR_4.10_265.exe
+  06 December, 2012 20:00
+
+  [+] Added option "Do not send ENQ at each command"
+
+********************************************************************************
+
+  DrvFR_4.10_264.exe
+  04 December, 2012 17:00
+
+  [-] Fixed slip printing command
+  [-] Fixed GetStatus command
+
+********************************************************************************
+
+  DrvFR_4.10_263.exe
+  03 December, 2012 15:00
+
+  [-] Fixed translation
+
+********************************************************************************
+
+  DrvFR_4.10_262.exe
+  26 November, 2012 15:00
+
+  [-] Some errors fixed
+  [+] Added "SHTRIH-COMBO-PTK" model support
+
+********************************************************************************
+
+  DrvFR_4.10_261.exe
+  23 November, 2012 23:00
+
+  [-] Small fixes
+
+********************************************************************************
+
+  DrvFR_4.10_260.exe
+  21 November, 2012 20:00
+
+  [-] Fixed work with "SHTRIH-MOBILE-PTK" model
+  [+] Added "DiscountOnCheck" property in DrvFR1C interface
+
+********************************************************************************
+
+  DrvFR_4.10_259.exe
+  15 November, 2012 19:00
+
+  [-] Translated some messages
+  [-] Fixed work with "SHTRIH-PTK" model
+
+********************************************************************************
+
+  DrvFR_4.10_258.exe
+  09 November, 2012 19:00
+
+  [+] Added "Reconnect COM port if it's unavailable" option
+
+********************************************************************************
+
+  DrvFR_4.10_257.exe
+  02 November, 2012 18:00
+
+  [-] Fixed TCP socket connection error
+  [-] Fixed operation registers reading in driver test
+  [-] Fixed tax officier utilite
+
+********************************************************************************
+
+  DrvFR_4.10_256.exe
+  10 October, 2012 21:00
+
+  [-] Fixed model parameters reading
+  [+] Added an option in driver test to carry strings when printing using "\n" 
+      symbols
+
+********************************************************************************
+
+  DrvFR_4.10_255.exe
+  9 October, 2012 19:00
+
+  [+] Added RNM and INN fields length setup in TaxProg and TaxProg2 utilities
+
+********************************************************************************
+
+  DrvFR_4.10_254.exe
+  2 October, 2012 18:30
+
+  [+] Added Unicode support to TaxProg, TaxProg2, SrvFR, ServiceProg, PrintSrv
+
+********************************************************************************
+
+  DrvFR_4.10_253.exe
+  25 September, 2012 20:00
+
+  [+] Added "YARUS-TK" model support
+
+********************************************************************************
+
+  DrvFR_4.10_252.exe
+  14 September, 2012 12:00
+
+  [-] Fixed error in CloseCheck method for 1C interface
+
+********************************************************************************
+
+  DrvFR_4.10_251.exe
+  11 September, 2012 14:00
+
+  [-] Disabled device search for "TCP socket" connection type
+
+********************************************************************************
+
+  DrvFR_4.10_250.exe
+  04 September, 2012 16:40
+
+  [+] Added "Adjust read interval timeout" option
+
+********************************************************************************
+
+  DrvFR_4.10_249.exe
+  31 August 2012, 14:40
+
+  [-] Fixed error with reading INN (Tax payer ID) for model SHTRIH-M-FR-K (KYRGYZSTAN)
+
+********************************************************************************
+
+  DrvFR_4.10_248.exe
+  27 August 2012, 16:00
+
+  [-] "Repeat" Button in driver test renamed to "Print rec. copy"
+
+********************************************************************************
+
+  DrvFR_4.10_247.exe
+  24 August 2012, 20:00
+
+  [-] Fixed some errors in driver test
+
+********************************************************************************
+
+  DrvFR_4.10_246.exe
+  17 August 2012, 19:00
+
+  [-] Fixed some errors
+
+********************************************************************************
+
+  DrvFR_4.10_245.exe
+  02 August 2012, 14:00
+
+  [-] Fixed some errors
+
+********************************************************************************
+
+  DrvFR_4.10_244.exe
+  19 July 2012, 18:00
+
+  [+] Added new "cash core" protocol commands
+  [-] Fixed some errors
+
+********************************************************************************
+
+  DrvFR_4.10_243.exe
+  02 July 2012, 18:45
+
+  [+] Added cash core protocol support (Model "YARUS M2100K")
+
+********************************************************************************
+
+  DrvFR_4.9_242.exe
+  20 June 2012, 19:00
+
+  [-] Changed model 240 parameters, parameter SwapLineBytes set to 1
+  [-] Fixed error with slow printing via TCP and DCOM connections
+  [-] Fixed error - samples do not compiled
+
+********************************************************************************
+
+  DrvFR_4.9_241.exe
+  11 May 2012, 18:00
+
+  [+] Added support for model SHTRIH-MINI-FR-K (Kyrgyzstan), model code 50
+
+********************************************************************************
+
+  DrvFR_4.9_239.exe
+  02 May 2012, 20:00
+
+  [+] Added QR code printing
+
+********************************************************************************
+
+  DrvFR_4.9_238.exe
+  26 March 2012, 14:00
+
+  [-] Changed log format
+
+********************************************************************************
+
+  DrvFR_4.9_236.exe
+  21 March 2012, 12:30
+
+  [-] Command retries made after any error
+
+********************************************************************************
+
+  DrvFR_4.9_235.exe
+  16 March 2012, 16:20
+
+  [+] Changed trial mode
+
+********************************************************************************
+
+  DrvFR_4.9_234.exe
+  17 Febriary 2012, 20:00
+
+  [-] Fixed slip printing in Driver Test
+
+********************************************************************************
+
+  DrvFR_4.9_233.exe
+  15 Febriary 2012, 19:00
+
+  [+] Added USB, Bluetooth, WiFi interfaces
+
+********************************************************************************
+
+  DrvFR_4.9_232.exe
+  3 Febriary 2012, 13:00
+
+  [+] Added text mapping facility for table names, field names and value names
+
+********************************************************************************
+
+  DrvFR_4.9_231.exe
+  10 January 2012, 14:00
+
+  [+] Added "Operation tax report" item to TaxProg2.exe utility
+
+********************************************************************************
+
+  DrvFR_4.9_230.exe
+  27 December 2011, 15:00
+
+  [+] Added commands to read and write modem parameters
+
+********************************************************************************
+
+  DrvFR_4.9_229.exe
+  22 December 2011, 19:00
+
+  [+] Fixed models description
+
+********************************************************************************
+
+  DrvFR_4.9_228.exe
+  16 November 2011, 15:00
+
+  [+] Added method GetEKLZCode3Report for command 0xBDh
+
+********************************************************************************
+
+  DrvFR_4.9_225.exe
+  09 November 2011, 15:00
+
+  [+] Added parameter "Get electronic journal report before Z-report"
+
+********************************************************************************
+
+  DrvFR_4.9_224.exe
+  27 October 2011, 15:10
+
+  [+] Added character encoding for Armenian language
+
+********************************************************************************
+
+  DrvFR_4.9_222.exe
+  26 September 2011, 14:00
+
+  [+] Added "SHTRIH-Light-200" model support (model code 251)
+
+********************************************************************************
+
+  DrvFR_4.9_221.exe
+  2 September 2011, 14:00
+
+  [-] Fixed error with device search when driver object created not from 
+      main application thread.
+
+********************************************************************************
+
+  DrvFR_4.9_220.exe
+  1 September 2011, 17:00
+
+  [+] Added BinaryConversion property and defined constants
+      BINARY_CONVERSION_NONE = 0;
+      BINARY_CONVERSION_HEX  = 1;
+      Property BinaryConversion defines data format for property TransferBytes
+
+********************************************************************************
+
+  DrvFR_4.9_219.exe
+  August, 12 2011 19:15
+
+  [+] Added Low-level commands in "DrvFR1C" interface: "DeviceControl" and 
+      "DeviceControlHEX"
+  [+] Added "SHTRIH-LightPOS-K" model support (model code 251)
+
+********************************************************************************
+
+  DrvFR_4.9_218.exe
+  July, 26 2011 19:10
+
+  [-] Minor changes
+  [-] Changed default command timeouts
+
+********************************************************************************
+
+  DrvFR_4.9_216.exe
+  July, 19 2011 16:00
+
+  [-] Removed day number limit in 2100 from TaxProg2 application
+
+********************************************************************************
+
+  DrvFR_4.9_215.exe
+  June, 06 2011 18:30
+
+  [+] Added dongle key check in "Print server" application
+
+********************************************************************************
+
+  DrvFR_4.9_214.exe
+  June, 02 2011 16:00
+
+  [+] Added ROCKEY4 dongle type support
+  [+] Added "SHTRIH-M 200" model support (model code 239)
+  [+] Added "Interface" parameter on property page
+
+********************************************************************************
+
+  DrvFR_4.9_213.exe
+  May, 18 2011 17:30
+
+  [-] Fixed "Get full status" command in driver test
+
+********************************************************************************
+
+  DrvFR_4.9_212.exe
+  May, 12 2011 17:15
+
+  [+] Added "Save settings" parameter
+
+********************************************************************************
+
+  DrvFR_4.9_211.exe
+  April, 27 2011 17:00
+
+  [+] Added "SHTRIH-MOBILE-PTK" model support (model code 19)
+
+********************************************************************************
+
+  DrvFR_4.9_210.exe
+  March, 29 2011 14:30
+
+  [-] Fixed error in model description for YARUS-01K and YARUS-02K
+  [+] Added maximum log files count parameter
+  [+] Added maximum log file size parameter
+
+********************************************************************************
+
+  DrvFR_4.9_209.exe
+  March, 25 2011 12:00
+
+  [-] Fixed error with device search dialog:
+      "While searching devices, mouse double click an any COM port cause error
+      and program will be closed.
+  
+********************************************************************************
+
+  DrvFR_4.9_208.exe
+  March, 22 2011 15:30
+
+  [-] Removed constraint for dump compare
+  
+********************************************************************************
+
+  DrvFR_4.9_207.exe
+  March, 05 2011 17:00
+
+  [+] Added command "Read report buffer line" (8Fh)
+  
+********************************************************************************
+
+  DrvFR_4.9_206.exe
+  February, 22 2011 12:30
+
+  [+] Added command "Excisable operation" (8Fh)
+  [-] Fixed log file write
+  [+] Added dump devices "File system image", "uLinux image", "Software executable file"
+  
+********************************************************************************
+
+  DrvFR_4.9_205.exe
+  February, 15 2011 19:00
+
+  [+] Added answer read count adjustment
+  [+] Added cashier name synchronization for "Cash control" system
+  [+] Changed log file write, added file close after write
+  
+********************************************************************************
+
+  DrvFR_4.9_203.exe
+  January, 28 2011 15:00
+
+  [+] Added methods for 2D barcode printout
+  [-] Fixed error with device find dialog
+  
+********************************************************************************
+
+  DrvFR_4.9_202.exe
+  December, 27 2010 14:30
+
+  [+] Added parameter PosControlReceiptSeparator
+  
+********************************************************************************
+
+  DrvFR_4.9_201.exe
+  December, 15 2010 17:00
+
+  [+] Added "NCR-001K" model support.
+  
+********************************************************************************
+
+  DrvFR_4.9_200.exe
+  December, 13 2010 19:00
+
+  [+] Added methods BeginDocument and EndDocument for commands buffering.
+  [+] Print server application modified, added print wait.
+  
+********************************************************************************
+
+  DrvFR_4.9_199.exe
+  December, 3 2010 года 12:00
+
+  [-] Fixed parameters reading
+  
+********************************************************************************
+
+  DrvFR_4.9_198.exe
+  December, 2 2010 13:00
+
+  [+] Added property StatusCommand. It controls printer command used
+      for status request in WaitForPrinting method.
+      Available values for StatusCommand property:
+      STATUS_COMMAND_DRIVER_SELECTION = 0 - driver selection
+      STATUS_COMMAND_SHORT = 1 - short status request
+      STATUS_COMMAND_LONG = 2 - long status request
+  
+********************************************************************************
+
+  DrvFR_4.9_197.exe
+  November 23, 2010 13:00
+
+  [+] Driver parameters stored in HKEY_LOCAL_MACHINE
+  [-] Fixed CashControl system issue, when driver send lines like
+      "1. --------------------------------------------"
+  
+********************************************************************************
+
+  DrvFR_4.9_196.exe
+  November 19, 2010 14:20
+
+  [-] Fixed english version errors
+  
+********************************************************************************
+
+  DrvFR_4.9_195.exe
+  November 18, 2010 13:30
+
+  [+] Added CashControl protocol version 2.11
+  
+********************************************************************************
+
+  DrvFR_4.9_194.exe
+  November 12, 2010 16:30
+
+  [-] Fixed CashControl system issue
+  
+********************************************************************************
+
+  DrvFR_4.9_193.exe
+  October 18, 2010 16:00
+
+  [+] Added command "OpenSession" into 1C interface 
+  
+********************************************************************************
+
+  DrvFR_4.9_192.exe
+  August 26, 2010 22:00
+
+  [+] Added printer emulation mode
+  
+********************************************************************************
+
+  DrvFR_4.9_191.exe
+  June 22, 2010 16:00
+
+  [-] Fixed graphics printing error with "SHTRIH-M-FR-K" when using 1C interface
+  
+********************************************************************************
+
+  DrvFR_4.9_190.exe
+  May 21, 2010 17:00
+
+  [+] First english version
+  
+********************************************************************************

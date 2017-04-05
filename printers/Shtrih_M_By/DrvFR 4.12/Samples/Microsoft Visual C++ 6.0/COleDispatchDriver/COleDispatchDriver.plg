@@ -1,0 +1,51 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: COleDispatchDriver - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x419 /fo"Debug/COleDispatchDriver.res" /d "_DEBUG" /d "_AFXDLL" "D:\Projects\Work\DrvFR\Source\Samples\MSVC6\COleDispatchDriver\COleDispatchDriver.rc"" 
+Creating temporary file "C:\DOCUME~1\VED0B~1.KRA\LOCALS~1\Temp\RSP2B.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/COleDispatchDriver.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\Projects\Work\DrvFR\Source\Samples\MSVC6\COleDispatchDriver\COleDispatchDriver.cpp"
+"D:\Projects\Work\DrvFR\Source\Samples\MSVC6\COleDispatchDriver\COleDispatchDriverDlg.cpp"
+"D:\Projects\Work\DrvFR\Source\Samples\MSVC6\COleDispatchDriver\drvfr.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\VED0B~1.KRA\LOCALS~1\Temp\RSP2B.tmp" 
+Creating temporary file "C:\DOCUME~1\VED0B~1.KRA\LOCALS~1\Temp\RSP2C.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/COleDispatchDriver.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\Projects\Work\DrvFR\Source\Samples\MSVC6\COleDispatchDriver\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\VED0B~1.KRA\LOCALS~1\Temp\RSP2C.tmp" 
+Creating temporary file "C:\DOCUME~1\VED0B~1.KRA\LOCALS~1\Temp\RSP2D.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"Debug/COleDispatchDriver.pdb" /debug /machine:I386 /out:"Debug/COleDispatchDriver.exe" /pdbtype:sept 
+.\Debug\COleDispatchDriver.obj
+.\Debug\COleDispatchDriverDlg.obj
+.\Debug\drvfr.obj
+.\Debug\StdAfx.obj
+.\Debug\COleDispatchDriver.res
+]
+Creating command line "link.exe @C:\DOCUME~1\VED0B~1.KRA\LOCALS~1\Temp\RSP2D.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+COleDispatchDriver.cpp
+COleDispatchDriverDlg.cpp
+drvfr.cpp
+Generating Code...
+Linking...
+
+
+
+<h3>Results</h3>
+COleDispatchDriver.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
