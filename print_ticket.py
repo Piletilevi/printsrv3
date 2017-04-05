@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
 # Written by Janis Putrams for "Biļešu Serviss SIA"
 # janis.putrams@gmail.com
 # Rewrite by Mihkel Putrinš on July 29, 2016
@@ -17,6 +17,7 @@ from PIL import Image, ImageWin
 from ctypes import *
 import string
 import wmi
+from json import load as loadJSON
 from UrllibProxy import UrllibProxy
 
 import version
@@ -797,66 +798,57 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
 
     after_begin = False
     layout_cfg = cfg
-    with open(plp_filename, "rb") as infile:
-        for line in infile:
-            param = read_param(line)
-            if not param:
-                continue
-            param_key, param_val = param
-            # logger.info("key:val = {0}:{1}".format(param_key, param_val))
+    with open(plp_filename, 'rU') as plp_data_file:
+        plp_json_data = loadJSON(plp_data_file)
+        # we check for old jobs in printer queue when starting first document
+        is_first_document = False
+        for ticket in plp_json_data['ticketData']:
+            print('ticket: {0}'.format(ticket))
+            logger.info("start new document")
+            printer_cfg = cfg
+            start_new_document(printer_cfg, is_first_document)
+            is_first_document = False
+            document_open = 1
 
-            if param_key == "BEGIN":
-                logger.info("start new document")
-                printer_cfg = cfg
-                # we check for old jobs in printer queue when starting first document
-                start_new_document(printer_cfg, is_first_document = False)
-                # start_new_document(printer_cfg, is_first_document = (param_val == "BEGIN 1"))
-                document_open = 1
-                after_begin = True
-            elif param_key == "END":
-                print_static_text_value(layout_cfg)
-                print_document()
-                document_open = 0
-            else:
-                if document_open == 0:
-                    continue
-                if after_begin:
-                    after_begin = False
-                    if param_key == "layout":
-                        if cfg.has_option("DEFAULT", "layout") and cfg.get("DEFAULT", "layout") == "none":
-                            layout_cfg = cfg
-                        else:
-                            layout_cfg = get_layout_cfg(param_val)
-                    continue
-                for postfix in ["", "_1", "_2", "_3"]: # this makes it possible to print out several types for one value
-                    section_name = param_key + postfix
-                    if layout_cfg.has_section(section_name):
-                        if layout_cfg.get(section_name, "type") == "text":
-                            print_text_value(dict(layout_cfg.items(section_name)), param_val)
-                        elif layout_cfg.get(section_name, "type") == "qmatrix":
-                            print_qmatrix_value(dict(layout_cfg.items(section_name)), param_val)
-                        elif layout_cfg.get(section_name, "type") == "image_url":
-                            print_image_url_value(dict(layout_cfg.items(section_name)), param_val)
-                        elif layout_cfg.get(section_name, "type") == "image_xml" and param_val != "":
-                            print_image_xml_value(dict(layout_cfg.items(section_name)), param_val)
-                        elif layout_cfg.get(section_name, "type") == "bar_2_of_5":
-                            print_bar_2_of_5_value(dict(layout_cfg.items(section_name)), param_val)
-                            if layout_cfg.has_section("%s_text" % section_name):
-                                print_text_value(dict(layout_cfg.items("%s_text" % section_name)), param_val)
-                        elif layout_cfg.get(section_name, "type") == "bar_3_of_9":
-                            print_bar_3_of_9_value(dict(layout_cfg.items(section_name)), param_val)
-                            if layout_cfg.has_section("%s_text" % section_name):
-                                print_text_value(dict(layout_cfg.items("%s_text" % section_name)), param_val)
-                        elif layout_cfg.get(section_name, "type") == "bar_code128":
-                            print_code128_value(dict(layout_cfg.items(section_name)), param_val)
-                            if layout_cfg.has_section("%s_text" % section_name):
-                                print_text_value(dict(layout_cfg.items("%s_text" % section_name)), param_val)
-                        else:
-                            logger.warning("unknown type for section:%s" % section_name)
-                            set_exit_status(UNKNOWN_TYPE_FOR_SECTION)
-                    # else:
-                    #     logger.info("No section {0} for parameter {1}".format(section_name, param))
-    infile.close()
+            if ticket.layout:
+                if cfg.has_option("DEFAULT", "layout") and cfg.get("DEFAULT", "layout") == "none":
+                    layout_cfg = cfg
+                else:
+                    layout_cfg = get_layout_cfg(param_val)
+
+            for section_name in ticket:
+                if layout_cfg.has_section(section_name):
+                    param_val = ticket[section_name]
+                    if layout_cfg.get(section_name, "type") == "text":
+                        print_text_value(dict(layout_cfg.items(section_name)), param_val)
+                    elif layout_cfg.get(section_name, "type") == "qmatrix":
+                        print_qmatrix_value(dict(layout_cfg.items(section_name)), param_val)
+                    elif layout_cfg.get(section_name, "type") == "image_url":
+                        print_image_url_value(dict(layout_cfg.items(section_name)), param_val)
+                    elif layout_cfg.get(section_name, "type") == "image_xml" and param_val != "":
+                        print_image_xml_value(dict(layout_cfg.items(section_name)), param_val)
+                    elif layout_cfg.get(section_name, "type") == "bar_2_of_5":
+                        print_bar_2_of_5_value(dict(layout_cfg.items(section_name)), param_val)
+                        if layout_cfg.has_section("%s_text" % section_name):
+                            print_text_value(dict(layout_cfg.items("%s_text" % section_name)), param_val)
+                    elif layout_cfg.get(section_name, "type") == "bar_3_of_9":
+                        print_bar_3_of_9_value(dict(layout_cfg.items(section_name)), param_val)
+                        if layout_cfg.has_section("%s_text" % section_name):
+                            print_text_value(dict(layout_cfg.items("%s_text" % section_name)), param_val)
+                    elif layout_cfg.get(section_name, "type") == "bar_code128":
+                        print_code128_value(dict(layout_cfg.items(section_name)), param_val)
+                        if layout_cfg.has_section("%s_text" % section_name):
+                            print_text_value(dict(layout_cfg.items("%s_text" % section_name)), param_val)
+                    else:
+                        logger.warning("unknown type for section:%s" % section_name)
+                        set_exit_status(UNKNOWN_TYPE_FOR_SECTION)
+
+            # elif param_key == "END":
+            print_static_text_value(layout_cfg)
+            print_document()
+            document_open = 0
+
+    plp_data_file.close()
 
 #################################################################
 # Log available printer name on the system
@@ -1090,14 +1082,14 @@ logger.info("plp filename:\n- %s" % plp_filename)
 
 # things like proxy, my_id are stored in persistent.ini
 persistent_ini_filename = "persistent.ini"
-persistent_ini_path = os.path.join(get_main_dir(), "..", persistent_ini_filename)
+persistent_ini_path = os.path.join(get_main_dir(), persistent_ini_filename)
 logger.info("Loading persistent.ini from:\n{0}".format(persistent_ini_path))
 if not os.path.isfile(persistent_ini_path):
     logger.error("ERROR: persistent.ini could not be found at:\n{0}".format(persistent_ini_path))
     sys.exit(EXIT_STATUS)
 cfg_persistent = read_ini_config(persistent_ini_path)
 
-ini_filename = os.path.join(get_main_dir(), "..", "setup_%s.ini" % get_lang(cfg_persistent))
+ini_filename = os.path.join(get_main_dir(), "setup_%s.ini" % get_lang(cfg_persistent))
 logger.info("setting ini filename to:\n- %s" % ini_filename)
 
 # default layout
@@ -1110,32 +1102,13 @@ os.environ['plp_language'] = language
 os.environ['plp_filename'] = os.path.abspath(plp_filename)
 os.environ['plp_devmode'] = "TRUE" if os.path.splitext(sys.argv[0])[1] == '.py' else 'FALSE'
 
-# Detect plp file type.
-# If valid JSON, read file type from 'info' field, otherwise assume it's for a ticket
-try:
-    with open(plp_filename, 'rU') as plp_data_file:
-        plp_json_data = json.load(plp_data_file)
-except Exception as e:
-    plp_file_type = 'ticket'
-else:
-    if 'info' not in plp_json_data:
-        logger.info('PLP_FILE_WITHOUT_INFO')
-        set_exit_status(PLP_FILE_WITHOUT_INFO)
-        sys.exit(EXIT_STATUS)
-    plp_file_type = plp_json_data['info']
-logger.info('plp_file_type:%s\n' % plp_file_type)
-
-if plp_file_type == 'fiscal':
-    appexe = os.path.abspath(os.path.join("..", "RasoASM", "fiscal.py"))
-    logger.info("Invoke: {0}".format(appexe))
-    os.execlp("python", "python", appexe)
 
 
-cfg_plp = read_plp_in_cfg(plp_filename)
+# cfg_plp = read_plp_in_cfg(plp_filename)
 # plp overrides persistent.ini and setup.ini values if there are any
 # logger.debug("Print cfg DEFAULT after read_plp_in_cfg: {0}".format(cfg_plp.defaults()))
 
-cfg = override_cfg_values(cfg, cfg_plp)
+# cfg = override_cfg_values(cfg, cfg_plp)
 
 proxy = setup_proxy(cfg)
 
