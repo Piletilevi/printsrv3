@@ -1,7 +1,8 @@
 # coding: utf-8
 
 from json import load as loadJSON
-from os import environ
+from os import environ, path, chdir
+from subprocess import call
 from sys import argv, exit
 
 import shtrihm as cm
@@ -120,3 +121,14 @@ elif operation == 'xreport':
     cm.xReport()
 else:
     raise ValueError('"operation" must be one of {0} in plp file.'.format(VALID_OPERATIONS))
+
+
+print('{0} operation from:\n{1} succeeded.'.format(operation, plp_filename))
+if plp_json_data['ticketData']:
+    BASEDIR = path.realpath(path.dirname(argv[0]))
+    PRINTSRV_DIRNAME = path.join(BASEDIR, '..', '..')
+    print(PRINTSRV_DIRNAME)
+    PRINTSRV_FILENAME = 'print_ticket.py'
+    chdir(PRINTSRV_DIRNAME)
+    print('Invoke: {0}'.format(PRINTSRV_FILENAME))
+    call(['python', PRINTSRV_FILENAME])

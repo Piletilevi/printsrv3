@@ -1,0 +1,76 @@
+{
+    "plpVersion": "2.0.0",
+    "feedbackToken": "",
+    "feedbackUrl": "",
+    "busnId": "", 
+    "printingDriverVersion": "3.0.0",
+    "printingDriverVersionURL": "http://",
+    "salesPointText": "Prodano:",
+    "salesPointCountry": "Беларусь",
+    "salesPoint": "Пункт продажи Piletilevi",
+    "transactionDateTime": "12.01.2017 13:25",
+    "fiscalData": {
+        "operation": "refund",
+        "cardPaymentUnitSettings": {
+            "cardPaymentUnit": "",
+            "cardPaymentSetting1": "",
+            "cardPaymentSetting2": ""
+        },
+        "printerData": {
+            "type": "fiscal",
+            "printerName": "Shtrih_M_By",
+            "printerRegNumber": "123456",
+            "comPortNumber": 3,
+            "comPortBaudRate": 9600,
+            "readTimeout": 30,
+            "writeTimeout": 30,
+            "adminPw": "",
+            "cashierPw": "",
+            "certUserPw": "",
+            "sysAdminPw": ""
+        },
+        "payments": [
+            {
+                "type": "4",
+                "name": "cardPayment",
+                "cost": 30.00,
+                "components": [
+                    {
+                        "amount": 1,
+                        "cost": 12.00,
+                        "kkm": true,
+                        "name": "Билет",
+                        "ticketId": "123456781",
+                        "type": "tickets",
+                        "vatGroup": "0"
+                    },
+                    {
+                        "amount": 1,
+                        "cost": 12.00,
+                        "kkm": true,
+                        "name": "Билет",
+                        "ticketId": "123456782",
+                        "type": "tickets",
+                        "vatGroup": "0"
+                    },
+                    {
+                        "amount": 2,
+                        "cost": 1.00,
+                        "kkm": true,
+                        "name": "Сервисный сбор",
+                        "type": "Type Сервисный сбор",
+                        "vatGroup": "0"
+                    },
+                    {
+                        "amount": 2,
+                        "cost": 2.00,
+                        "kkm": true,
+                        "name": "Плата за обслуживание в зале",
+                        "type": "Type Сервисный сбор",
+                        "vatGroup": "0"
+                    }
+                ]
+            }
+        ]
+    }
+}
