@@ -58,6 +58,10 @@ def init(options):
 
 def connect():
     global v
+
+    setattr(v, 'ComNumber', 7)
+    setattr(v, 'BaudRate', 6)
+    # setattr(v, 'Timeout ', 100)
     insist(v.WaitConnection, USER_KASSIR)
     insist(v.Connect, USER_KASSIR)
     prc()
