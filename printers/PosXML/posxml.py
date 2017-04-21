@@ -1,4 +1,5 @@
 import requests
+from dicttoxml import dicttoxml
 
 OPTIONS = {}
 
@@ -15,6 +16,16 @@ OPTIONS['payload'] = """<?xml version="1.0" encoding="UTF-8" ?>
     </DoBeepRequest>
 </PosXML>"""
 
+OPTIONS['postData'] = {
+    'DoBeepRequest': {
+        'Frequency1': 2000,
+        'Duration1':  40,
+        'Interval1':  10,
+        'Repeat':     2,
+        'RepeatInt':  100,
+    }
+}
+
 OPTIONS['headers'] = {
     'content-type': "application/xml"
 }
@@ -24,8 +35,23 @@ def init(options):
     for key, val in options.iteritems():
         OPTIONS[key] = val
 
-def post(payload = OPTIONS['payload']):
-    response = requests.request('POST', OPTIONS['url'], data=payload, headers=OPTIONS['headers'])
+def post(postData = OPTIONS['postData']):
+    xml = """<?xml version="1.0" encoding="UTF-8" ?>
+<PosXML version="7.2.0">
+""" + dicttoxml(postData, root=False, attr_type=False) + """
+</PosXML>"""
+
+    print(xml)
+    response = requests.request('POST', OPTIONS['url'], data=xml, headers=OPTIONS['headers'])
     print(response.text)
 
-post()
+# Usage:
+# ---------
+# post({ 
+# 'RefundTransactionRequest': {
+#     'TransactionID': 1,
+#     'RefundAmount' : 100,
+#     'CurrencyName' : 'EUR',
+#     'PrintReceipt' : 2,
+#     'Timeout'      : 100,
+# }})
