@@ -1,5 +1,8 @@
+# coding: utf-8
+
 import requests
-from dicttoxml import dicttoxml
+import xmltodict
+import json
 
 OPTIONS = {}
 
@@ -16,14 +19,13 @@ OPTIONS['payload'] = """<?xml version="1.0" encoding="UTF-8" ?>
     </DoBeepRequest>
 </PosXML>"""
 
+OPTIONS['postFunc'] = 'DoBeepRequest'
 OPTIONS['postData'] = {
-    'DoBeepRequest': {
-        'Frequency1': 2000,
-        'Duration1':  40,
-        'Interval1':  10,
-        'Repeat':     2,
-        'RepeatInt':  100,
-    }
+    'Frequency1': 2000,
+    'Duration1':  40,
+    'Interval1':  10,
+    'Repeat':     2,
+    'RepeatInt':  100,
 }
 
 OPTIONS['headers'] = {
@@ -35,23 +37,28 @@ def init(options):
     for key, val in options.iteritems():
         OPTIONS[key] = val
 
-def post(postData = OPTIONS['postData']):
-    xml = """<?xml version="1.0" encoding="UTF-8" ?>
-<PosXML version="7.2.0">
-""" + dicttoxml(postData, root=False, attr_type=False) + """
-</PosXML>"""
+def post(func = OPTIONS['postFunc'], data = OPTIONS['postData']):
+    dict = {
+        'PosXML': {
+            '@version':'7.2.0',
+        }
+    }
+    dict['PosXML'][func] = data
+    xml = xmltodict.unparse(dict, pretty=True).encode('UTF-8')
 
     print(xml)
     response = requests.request('POST', OPTIONS['url'], data=xml, headers=OPTIONS['headers'])
     print(response.text)
+    response = xmltodict.parse(response.text)['PosXML']
+    responseName = response.keys()[1]
+    print(json.dumps(response[responseName], indent=4))
 
-# Usage:
-# ---------
-# post({ 
-# 'RefundTransactionRequest': {
-#     'TransactionID': 1,
-#     'RefundAmount' : 100,
-#     'CurrencyName' : 'EUR',
-#     'PrintReceipt' : 2,
-#     'Timeout'      : 100,
-# }})
+
+post('RefundTransactionRequest', {
+    'TransactionID': 1,
+    'RefundAmount' : 100,
+    'CurrencyName' : 'EUR',
+    'PrintReceipt' : 2,
+    'Timeout'      : 100,
+    'UTFTesting'   : u'õüäöšžč'
+})
