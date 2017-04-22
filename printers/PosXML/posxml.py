@@ -3,62 +3,67 @@
 import requests
 import xmltodict
 import json
+from os import path
+from sys import argv, stdin
+from yaml import load as loadYAML
+import urllib
+from time import sleep
 
-OPTIONS = {}
+BASEDIR = path.realpath(path.dirname(argv[0]))
+with open(path.join(BASEDIR, 'responses.yaml'), 'r') as posxml_responses_file:
+    PXRESPONSES = loadYAML(posxml_responses_file)
 
-OPTIONS['url'] = "http://192.168.2.45:4445/"
-
-OPTIONS['payload'] = """<?xml version="1.0" encoding="UTF-8" ?>
-<PosXML version="7.2.0">
-    <DoBeepRequest>
-        <Frequency1>2000</Frequency1>
-        <Duration1>40</Duration1>
-        <Interval1>10</Interval1>
-        <Repeat>2</Repeat>
-        <RepeatInt>100</RepeatInt>
-    </DoBeepRequest>
-</PosXML>"""
-
-OPTIONS['postFunc'] = 'DoBeepRequest'
-OPTIONS['postData'] = {
-    'Frequency1': 2000,
-    'Duration1':  40,
-    'Interval1':  10,
-    'Repeat':     2,
-    'RepeatInt':  100,
-}
-
-OPTIONS['headers'] = {
-    'content-type': "application/xml"
-}
+OPTIONS = { 'headers': { 'content-type': "application/xml" } }
 
 def init(options):
     global OPTIONS
     for key, val in options.iteritems():
         OPTIONS[key] = val
 
-def post(func = OPTIONS['postFunc'], data = OPTIONS['postData']):
-    dict = {
-        'PosXML': {
-            '@version':'7.2.0',
-        }
-    }
+def post(func, data):
+    dict = { 'PosXML': { '@version':'7.2.0', } }
     dict['PosXML'][func] = data
-    xml = xmltodict.unparse(dict, pretty=True).encode('UTF-8')
+    payload_xml = xmltodict.unparse(dict, pretty=True).encode('utf-8')
+    http_response = requests.post(OPTIONS['url'], data=payload_xml, headers=OPTIONS['headers'])
+    response = xmltodict.parse(http_response.content)['PosXML']
+    try:
+        # find if any key in response matches one of expected response keys
+        responseKey = [key for key in PXRESPONSES[func] if key in response][0]
+    except Exception as e:
+        print('Expected responses: "' + ';'.join(PXRESPONSES[func]) 
+            + '" not present in returned response keys: "' 
+            + ';'.join(response.keys()) + '".')
+        print(json.dumps(response, indent=4, encoding='utf-8'))
+        print('Take a screenshot')
+        stdin.readline()
+        raise 
+    if response[responseKey]['ReturnCode'] != '0' and not response[responseKey]['Reason']:
+        response[responseKey]['Reason'] = 'ReturnCode: ' + response[responseKey]['ReturnCode']
+    return response[responseKey]
 
-    print(xml)
-    response = requests.request('POST', OPTIONS['url'], data=xml, headers=OPTIONS['headers'])
-    print(response.text)
-    response = xmltodict.parse(response.text)['PosXML']
-    responseName = response.keys()[1]
-    print(json.dumps(response[responseName], indent=4))
+def beep():
+    post('DoBeepRequest', {'Frequency1':2000, 'Duration1':40})
 
-
-post('RefundTransactionRequest', {
-    'TransactionID': 1,
-    'RefundAmount' : 100,
-    'CurrencyName' : 'EUR',
-    'PrintReceipt' : 2,
-    'Timeout'      : 100,
-    'UTFTesting'   : u'õüäöšžč'
-})
+def message(destination, message):
+    post('DisplayMessageRequest', {
+        'Action':1, 
+        'BackLight':1, 
+        'Destination':destination, 
+        'Line2': message.encode('utf-8')
+    })
+def resetMessages():
+    post('DisplayMessageRequest', {
+        'Action':0
+    })
+    
+def waitForRemoveCardFromTerminal():
+    response = post('GetTerminalStatusRequest', '')
+    CardStatus = response['CardStatus']
+    if CardStatus != '0':
+        print('Remove card from terminal')
+        # message(2,'Remove card from terminal')
+    while CardStatus != '0':
+        beep()
+        sleep(0.3)
+        CardStatus = post('GetTerminalStatusRequest', '')['CardStatus']
+    resetMessages()
