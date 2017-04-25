@@ -1,13 +1,13 @@
 # coding: utf-8
 
-from os import path
-from sys import argv, stdin
-from System import Type, Activator
-from yaml import load as loadYAML
-from time import sleep
+from os              import path
+from sys             import argv, stdin
+from win32com.client import Dispatch
+from yaml            import load as loadYAML
+from time            import sleep
 
 
-BASEDIR = path.realpath(path.dirname(argv[0]))
+BASEDIR = path.dirname(path.abspath(__file__))
 with open(path.join(BASEDIR, 'ECRModes.yaml'), 'r') as ecrmode_table_file:
     ECRMODE_TABLE = loadYAML(ecrmode_table_file)['ECRMode']
 
@@ -247,6 +247,8 @@ def openCashRegister(drawer = 0, password = USER_KASSIR):
     insist(v.OpenDrawer, password)
 
 
-oo = Type.GetTypeFromProgID('Addin.DrvFR')
-v = Activator.CreateInstance(oo)
+# oo = Type.GetTypeFromProgID('Addin.DrvFR')
+# v = Activator.CreateInstance(oo)
+
+v = Dispatch('Addin.DrvFR')
 prc()

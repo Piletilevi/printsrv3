@@ -9,7 +9,7 @@ from yaml import load as loadYAML
 import urllib
 from time import sleep
 
-BASEDIR = path.realpath(path.dirname(argv[0]))
+BASEDIR = path.dirname(path.abspath(__file__))
 with open(path.join(BASEDIR, 'responses.yaml'), 'r') as posxml_responses_file:
     PXRESPONSES = loadYAML(posxml_responses_file)
 
@@ -30,13 +30,13 @@ def post(func, data):
         # find if any key in response matches one of expected response keys
         responseKey = [key for key in PXRESPONSES[func] if key in response][0]
     except Exception as e:
-        print('Expected responses: "' + ';'.join(PXRESPONSES[func]) 
-            + '" not present in returned response keys: "' 
+        print('Expected responses: "' + ';'.join(PXRESPONSES[func])
+            + '" not present in returned response keys: "'
             + ';'.join(response.keys()) + '".')
         print(json.dumps(response, indent=4, encoding='utf-8'))
         print('Take a screenshot')
         stdin.readline()
-        raise 
+        raise
     if response[responseKey]['ReturnCode'] != '0' and not response[responseKey]['Reason']:
         response[responseKey]['Reason'] = 'ReturnCode: ' + response[responseKey]['ReturnCode']
     return response[responseKey]
@@ -46,16 +46,16 @@ def beep():
 
 def message(destination, message):
     post('DisplayMessageRequest', {
-        'Action':1, 
-        'BackLight':1, 
-        'Destination':destination, 
+        'Action':1,
+        'BackLight':1,
+        'Destination':destination,
         'Line2': message.encode('utf-8')
     })
 def resetMessages():
     post('DisplayMessageRequest', {
         'Action':0
     })
-    
+
 def waitForRemoveCardFromTerminal():
     response = post('GetTerminalStatusRequest', '')
     CardStatus = response['CardStatus']

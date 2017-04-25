@@ -3,9 +3,17 @@
 from json import load as loadJSON
 from os import environ, path, chdir
 from subprocess import call
-from sys import argv, exit
+from sys import argv, exit, path as sysPath
 
 import shtrihm as cm
+sysPath.append("../PosXML")
+import posxml
+
+posxml.init({'url': 'http://192.168.2.45:4445'})
+print('CancelAllOperationsRequest')
+response = posxml.post('CancelAllOperationsRequest', '')
+print(json.dumps(response, indent=4))
+print(response['ReturnCode'])
 
 
 if 'plp_filename' in environ:
