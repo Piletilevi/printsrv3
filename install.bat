@@ -3,6 +3,9 @@ pip install fontname
 pip install jsonschema
 pip install qrcode
 pip install wmi
+pip install requests
+pip install xmltodict
+pip install pyyaml
 
 @echo off
 

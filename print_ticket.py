@@ -10,6 +10,7 @@ import ConfigParser
 import codecs
 import os
 import json
+import requests
 import urllib
 import urllib2
 import urlparse
@@ -34,36 +35,43 @@ import qrcode.image.pil
 
 import errno, stat, shutil
 
-EXIT_OK = 0
-COULD_NOT_OPEN_PRINTER        = 2 ** 0  #         1
-COULD_NOT_CREATE_DC           = 2 ** 1  #         2
-NO_SUCH_FONT_AVAILABLE        = 2 ** 2  #         4
-UNABLE_TO_CREATE_FONT         = 2 ** 3  #         8
-CANT_DECODE_AS_UTF8           = 2 ** 4  #        16
-NO_IMAGE_BY_THAT_NAME         = 2 ** 5  #        32
-UNSUPPORTED_IMAGE_FORMAT      = 2 ** 6  #        64
-COULD_NOT_DOWNLOAD_XML_IMAGE  = 2 ** 7  #       128
-COULD_NOT_DOWNLOAD_URL_IMAGE  = 2 ** 8  #       256
-EXCEPTION_IN_2_OF_5           = 2 ** 9  #       512
-EXCEPTION_IN_3_OF_9           = 2 ** 10 #     1 024
-EXCEPTION_IN_CODE128          = 2 ** 11 #     2 048
-UNKNOWN_TYPE_FOR_SECTION      = 2 ** 12 #     4 096
-NO_SUCH_SECTION               = 2 ** 13 #     8 192
-COULD_NOT_DELETE_PLP          = 2 ** 14 #    16 384
-PLP_FILE_NOT_SPECIFIED        = 2 ** 15 #    32 768
-PRINTER_IS_OFFLINE            = 2 ** 16 #    65 536
-DC_NOT_CREATED                = 2 ** 17 #   131 072
-HDC_NOT_CREATED               = 2 ** 18 #   262 144
-HELP_MESSAGE                  = 2 ** 19 #   524 288
-COULD_NOT_DOWNLOAD_URL_LAYOUT = 2 ** 20 # 1 048 576
-PLP_FILENAME_NOT_IN_ENVIRON   = 2 ** 21 # 2 097 152
-PLP_FILE_WITHOUT_INFO         = 2 ** 22 # 4 194 304
-
-EXIT_STATUS = EXIT_OK
+ERROR_CODES = {
+    "EXIT_OK"                       : 0      ,
+    "COULD_NOT_OPEN_PRINTER"        : 2 ** 0 , #         1
+    "COULD_NOT_CREATE_DC"           : 2 ** 1 , #         2
+    "NO_SUCH_FONT_AVAILABLE"        : 2 ** 2 , #         4
+    "UNABLE_TO_CREATE_FONT"         : 2 ** 3 , #         8
+    "CANT_DECODE_AS_UTF8"           : 2 ** 4 , #        16
+    "NO_IMAGE_BY_THAT_NAME"         : 2 ** 5 , #        32
+    "UNSUPPORTED_IMAGE_FORMAT"      : 2 ** 6 , #        64
+    "COULD_NOT_DOWNLOAD_XML_IMAGE"  : 2 ** 7 , #       128
+    "COULD_NOT_DOWNLOAD_URL_IMAGE"  : 2 ** 8 , #       256
+    "EXCEPTION_IN_2_OF_5"           : 2 ** 9 , #       512
+    "EXCEPTION_IN_3_OF_9"           : 2 ** 10, #     1 024
+    "EXCEPTION_IN_CODE128"          : 2 ** 11, #     2 048
+    "UNKNOWN_TYPE_FOR_SECTION"      : 2 ** 12, #     4 096
+    "NO_SUCH_SECTION"               : 2 ** 13, #     8 192
+    "COULD_NOT_DELETE_PLP"          : 2 ** 14, #    16 384
+    "PLP_FILE_NOT_SPECIFIED"        : 2 ** 15, #    32 768
+    "PRINTER_IS_OFFLINE"            : 2 ** 16, #    65 536
+    "DC_NOT_CREATED"                : 2 ** 17, #   131 072
+    "HDC_NOT_CREATED"               : 2 ** 18, #   262 144
+    "HELP_MESSAGE"                  : 2 ** 19, #   524 288
+    "COULD_NOT_DOWNLOAD_URL_LAYOUT" : 2 ** 20, # 1 048 576
+    "PLP_FILENAME_NOT_IN_ENVIRON"   : 2 ** 21, # 2 097 152
+    "PLP_FILE_WITHOUT_INFO"         : 2 ** 22 # 4 194 304
+}
 
 DEVICE_CONTEXT_HANDLE = None # pylint: disable=C0103
 DEVICE_CONTEXT = None # pylint: disable=C0103
 proxy = None
+
+if 'plp_filename' not in os.environ:
+    sys.exit(PLP_FILENAME_NOT_IN_ENVIRON)
+
+plp_filename = os.environ['plp_filename']
+with open(plp_filename, 'rU') as plp_data_file:
+    PLP_JSON_DATA = loadJSON(plp_data_file)
 
 class StreamToLogger(object):
     """
@@ -79,9 +87,10 @@ class StreamToLogger(object):
             self.logger.log(self.log_level, line.rstrip())
 
 #################################################################
-def set_exit_status(status):
-    global EXIT_STATUS
-    EXIT_STATUS = EXIT_STATUS | status
+def exit_with_status(status):
+    print ('Sending "{0}:{1}" to "{2}"'.format(ERROR_CODES[status], status, PLP_JSON_DATA['feedbackUrl']))
+    # http_response = requests.post(PLP_JSON_DATA['feedbackUrl'], data=payload, headers={ 'content-type': "application/json" })
+    sys.exit(ERROR_CODES[status])
 
 #################################################################
 # for code128 used info from http://grandzebu.net/index.php?page=/informatique/codbar-en/code128.htm
@@ -212,16 +221,14 @@ def start_new_document(cfg, is_first_document = False):
         retry_times_left -= 1
         if retry_times_left <= 0:
             logger.error("Printer {0} is offline. Exiting.".format(printer))
-            set_exit_status(PRINTER_IS_OFFLINE)
-            sys.exit(EXIT_STATUS)
+            exit_with_status('PRINTER_IS_OFFLINE')
 
     try:
         # logger.info("win32print.OpenPrinter(%s)" % printer)
         hprinter = win32print.OpenPrinter(printer)
     except:
         logger.error("exception while opening printer");
-        set_exit_status(COULD_NOT_OPEN_PRINTER)
-        sys.exit(EXIT_STATUS)
+        exit_with_status('COULD_NOT_OPEN_PRINTER')
     # logger.info("win32print.GetPrinter")
     devmode = win32print.GetPrinter(hprinter, 2)["pDevMode"]
     # logger.info("win32print.EnumJobs")
@@ -237,8 +244,7 @@ def start_new_document(cfg, is_first_document = False):
             retry_times_left -= 1
             if retry_times_left <= 0:
                 logger.error("Printer has old jobs in queue. Exiting")
-                # set_exit_status(PRINTER_IS_OFFLINE)
-                sys.exit(EXIT_STATUS)
+                # exit_with_status('PRINTER_IS_OFFLINE')
 
     try:
         devmode.Orientation = int(cfg.get("DEFAULT", "printer_orientation"))
@@ -251,16 +257,13 @@ def start_new_document(cfg, is_first_document = False):
         DEVICE_CONTEXT = win32ui.CreateDCFromHandle(DEVICE_CONTEXT_HANDLE)
     except:
         logger.error("exception while creating DEVICE_CONTEXT")
-        set_exit_status(COULD_NOT_CREATE_DC)
-        sys.exit(EXIT_STATUS)
+        exit_with_status('COULD_NOT_CREATE_DC')
     if DEVICE_CONTEXT == None:
         logger.error("DEVICE_CONTEXT not created")
-        set_exit_status(DC_NOT_CREATED)
-        sys.exit(EXIT_STATUS)
+        exit_with_status('DC_NOT_CREATED')
     if DEVICE_CONTEXT_HANDLE == None:
         logger.error("DEVICE_CONTEXT_HANDLE not created")
-        set_exit_status(HDC_NOT_CREATED)
-        sys.exit(EXIT_STATUS)
+        exit_with_status('HDC_NOT_CREATED')
 
     logger.info("DEVICE_CONTEXT.SetMapMode")
     DEVICE_CONTEXT.SetMapMode(int(cfg.get("DEFAULT", "map_mode")))
@@ -298,7 +301,7 @@ def set_section_font_indirect(section_cfg, postfix = ""):
         log_font = fonts[1]
     except:
         logger.warning("No such font available:%s" % section_cfg["font_name"+postfix])
-        set_exit_status(NO_SUCH_FONT_AVAILABLE)
+        exit_with_status('NO_SUCH_FONT_AVAILABLE')
         log_font = win32gui.LOGFONT()
     try:
         log_font.lfHeight = int(section_cfg["font_height"+postfix])
@@ -364,7 +367,7 @@ def print_text_value(section_cfg, value):
         value = unicode( value, "utf-8" )
     except:
         logger.warning("can't decode:%s" % value)
-        set_exit_status(CANT_DECODE_AS_UTF8)
+        exit_with_status('CANT_DECODE_AS_UTF8')
 
     value_w = ""
     value_w1 = ""
@@ -518,7 +521,7 @@ def print_image(x, y, value, rotate = 0):
         bmp = Image.open(value)
     except:
         logger.error("No image by that name")
-        set_exit_status(NO_IMAGE_BY_THAT_NAME)
+        exit_with_status('NO_IMAGE_BY_THAT_NAME')
         return None
     rotate = int(rotate)
     logger.info("rotate=%d" % rotate)
@@ -533,7 +536,7 @@ def print_image(x, y, value, rotate = 0):
         dib = ImageWin.Dib(bmp)
     except:
         print "ERROR: Only jpg and bmp are supported"
-        set_exit_status(UNSUPPORTED_IMAGE_FORMAT)
+        exit_with_status('UNSUPPORTED_IMAGE_FORMAT')
         return None
     dib.draw(DEVICE_CONTEXT.GetHandleOutput(), (int(x), int(y), int(x) + bmp.size[0], int(y) + bmp.size[1]))
 
@@ -559,7 +562,7 @@ def print_qmatrix(x, y, size, value):
         dib = ImageWin.Dib(im)
     except:
         print("ERROR: unsupported image format in print_qmatrix")
-        set_exit_status(UNSUPPORTED_IMAGE_FORMAT)
+        exit_with_status('UNSUPPORTED_IMAGE_FORMAT')
         return None
     dib.draw(DEVICE_CONTEXT.GetHandleOutput(), (int(x), int(y), int(x) + int(size), int(y) + int(size)))
 
@@ -649,7 +652,7 @@ def print_image_xml_value(section_cfg, value):
                 print_image(section_cfg["x"], section_cfg["y"], local_image_filename)
         except urllib2.HTTPError, e:
             print "ERROR: Could not download image:%s. Got error code:%s" % (image_url, e.code)
-            set_exit_status(COULD_NOT_DOWNLOAD_XML_IMAGE)
+            exit_with_status('COULD_NOT_DOWNLOAD_XML_IMAGE')
     else:
         try:
             print_image(section_cfg["x"], section_cfg["y"], local_image_filename, section_cfg["orientation"])
@@ -688,7 +691,7 @@ def print_image_url_value(section_cfg, value):
                             print_image(image_x, image_y, local_image_filename)
                         except urllib2.HTTPError, e:
                             print "ERROR: Could not download image:%s. Got error code:%s" % (image_url, e.code)
-                            set_exit_status(COULD_NOT_DOWNLOAD_URL_IMAGE)
+                            exit_with_status('COULD_NOT_DOWNLOAD_URL_IMAGE')
                     else:
                         print_image(image_x, image_y, local_image_filename)
 
@@ -708,7 +711,7 @@ def print_bar_2_of_5_value(section_cfg, value):
     except(KeyError):
         pass
     except:
-        set_exit_status(EXCEPTION_IN_2_OF_5)
+        exit_with_status('EXCEPTION_IN_2_OF_5')
         raise
 
 #################################################################
@@ -727,7 +730,7 @@ def print_bar_3_of_9_value(section_cfg, value):
     except(KeyError):
         pass
     except:
-        set_exit_status(EXCEPTION_IN_3_OF_9)
+        exit_with_status('EXCEPTION_IN_3_OF_9')
         raise
 
 #################################################################
@@ -746,7 +749,7 @@ def print_code128_value(section_cfg, value):
     except(KeyError):
         pass
     except:
-        set_exit_status(EXCEPTION_IN_CODE128)
+        exit_with_status('EXCEPTION_IN_CODE128')
         raise
 
 #################################################################
@@ -793,62 +796,60 @@ def read_plp_file(cfg, plp_filename, skip_file_delete):
     global DEVICE_CONTEXT
     global DEVICE_CONTEXT_HANDLE
     global proxy
+    global PLP_JSON_DATA
 
     document_open = 0
 
     after_begin = False
     layout_cfg = cfg
-    with open(plp_filename, 'rU') as plp_data_file:
-        plp_json_data = loadJSON(plp_data_file)
-        # we check for old jobs in printer queue when starting first document
+    # we check for old jobs in printer queue when starting first document
+    is_first_document = False
+    for ticket in PLP_JSON_DATA['ticketData']:
+        print('ticket: {0}'.format(ticket))
+        logger.info("start new document")
+        printer_cfg = cfg
+        start_new_document(printer_cfg, is_first_document)
         is_first_document = False
-        for ticket in plp_json_data['ticketData']:
-            print('ticket: {0}'.format(ticket))
-            logger.info("start new document")
-            printer_cfg = cfg
-            start_new_document(printer_cfg, is_first_document)
-            is_first_document = False
-            document_open = 1
+        document_open = 1
 
-            if ticket.layout:
-                if cfg.has_option("DEFAULT", "layout") and cfg.get("DEFAULT", "layout") == "none":
-                    layout_cfg = cfg
+        if ticket.layout:
+            if cfg.has_option("DEFAULT", "layout") and cfg.get("DEFAULT", "layout") == "none":
+                layout_cfg = cfg
+            else:
+                layout_cfg = get_layout_cfg(param_val)
+
+        for section_name in ticket:
+            if layout_cfg.has_section(section_name):
+                param_val = ticket[section_name]
+                if layout_cfg.get(section_name, "type") == "text":
+                    print_text_value(dict(layout_cfg.items(section_name)), param_val)
+                elif layout_cfg.get(section_name, "type") == "qmatrix":
+                    print_qmatrix_value(dict(layout_cfg.items(section_name)), param_val)
+                elif layout_cfg.get(section_name, "type") == "image_url":
+                    print_image_url_value(dict(layout_cfg.items(section_name)), param_val)
+                elif layout_cfg.get(section_name, "type") == "image_xml" and param_val != "":
+                    print_image_xml_value(dict(layout_cfg.items(section_name)), param_val)
+                elif layout_cfg.get(section_name, "type") == "bar_2_of_5":
+                    print_bar_2_of_5_value(dict(layout_cfg.items(section_name)), param_val)
+                    if layout_cfg.has_section("%s_text" % section_name):
+                        print_text_value(dict(layout_cfg.items("%s_text" % section_name)), param_val)
+                elif layout_cfg.get(section_name, "type") == "bar_3_of_9":
+                    print_bar_3_of_9_value(dict(layout_cfg.items(section_name)), param_val)
+                    if layout_cfg.has_section("%s_text" % section_name):
+                        print_text_value(dict(layout_cfg.items("%s_text" % section_name)), param_val)
+                elif layout_cfg.get(section_name, "type") == "bar_code128":
+                    print_code128_value(dict(layout_cfg.items(section_name)), param_val)
+                    if layout_cfg.has_section("%s_text" % section_name):
+                        print_text_value(dict(layout_cfg.items("%s_text" % section_name)), param_val)
                 else:
-                    layout_cfg = get_layout_cfg(param_val)
+                    logger.warning("unknown type for section:%s" % section_name)
+                    exit_with_status('UNKNOWN_TYPE_FOR_SECTION')
 
-            for section_name in ticket:
-                if layout_cfg.has_section(section_name):
-                    param_val = ticket[section_name]
-                    if layout_cfg.get(section_name, "type") == "text":
-                        print_text_value(dict(layout_cfg.items(section_name)), param_val)
-                    elif layout_cfg.get(section_name, "type") == "qmatrix":
-                        print_qmatrix_value(dict(layout_cfg.items(section_name)), param_val)
-                    elif layout_cfg.get(section_name, "type") == "image_url":
-                        print_image_url_value(dict(layout_cfg.items(section_name)), param_val)
-                    elif layout_cfg.get(section_name, "type") == "image_xml" and param_val != "":
-                        print_image_xml_value(dict(layout_cfg.items(section_name)), param_val)
-                    elif layout_cfg.get(section_name, "type") == "bar_2_of_5":
-                        print_bar_2_of_5_value(dict(layout_cfg.items(section_name)), param_val)
-                        if layout_cfg.has_section("%s_text" % section_name):
-                            print_text_value(dict(layout_cfg.items("%s_text" % section_name)), param_val)
-                    elif layout_cfg.get(section_name, "type") == "bar_3_of_9":
-                        print_bar_3_of_9_value(dict(layout_cfg.items(section_name)), param_val)
-                        if layout_cfg.has_section("%s_text" % section_name):
-                            print_text_value(dict(layout_cfg.items("%s_text" % section_name)), param_val)
-                    elif layout_cfg.get(section_name, "type") == "bar_code128":
-                        print_code128_value(dict(layout_cfg.items(section_name)), param_val)
-                        if layout_cfg.has_section("%s_text" % section_name):
-                            print_text_value(dict(layout_cfg.items("%s_text" % section_name)), param_val)
-                    else:
-                        logger.warning("unknown type for section:%s" % section_name)
-                        set_exit_status(UNKNOWN_TYPE_FOR_SECTION)
+        # elif param_key == "END":
+        print_static_text_value(layout_cfg)
+        print_document()
+        document_open = 0
 
-            # elif param_key == "END":
-            print_static_text_value(layout_cfg)
-            print_document()
-            document_open = 0
-
-    plp_data_file.close()
 
 #################################################################
 # Log available printer name on the system
@@ -916,7 +917,7 @@ def get_layout_cfg(file_url):
                 return read_ini_config(local_file_filename) # reading freshly downloaded copy
             except urllib2.HTTPError, e:
                 logger.error("Could not download image:%s. Got error code:%s" % (file_url, e.code))
-                set_exit_status(COULD_NOT_DOWNLOAD_URL_LAYOUT)
+                exit_with_status('COULD_NOT_DOWNLOAD_URL_LAYOUT')
             except:
                 logger.error("got exception while getting or parsing ini file")
         else:
@@ -1073,12 +1074,6 @@ skip_file_delete = True
 prev_version = False
 downgrade_version = False
 
-if 'plp_filename' not in os.environ:
-    set_exit_status(PLP_FILENAME_NOT_IN_ENVIRON)
-    sys.exit(EXIT_STATUS)
-
-plp_filename = os.environ['plp_filename']
-logger.info("plp filename:\n- %s" % plp_filename)
 
 # things like proxy, my_id are stored in persistent.ini
 persistent_ini_filename = "persistent.ini"
@@ -1086,7 +1081,6 @@ persistent_ini_path = os.path.join(get_main_dir(), persistent_ini_filename)
 logger.info("Loading persistent.ini from:\n{0}".format(persistent_ini_path))
 if not os.path.isfile(persistent_ini_path):
     logger.error("ERROR: persistent.ini could not be found at:\n{0}".format(persistent_ini_path))
-    sys.exit(EXIT_STATUS)
 cfg_persistent = read_ini_config(persistent_ini_path)
 
 ini_filename = os.path.join(get_main_dir(), "setup_%s.ini" % get_lang(cfg_persistent))
@@ -1116,5 +1110,4 @@ proxy = setup_proxy(cfg)
 
 read_plp_file(cfg, plp_filename, skip_file_delete)
 
-logger.info("exit status:%d" % EXIT_STATUS)
-sys.exit(EXIT_STATUS)
+exit_with_status('EXIT_OK')
