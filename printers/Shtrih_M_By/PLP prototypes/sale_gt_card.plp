@@ -1,8 +1,8 @@
 {
     "plpVersion": "2.0.0",
     "feedbackToken": "",
-    "feedbackUrl": "",
-    "busnId": "", 
+    "feedbackUrl": "http://bo.piletilevi.ee/api/plp2",
+    "busnId": "",
     "printingDriverVersion": "3.0.0",
     "printingDriverVersionURL": "http://",
     "salesPointText": "Prodano:",
