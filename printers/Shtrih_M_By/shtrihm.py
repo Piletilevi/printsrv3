@@ -151,7 +151,7 @@ def sale(sales_options, payment_options, password = USER_KASSIR):
             'Tax2': 0,
             'Tax3': 0,
             'Tax4': 0,
-            'StringForPrinting': item['name'].decode(encoding='UTF-8')
+            'StringForPrinting': item['name']
         }.iteritems():
             # print 'Setting {0} = {1}'.format(attr, value)
             setattr(v, attr, value)

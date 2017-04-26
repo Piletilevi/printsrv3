@@ -1,19 +1,13 @@
 # coding: utf-8
 
-from os import path, chdir, execl, makedirs, remove, chmod
-from stat import S_IWRITE
-from io import open as ioOpen
-from sys import argv, exit, path as sysPath
-from subprocess import call
+from os import path, chdir
+from sys import argv, path as sysPath
 from json import load as loadJSON, dumps as dumpsJSON
-import jsonschema
-from re import match
-from urllib2 import urlopen, URLError, HTTPError
-from zipfile import ZipFile
-from distutils.version import LooseVersion
-from helpers import cd
+# from re import match
 
+import print_ticket
 BASEDIR = path.dirname(path.abspath(__file__))
+chdir(BASEDIR)
 sysPath.append("printers/PosXML")
 import posxml
 sysPath.append("printers/Shtrih_M_By")
@@ -26,22 +20,54 @@ PLP_FILENAME = argv[1]
 with open(path.join(BASEDIR, 'printsrv', 'jsonschema', 'plp.json'), 'rU') as schema_file:
     schema = loadJSON(schema_file)
 with open(PLP_FILENAME, 'rU') as plp_data_file:
-    PLP_JSON_DATA = loadJSON(plp_data_file)
-try:
-    print('Validating against {0}: {1}').format(path.join(BASEDIR, 'printsrv', 'jsonschema', 'plp.json'), PLP_FILENAME)
-    jsonschema.validate(PLP_JSON_DATA, schema)
-except jsonschema.exceptions.ValidationError as ve:
-    print("JSON validation ERROR\n")
-    # print( "{0}\n".format(ve))
-    raise ve
+    PLP_JSON_DATA = loadJSON(plp_data_file, 'utf-8')
 
-with open(path.join(BASEDIR, 'printsrv', 'package.json'), 'rU') as package_json_file:
+# import jsonschema
+# try:
+#     print('Validating against {0}: {1}').format(path.join(BASEDIR, 'printsrv', 'jsonschema', 'plp.json'), PLP_FILENAME)
+#     print('S: {0}'.format(schema))
+#     print('D: {0}'.format(PLP_JSON_DATA))
+#     jsonschema.validate(PLP_JSON_DATA, schema)
+# except jsonschema.exceptions.ValidationError as ve:
+#     print("JSON validation ERROR\n")
+#     print( "{0}\n".format(ve))
+#     raise ve
+
+with open(path.join(BASEDIR, 'package.json'), 'rU') as package_json_file:
     PACKAGE_JSON_DATA = loadJSON(package_json_file)
 
 
 def cmsale():
     global PLP_JSON_DATA
-    global cm
+
+    card_payment_amount = 0
+    for payment in PLP_JSON_DATA['fiscalData']['payments']:
+        if payment['type'] == '4':
+            card_payment_amount += payment['cost']
+        print(payment['type'], card_payment_amount)
+
+    if card_payment_amount > 0:
+        global cm
+        posxml.init({'url': 'http://192.168.2.45:4445'})
+        posxml.post('CancelAllOperationsRequest', '')
+        response = posxml.post('TransactionRequest', {
+            'TransactionID': PLP_JSON_DATA['busnId'],
+            'Amount'       : card_payment_amount*100,
+            'CurrencyName' : 'EUR',
+            'PrintReceipt' : 2,
+            'Timeout'      : 100,
+            'Language'     : 'en',
+        })
+        print(dumpsJSON(response, indent=4))
+        print(response['ReturnCode'])
+        if response['ReturnCode'] != '0':
+            print(dumpsJSON(response, indent=4))
+            print(response['Reason'].encode('utf-8'))
+
+            posxml.waitForRemoveCardFromTerminal()
+
+
+
 
     payment_method_total = {}
     payment_method_total_validate = {}
@@ -67,7 +93,7 @@ def cmsale():
             if not 'amount' in component:
                 component['amount'] = 1
             if 'ticketId' in component:
-                component['name'] = '{0} {1}'.format(component['name'], component['ticketId'])
+                component['name'] = '{0} {1}'.format(component['name'].encode('utf-8'), component['ticketId'])
             payment_method_total_validate[payment['type']] += component['cost'] * component['amount']
             sales_options.append(component)
 
@@ -108,7 +134,7 @@ if PLP_JSON_DATA['fiscalData']:
     VALID_OPERATIONS = ('cut', 'endshift', 'feed', 'insertcash', 'open_cachreg', 'refund', 'sale', 'startshift', 'withdrawcash', 'xreport')
 
     operation = PLP_JSON_DATA['fiscalData']['operation']
-    print('{0} operation from:\n{1}'.format(operation, plp_filename))
+    print('{0} operation from:\n{1}'.format(operation, PLP_FILENAME))
 
     cm.init({'feedbackURL': 'https://api.piletilevi.ee/bo/feedback'})
     cm.connect()
@@ -128,7 +154,7 @@ if PLP_JSON_DATA['fiscalData']:
     elif operation == 'refund':
         cmsale()
     elif operation == 'sale':
-        sale()
+        cmsale()
     elif operation == 'startshift':
         cm.openShift()
     elif operation == 'withdrawcash':
@@ -138,12 +164,13 @@ if PLP_JSON_DATA['fiscalData']:
     else:
         raise ValueError('"operation" must be one of {0} in plp file.'.format(VALID_OPERATIONS))
 
-    print('{0} operation from:\n{1} succeeded.'.format(operation, plp_filename))
+    print('{0} operation from:\n{1} succeeded.'.format(operation, PLP_FILENAME))
 
 
 if PLP_JSON_DATA['ticketData']:
-    PRINTSRV_DIRNAME = path.join(BASEDIR, 'printers', 'ticket')
-    PRINTSRV_FILENAME = 'print_ticket.py'
-    chdir(PRINTSRV_DIRNAME)
-    print('Invoke: {0}'.format(PRINTSRV_FILENAME))
-    call(['python', PRINTSRV_FILENAME])
+    print('Invoke ticket printing')
+    print_ticket.doPrint(PLP_JSON_DATA)
+
+
+# C:\github\printsrv\printsrv_exe.py "C:\github\printsrv\printers\Shtrih_M_By\PLP prototypes\sale_cash.plp"
+# C:\github\printsrv\printsrv_exe.py "C:\github\printsrv\printers\Shtrih_M_By\PLP prototypes\sale_gt_card.plp"
