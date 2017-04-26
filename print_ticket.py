@@ -6,32 +6,27 @@
 import win32ui
 import win32gui
 import win32print
+from ctypes import windll
 import ConfigParser
 from os import path, makedirs
-import json
 import requests
 import urllib
 import urllib2
 import urlparse
 from PIL import Image, ImageWin
-from ctypes import *
 import string
 import wmi
-from json import load as loadJSON
+from json import load as loadJSON, dumps as dumpsJSON
+from yaml import load as loadYAML
 from UrllibProxy import UrllibProxy
 
-import version
-import getopt
-
 import sys
-
-# import logging
-# import logging.config
 
 import qrcode
 import qrcode.image.pil
 
 import errno, stat, shutil
+
 
 ERROR_CODES = {
     "EXIT_OK"                       : 0      ,
@@ -62,21 +57,7 @@ ERROR_CODES = {
 
 DEVICE_CONTEXT_HANDLE = None # pylint: disable=C0103
 DEVICE_CONTEXT = None # pylint: disable=C0103
-proxy = None
 
-
-# class StreamToLogger(object):
-#     """
-#     Fake file-like stream object that redirects writes to a logger instance.
-#     """
-#     def __init__(self, logger, log_level=logging.INFO):
-#         self.logger = logger
-#         self.log_level = log_level
-#         #self.linebuf = u""
-#
-#     def write(self, buf):
-#         for line in buf.rstrip().splitlines():
-#             self.logger.log(self.log_level, line.rstrip())
 
 #################################################################
 def exit_with_status(status):
@@ -187,7 +168,7 @@ def is_printer_online(printer_name):
                 return True
 
 #################################################################
-def start_new_document(cfg, is_first_document = False):
+def start_new_document(is_first_document = False):
     global DEVICE_CONTEXT
     global DEVICE_CONTEXT_HANDLE
     global EXIT_STATUS
@@ -225,7 +206,7 @@ def start_new_document(cfg, is_first_document = False):
                 # exit_with_status('PRINTER_IS_OFFLINE')
 
     try:
-        devmode.Orientation = int(cfg.get("DEFAULT", "printer_orientation"))
+        devmode.Orientation = 2
     except:
         print("Setting orientation failed: {0}".format(sys.exc_info()[0]))
     try:
@@ -244,9 +225,9 @@ def start_new_document(cfg, is_first_document = False):
         exit_with_status('HDC_NOT_CREATED')
 
     print("DEVICE_CONTEXT.SetMapMode")
-    DEVICE_CONTEXT.SetMapMode(int(cfg.get("DEFAULT", "map_mode")))
+    DEVICE_CONTEXT.SetMapMode(1)
     print("DEVICE_CONTEXT.StartDoc")
-    DEVICE_CONTEXT.StartDoc(cfg.get("DEFAULT", "print_document_name"))
+    DEVICE_CONTEXT.StartDoc("ticket.txt")
     print("DEVICE_CONTEXT.StartPage")
     DEVICE_CONTEXT.StartPage()
     print("win32ui.CreateFont");
@@ -361,6 +342,7 @@ def print_text_value(section_cfg, value):
     value2 = value
     value3 = value
 
+    print('print_text_value {0} on {1}'.format(value,section_cfg))
     try:
         space = value.rfind(u" ",0,int(section_cfg["font_wrap"]))
         print("wrap {0} found at:{1}".format(int(section_cfg["font_wrap"]), space))
@@ -742,28 +724,42 @@ def print_static_text_value(cfg):
             print("no section type")
 
 #################################################################
-def read_plp_file(cfg, skip_file_delete):
+PLP_JSON_DATA = {}
+LAYOUT = {}
+
+def doPrint(plp_json_data):
     global DEVICE_CONTEXT
     global DEVICE_CONTEXT_HANDLE
-    global proxy
-    # global PLP_JSON_DATA
+
+    global PLP_JSON_DATA
+    global LAYOUT
+
+    PLP_JSON_DATA = plp_json_data
+    BASEDIR = path.dirname(path.abspath(__file__))
+    with open(path.join(BASEDIR, 'layout.yaml'), 'r') as layout_file:
+        LAYOUT = loadYAML(layout_file)
 
     document_open = 0
-
     after_begin = False
-    layout_cfg = cfg
+    # cfg = ConfigParser.ConfigParser()
+    layout_cfg = ConfigParser.ConfigParser()
+    layout_cfg.read(path.join(BASEDIR,'layouts','_layouts_default.pla'))
+    # layout_cfg = ConfigParser.ConfigParser().read('layouts\_layouts_default.pla')
     # we check for old jobs in printer queue when starting first document
     is_first_document = False
     for ticket in PLP_JSON_DATA['ticketData']['tickets']:
         print('ticket: {0}'.format(ticket))
         print("start new document")
-        printer_cfg = cfg
-        start_new_document(printer_cfg, is_first_document)
+        start_new_document(is_first_document)
         is_first_document = False
         document_open = 1
 
+        print('layout_cfg: {0}'.format(layout_cfg))
+        print('layout_cfg: {0}'.format(layout_cfg.sections()))
+
         for section_name in ticket:
             if layout_cfg.has_section(section_name):
+                print('Printing section {0}'.format(section_name))
                 param_val = ticket[section_name]
                 if layout_cfg.get(section_name, "type") == "text":
                     print_text_value(dict(layout_cfg.items(section_name)), param_val)
@@ -788,225 +784,13 @@ def read_plp_file(cfg, skip_file_delete):
                 else:
                     print("unknown type for section:{0}".format(section_name))
                     exit_with_status('UNKNOWN_TYPE_FOR_SECTION')
+            else:
+                print('Missing section {0}'.format(section_name))
+
+        return
+
 
         # elif param_key == "END":
         print_static_text_value(layout_cfg)
         print_document()
         document_open = 0
-
-
-#################################################################
-# Log available printer name on the system
-#################################################################
-def print_available_printers():
-    print("local printers: {0}".format(win32print.EnumPrinters(win32print.PRINTER_ENUM_LOCAL)))
-    print("network printers:{0}".format(win32print.EnumPrinters(win32print.PRINTER_ENUM_CONNECTIONS)))
-    print("default printer:{0}".format(win32print.GetDefaultPrinter()))
-
-#################################################################
-# Read ini filename into cfg structure
-#################################################################
-def read_ini_config(ini_file_full_path):
-    cfg = ConfigParser.ConfigParser()
-    print("read_ini_config: Read configuration from:\n- {0}".format(ini_file_full_path))
-    ret = cfg.read(ini_file_full_path)
-    if len(ret) == 0:
-        return None
-    else:
-        return cfg
-
-#################################################################
-# Find absolute path for this file when exacuted
-#################################################################
-def get_main_dir():
-    return path.realpath(path.dirname(sys.argv[0]))
-
-#################################################################
-# Layout file downloaded from EE has \00 chars in the end of file
-#################################################################
-def strip_file_null_chars(fname):
-    with open(fname, "r") as in_f:
-        content = in_f.read().rstrip("\0\n")
-
-    with open(fname, "w") as out_f:
-        out_f.write(content)
-
-#################################################################
-# Layout url may be speciffied in plp file right after BEGIN line
-#################################################################
-def get_layout_cfg(file_url):
-    global proxy
-    print("getting layout file:{0}".format(file_url))
-
-    file_url_parts = urlparse.urlsplit(file_url)
-    if len(file_url_parts) == 5:
-
-        local_file_filename = path.join(get_main_dir(), "layouts", file_url_parts[2].replace("/", "_"))
-        print("layouts file:{0}".format(local_file_filename))
-
-        # check to see if we have the file available localy
-        if not path.isfile(local_file_filename):
-            print("no file found in local folder. will try to download")
-            try:
-                file_url = file_url.encode("utf-8")
-                local_file_filename = local_file_filename.encode("utf-8")
-                # use proxy class wrap to urllib to download image if proxy is set
-                if proxy == None:
-                    ret = urllib.urlretrieve(file_url, local_file_filename)
-                else:
-                    urlprx = UrllibProxy(proxy)
-                    ret = urlprx.urlretrieve(file_url, local_file_filename)
-                print("layouts file download successful:{0}".format(local_file_filename))
-                strip_file_null_chars(local_file_filename)
-                return read_ini_config(local_file_filename) # reading freshly downloaded copy
-            except urllib2.HTTPError, e:
-                print("E: Could not download image:{0}. Got error code:{1}".format(file_url, e.code))
-                exit_with_status('COULD_NOT_DOWNLOAD_URL_LAYOUT')
-            except:
-                print("E: got exception while getting or parsing ini file")
-        else:
-            print("found layouts file {0} local copy".format(local_file_filename))
-            strip_file_null_chars(local_file_filename)
-            return read_ini_config(local_file_filename) # reading local copy
-    else:
-        print("E: len(file_url_parts)!=5. Exiting")
-    return None
-
-#################################################################
-def setup_proxy(cfg):
-    proxy = None
-    try:
-        proxy = cfg.get("DEFAULT", "http_proxy")
-        print("http proxy set:[{0}]".format(proxy))
-    except:
-        print("no http proxy set")
-
-    if proxy!=None:
-        proxy_handler = urllib2.ProxyHandler({
-            "http": proxy,
-            "https": proxy
-        })
-        opener = urllib2.build_opener(proxy_handler)
-        urllib2.install_opener(opener)
-    return proxy
-
-#################################################################
-def override_cfg_values(cfg_1, cfg_2):
-    if cfg_1 is None and cfg_2 is None:
-        print("E: cfg_1 = None and cfg_2 = None ")
-        return None
-    if cfg_1 is None:
-        print("cfg_1 = None")
-        return cfg_2
-    if cfg_2 is None:
-        print("cfg_2 = None")
-        return cfg_1
-
-    # cfg_2 overrides cfg_1
-    cfg_1_defaults = cfg_1.defaults()
-    cfg_2_defaults = cfg_2.defaults()
-
-    cfg_2_sections = cfg_2.sections()
-    cfg_2_sections.extend(["DEFAULT"])
-    for section in cfg_2_sections:
-        # each section can have disable_override value that lists parameters not to be overriden
-        if cfg_1.has_option(section, "disable_override"):
-            disable_override_list = cfg_1.get(section, "disable_override").strip("\"").split(",")
-        else:
-            disable_override_list = []
-
-        if not cfg_1.has_section(section) and section != "DEFAULT":
-            cfg_1.add_section(section)
-
-        # cfg_2.options(section) fails if section="DEFAULT"
-        if section=="DEFAULT":
-            option_list = cfg_2.defaults()
-        else:
-            option_list = cfg_2.options(section)
-        for option in option_list:
-            if cfg_1.has_option(section, option):
-                old_value = cfg_1.get(section, option)
-                new_value = cfg_2.get(section, option)
-                if old_value != new_value:
-                    if option not in disable_override_list:
-                        if option == "disable_override":
-                            # inherit disable_override params so that plp values does not override persistent.ini values
-                            # if in setup.ini has own disable_override values
-                            cfg_1.set(section, option, "{0},{1}".format(cfg_1.get(section, option), cfg_2.get(section, option)))
-                        else:
-                            cfg_1.set(section, option, cfg_2.get(section, option))
-                    else:
-                        pass
-                else:
-                    # values are the same in both config
-                    pass
-            else:
-                # adding new option
-                cfg_1.set(section, option, cfg_2.get(section, option))
-                pass
-    return cfg_1
-
-#################################################################
-def get_lang(cfg):
-    return cfg.get("DEFAULT","my_id")[0:2].lower()
-
-
-################################################################################
-# MAIN STARTS HERE
-################################################################################
-
-# logging.config.fileConfig(get_main_dir() + "//logger.ini")
-#
-# # redirect STDOUT to log file
-# stdout_logger = logging.getLogger("STDOUT")
-# sl = StreamToLogger(stdout_logger, logging.INFO)
-# sys.stdout = sl
-#
-# # redirect STDERR to log file
-# stderr_logger = logging.getLogger("STDERR")
-# sl = StreamToLogger(stderr_logger, logging.ERROR)
-# sys.stderr = sl
-#
-# # create logger
-# logger = logging.getLogger("printsrv")
-
-PLP_JSON_DATA = {}
-def doPrint(plp_json_data):
-    global PLP_JSON_DATA
-    PLP_JSON_DATA = plp_json_data
-    skip_file_delete = True
-    prev_version = False
-    downgrade_version = False
-
-
-    # things like proxy, my_id are stored in persistent.ini
-    persistent_ini_filename = "persistent.ini"
-    persistent_ini_path = path.join(get_main_dir(), persistent_ini_filename)
-    print("Loading persistent.ini from:\n{0}".format(persistent_ini_path))
-    if not path.isfile(persistent_ini_path):
-        print("E: persistent.ini could not be found at:\n{0}".format(persistent_ini_path))
-    cfg_persistent = read_ini_config(persistent_ini_path)
-
-    ini_filename = path.join(get_main_dir(), "setup_{0}.ini".format(get_lang(cfg_persistent)))
-    print("setting ini filename to:\n- {0}".format(ini_filename))
-
-    # default layout
-    cfg_setup = read_ini_config(ini_filename)
-
-    # setup.ini overrides persistent.ini values if there are any
-    cfg = override_cfg_values(cfg_persistent, cfg_setup)
-    language = get_lang(cfg)
-
-
-    # plp overrides persistent.ini and setup.ini values if there are any
-    # logger.debug("Print cfg DEFAULT after read_plp_in_cfg: {0}".format(cfg_plp.defaults()))
-
-    # cfg = override_cfg_values(cfg, cfg_plp)
-
-    proxy = setup_proxy(cfg)
-
-    # logger.debug("Print cfg before read_plp_file: {0}".format(cfg.defaults()))
-
-    read_plp_file(cfg, skip_file_delete)
-
-    # exit_with_status('EXIT_OK')
