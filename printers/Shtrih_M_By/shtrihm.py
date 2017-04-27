@@ -2,9 +2,10 @@
 
 from os              import path
 from sys             import argv, stdin
-from win32com.client import Dispatch
+# from win32com.client import Dispatch
 from yaml            import load as loadYAML
 from time            import sleep
+import win32com.client
 
 
 BASEDIR = path.dirname(path.abspath(__file__))
@@ -17,6 +18,16 @@ USER_KASSIR = 1000
 
 RETRY_SEC = 0.1
 TIMEOUT_SEC = 2
+
+OPTIONS = {'feedbackURL': False}
+def init(options):
+    global OPTIONS
+    OPTIONS['feedbackURL'] = options['feedbackURL']
+
+v = win32com.client.Dispatch('Addin.DrvFR')
+del v
+print('bye')
+raise SystemExit
 
 def ecr_mode_string(k):
     return str(k) + ":" + ECRMODE_TABLE[k]['name']
@@ -48,12 +59,6 @@ def insist(method, password):
             stdin.readline()
             method()
     v.Password = 0
-
-
-OPTIONS = {'feedbackURL': False}
-def init(options):
-    global OPTIONS
-    OPTIONS['feedbackURL'] = options['feedbackURL']
 
 
 def connect():
@@ -250,5 +255,4 @@ def openCashRegister(drawer = 0, password = USER_KASSIR):
 # oo = Type.GetTypeFromProgID('Addin.DrvFR')
 # v = Activator.CreateInstance(oo)
 
-v = Dispatch('Addin.DrvFR')
 prc()

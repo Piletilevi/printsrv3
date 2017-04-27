@@ -1,31 +1,29 @@
 # coding: utf-8
 # Written by Janis Putrams for "Biļešu Serviss SIA"
 # janis.putrams@gmail.com
-# Rewrite by Mihkel Putrinš on July 29, 2016
+# Rewrite by Mihkel Putrinš
+#    from July 29, 2016 to May 1, 2017
 
-import win32ui
-import win32gui
-import win32print
-from ctypes import windll
-import ConfigParser
-from os import path, makedirs
-import requests
-import urllib
-import urllib2
-import urlparse
-from PIL import Image, ImageWin
-import string
-import wmi
-from json import load as loadJSON, dumps as dumpsJSON
-from yaml import load as loadYAML
+import                  win32ui
+import                  win32gui
+import                  win32print
+from ctypes      import windll
+import                  ConfigParser
+from os          import path, makedirs
+import                  requests
+import                  urllib
+import                  urllib2
+import                  urlparse
+from PIL         import Image, ImageWin
+import                  string
+import                  wmi
+from json        import load as loadJSON, dumps as dumpsJSON
+from yaml        import load as loadYAML
 from UrllibProxy import UrllibProxy
-
-import sys
-
-import qrcode
-import qrcode.image.pil
-
-import errno, stat, shutil
+import                  sys
+import                  qrcode
+import                  qrcode.image.pil
+import                  errno, stat, shutil
 
 
 ERROR_CODES = {

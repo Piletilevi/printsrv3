@@ -1,31 +1,41 @@
 # coding: utf-8
 
-from os import path, chdir
-from sys import argv, path as sysPath
+import os, sys
+from os   import path, chdir
+from sys  import exit as sysexit, argv, path as sysPath
 from json import load as loadJSON, dumps as dumpsJSON
 from yaml import load as loadYAML
 # from re import match
 
 import print_ticket
-BASEDIR = path.dirname(path.abspath(__file__))
+
+if hasattr(sys, "frozen"):
+    BASEDIR = path.dirname(unicode(sys.executable, sys.getfilesystemencoding( )))
+else:
+    BASEDIR = path.dirname(unicode(__file__, sys.getfilesystemencoding( )))
+
+
+# BASEDIR = path.dirname(path.abspath(__file__))
 chdir(BASEDIR)
 sysPath.append("printers/PosXML")
 import posxml
 sysPath.append("printers/Shtrih_M_By")
 import shtrihm as cm
+raise SystemExit
 
+# sysexit(1)
 
 # Set plp_filename environment variable from passed argument
 PLP_FILENAME = argv[1]
-
-with open(path.join(BASEDIR, 'printsrv', 'jsonschema', 'plp.json'), 'rU') as schema_file:
+SCHEMA_FILENAME = path.join(BASEDIR, 'printsrv', 'jsonschema', 'plp.json')
+with open(SCHEMA_FILENAME, 'rU') as schema_file:
     schema = loadJSON(schema_file)
 with open(PLP_FILENAME, 'rU') as plp_data_file:
     PLP_JSON_DATA = loadJSON(plp_data_file, 'utf-8')
 
 # import jsonschema
+print('Validating against {0}: {1}').format(SCHEMA_FILENAME, PLP_FILENAME)
 # try:
-#     print('Validating against {0}: {1}').format(path.join(BASEDIR, 'printsrv', 'jsonschema', 'plp.json'), PLP_FILENAME)
 #     print('S: {0}'.format(schema))
 #     print('D: {0}'.format(PLP_JSON_DATA))
 #     jsonschema.validate(PLP_JSON_DATA, schema)
@@ -66,8 +76,6 @@ def cmsale():
             print(response['Reason'].encode('utf-8'))
 
             posxml.waitForRemoveCardFromTerminal()
-
-
 
 
     payment_method_total = {}
@@ -141,7 +149,22 @@ if PLP_JSON_DATA['fiscalData']:
     cm.connect()
     cm.setMode2()
 
+    operations_a = {
+        'cut': cm.cut,
+        'endshift': cm.closeShift,
+        'feed': cm.feed,
+        'insertcash': cm.insertCash,
+        'open_cashreg': cm.openCashRegister,
+        'refund': cmsale,
+        'sale': cmsale,
+        'startshift': cm.openShift,
+        'withdrawcash': cm.withdrawCash,
+        'xreport': cm.xReport
+    }
     print('operation {0}'.format(operation))
+    print('operation {0}'.format(operations_a[operation]))
+    exit(0)
+
     if operation == 'cut':
         cm.cut()
     elif operation == 'endshift':

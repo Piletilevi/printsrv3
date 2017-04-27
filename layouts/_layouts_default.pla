@@ -1,4 +1,4 @@
-[triipid]
+[ticketBarCode]
 type=bar_code128
 font_name=Code 128
 font_height=60
@@ -8,21 +8,21 @@ x=1012
 y=85
 
 
-[piltleft]
+[imageLeft]
 type=image_xml
 local_image_folder=c:/plevi/img/
 remote_image_url_folder=http://images.piletilevi.ee/tickets/
 x=100
 y=132
 
-[pilttop]
+[imageTop]
 type=image_xml
 local_image_folder=c:/plevi/img/
 remote_image_url_folder=http://images.piletilevi.ee/tickets/
 x=325
 y=40
 
-[piltbot]
+[imageBottom]
 type=image_xml
 local_image_folder=c:/plevi/img/
 remote_image_url_folder=http://images.piletilevi.ee/tickets/
@@ -57,7 +57,7 @@ font_weight=1000
 x=325
 y=211
 
-[aeg]
+[eventDateTime]
 type=text
 font_name=Arial
 font_height=30
@@ -67,7 +67,7 @@ x=325
 y=243
 
 
-[sektor1]
+[section1]
 type=text
 font_name=Arial
 font_height=30
@@ -76,7 +76,7 @@ font_weight=1000
 x=110
 y=382
 
-[rida1]
+[row1]
 type=text
 font_name=Arial
 font_height=30
@@ -85,7 +85,7 @@ font_weight=1000
 x=110
 y=410
 
-[koht1]
+[seat1]
 type=text
 font_name=Arial
 font_height=30
@@ -133,7 +133,7 @@ font_weight=500
 x=610
 y=444
 
-[teenustext]
+[serviceFee]
 type=text
 font_name=Arial
 font_height=25
@@ -199,7 +199,7 @@ font_weight=500
 x=110
 y=100
 
-[piletid1]
+[ticketId1]
 type=text
 font_name=Arial
 font_height=25
@@ -218,7 +218,7 @@ font_weight=500
 x=1035
 y=100
 
-[piletid1]
+[ticketId1]
 type=text
 font_name1=Arial
 font_height1=25
@@ -228,7 +228,7 @@ x1=1070
 y1=100
 
 
-[lisatext1]
+[infoText1]
 type=text
 font_name=Arial
 font_height=25
@@ -237,7 +237,7 @@ font_weight=500
 x=325
 y=105
 
-[lisatext2]
+[infoText2]
 type=text
 font_name=Arial
 font_height=25
@@ -246,7 +246,7 @@ font_weight=500
 x=325
 y=280
 
-[lisatext3]
+[infoText3]
 type=text
 font_name=Arial
 font_height=25
@@ -255,7 +255,7 @@ font_weight=500
 x=325
 y=305
 
-[lisatext4]
+[infoText4]
 type=text
 font_name=Arial
 font_height=25
@@ -264,7 +264,7 @@ font_weight=500
 x=325
 y=330
 
-[lisatext5]
+[infoText5]
 type=text
 font_name=Arial
 font_height=25
@@ -283,7 +283,7 @@ font_weight=500
 x=1035
 y=211
 
-[sektor2]
+[section2]
 type=text
 font_name=Arial
 font_height=25
@@ -292,7 +292,7 @@ font_weight=500
 x=1035
 y=236
 
-[rida2]
+[row2]
 type=text
 font_name=Arial
 font_height=25
@@ -301,7 +301,7 @@ font_weight=500
 x=1035
 y=261
 
-[koht2]
+[seat2]
 type=text
 font_name=Arial
 font_height=25
@@ -339,7 +339,7 @@ font_weight=500
 x=800
 y=386
 
-[piletid2]
+[ticketId2]
 type=text
 font_name=Arial
 font_height=25
@@ -358,7 +358,7 @@ font_weight=500
 x=1035
 y=386
 
-[piletid2]
+[ticketId2]
 type=text
 font_name1=Arial
 font_height1=25

@@ -37,7 +37,7 @@ OPTIONS = [
 
 setup(
 	cmdclass={"py2exe": JsonSchemaCollector},
-    options = {'py2exe': {'bundle_files': 1}},
+    options = {'py2exe': {'bundle_files': 3}},
     zipfile = None,
     console = OPTIONS
 )
