@@ -36,9 +36,9 @@ OPTIONS = [
     }]
 
 setup(
-	cmdclass={"py2exe": JsonSchemaCollector},
+	# cmdclass={"py2exe": JsonSchemaCollector},
     options = {'py2exe': {'bundle_files': 3}},
-    zipfile = None,
+    zipfile = 'printsrv-lib.zip',
     console = OPTIONS
 )
 

@@ -6,24 +6,271 @@ from sys  import exit as sysexit, argv, path as sysPath
 from json import load as loadJSON, dumps as dumpsJSON
 from yaml import load as loadYAML
 # from re import match
+import win32com.client
 
 import print_ticket
+from pyexpat import *
 
 if hasattr(sys, "frozen"):
     BASEDIR = path.dirname(unicode(sys.executable, sys.getfilesystemencoding( )))
 else:
     BASEDIR = path.dirname(unicode(__file__, sys.getfilesystemencoding( )))
+chdir(BASEDIR)
+
+class ShtrihM:
+    def __init__():
+        self.USER_SADM   = 30000
+        self.USER_ADM    = 29000
+        self.USER_KASSIR = 1000
+        self.RETRY_SEC   = 0.1
+        self.TIMEOUT_SEC = 2
+        self.v = win32com.client.Dispatch('Addin.DrvFR')
+
+        # del self.v
+
+
+    # v = win32com.client.Dispatch('Addin.DrvFR')
+    # print('bye {0}'.format(v))
+    # pythoncom.CoUninitialize()
+    # print('Bye')
+    # raise SystemExit
+
+    def ecr_mode_string(k):
+        return str(k) + ":" + ECRMODE_TABLE[k]['name']
+
+    def prc():
+        if v.ResultCode:
+            print str(v.ResultCode) + ':' + v.ResultCodeDescription
+            print "ENTER to exit(1)"
+            stdin.readline()
+            exit(1)
+
+    def feedback(feedback):
+        print ('Sending "{0}" to "{1}"'.format(feedback, OPTIONS['feedbackURL']))
+
+    def insist(method, password):
+        global v, OPTIONS
+        if not OPTIONS['feedbackURL']:
+            raise IndexError('Missing feedback URL.')
+
+        v.Password = password
+        method()
+        if v.ResultCode:
+            feedback(str(v.ResultCode) + ':' + v.ResultCodeDescription)
+
+            while v.ResultCode:
+                print str(v.ResultCode) + ':' + v.ResultCodeDescription
+                print('Method: {0}'.format(method))
+                print "ENTER to retry"
+                stdin.readline()
+                method()
+        v.Password = 0
+
+
+    def connect():
+        global v
+
+        setattr(v, 'ComNumber', 7)
+        setattr(v, 'BaudRate', 6)
+        # setattr(v, 'Timeout ', 100)
+        insist(v.WaitConnection, USER_KASSIR)
+        insist(v.Connect, USER_KASSIR)
+        prc()
+
+
+    def closeShift():
+        global v
+        # print "performing PrintReportWithCleaning() (Press ENTER)"
+        # stdin.readline()
+        insist(v.PrintReportWithCleaning, USER_ADM)
+        prc()
+
+
+    def xReport():
+        global v
+        # print "performing PrintReportWithoutCleaning() (Press ENTER)"
+        insist(v.PrintReportWithoutCleaning, USER_ADM)
+        prc()
+
+
+    def openShift():
+        global v
+        insist(v.OpenSession, USER_ADM)
+        prc()
+        # Shift will be actually opened with first recipe
+
+
+    def sysAdminCancelCheck():
+        global v
+        v.Password = USER_SADM
+        v.SysAdminCancelCheck()
+
+
+    def setMode2():
+        global v
+        timecount = 0
+
+        # print "Initial ECRMode " + ecr_mode_string(v.ECRMode)
+
+        if v.ECRMode == 8:
+            insist(v.Beep, USER_KASSIR)
+            print "Waiting for mode change"
+            print "v.ECRMode8Status " + str(v.ECRMode8Status)
+            while v.ECRMode == 8:
+                insist(v.GetShortECRStatus, USER_KASSIR)
+                sleep(RETRY_SEC)
+                timecount = timecount + RETRY_SEC
+                if timecount > TIMEOUT_SEC:
+                    timecount = 0
+                    print "sysAdminCancelCheck"
+                    sysAdminCancelCheck()
+            print "ECRMode " + ecr_mode_string(v.ECRMode)
+
+        insist(v.ResetECR, USER_KASSIR)
+        prc()
+
+        if v.ECRMode == 0:
+            insist(v.Beep, USER_KASSIR)
+            print "Waiting for mode change"
+            while v.ECRMode == 0:
+                insist(v.GetShortECRStatus, USER_KASSIR)
+                sleep(RETRY_SEC)
+
+        if v.ECRMode not in [2,3,4]:
+            print "Can't go on with ECRMode: " + ecr_mode_string(v.ECRMode)
+            print "Exiting (Press ENTER)"
+            stdin.readline()
+            exit(1)
+
+        if v.ECRMode == 3:
+            print ecr_mode_string(v.ECRMode)
+            closeShift()
+
+        if v.ECRMode == 4:
+            print ecr_mode_string(v.ECRMode)
+            openShift()
+
+
+    def sale(sales_options, payment_options, password = USER_KASSIR):
+        for item in sales_options:
+            # print('unpacking {0}'.format(item))
+            for attr, value in {
+                'Quantity': item['amount'],
+                'Price': item['cost'],
+                # 'Department': 1,
+                'Tax1': item['vatGroup'],
+                'Tax2': 0,
+                'Tax3': 0,
+                'Tax4': 0,
+                'StringForPrinting': item['name']
+            }.iteritems():
+                # print 'Setting {0} = {1}'.format(attr, value)
+                setattr(v, attr, value)
+            insist(v.Sale, password)
+
+        for item in payment_options:
+            # print 'Setting from {0}'.format(item)
+            attr = 'Summ{0}'.format(item['type'])
+            setattr(v, attr, item['cost'])
+
+        setattr(v, 'DiscountOnCheck', 0)
+
+        # for x in xrange(1,4):
+        #    print 'Summ{0} = {1} + {2}'.format( x,
+        #                                        getattr(v, 'Summ{0}'.format(x)),
+        #                                        getattr(v, 'Tax{0}'.format(x)) )
+        # print v.DiscountOnCheck
+        # print v.StringForPrinting
+
+        setattr(v, 'StringForPrinting', '')
+        # setattr(v, 'StringForPrinting', '- - - - - - - - - - - - - - - - - - - -')
+        insist(v.CloseCheck, password)
+
+
+    def returnSale(sales_options, payment_options, password = USER_KASSIR):
+        for item in sales_options:
+            # print('unpacking {0}'.format(item))
+            for attr, value in {
+                'Quantity': item['amount'],
+                'Price': item['cost'],
+                # 'Department': 1,
+                'Tax1': item['vatGroup'],
+                'Tax2': 0,
+                'Tax3': 0,
+                'Tax4': 0,
+                'StringForPrinting': item['name'].decode(encoding='UTF-8')
+            }.iteritems():
+                # print 'Setting {0} = {1}'.format(attr, value)
+                setattr(v, attr, value)
+            insist(v.ReturnSale, password)
+
+        for item in payment_options:
+            # print 'Setting from {0}'.format(item)
+            attr = 'Summ{0}'.format(item['type'])
+            setattr(v, attr, item['cost'])
+
+        setattr(v, 'DiscountOnCheck', 0)
+        setattr(v, 'StringForPrinting', '')
+        # setattr(v, 'StringForPrinting', '- - - - - - - - - - - - - - - - - - - -')
+        insist(v.CloseCheck, password)
+
+
+    def printLine(string = ' '):
+        if len(string) > 36:
+            printLine(string[:36])
+            printLine(string[36:])
+        else:
+            setattr(v, 'UseReceiptRibbon', True)
+            setattr(v, 'UseJournalRibbon', False)
+            setattr(v, 'StringForPrinting', string.decode(encoding='UTF-8'))
+            print ('Printing on receipt: "{0}"'.format(string.decode(encoding='UTF-8')))
+            insist(v.PrintString, USER_KASSIR)
+
+
+    def feed(feedLineCount = 4):
+        for x in xrange(0, feedLineCount):
+            printLine()
+
+
+    def cut(feedAfterCutCount = 0, partialCut = True):
+        feed()
+        if (feedAfterCutCount == 0):
+            setattr(v, 'FeedAfterCut', False)
+        else:
+            setattr(v, 'FeedAfterCut', True)
+            setattr(v, 'FeedLineCount', feedAfterCutCount)
+        setattr(v, 'CutType', partialCut)
+        insist(v.CutCheck, USER_KASSIR)
+
+
+    def insertCash(amount, password = USER_KASSIR):
+        setattr(v, 'Summ1', amount)
+        insist(v.CashIncome, password)
+
+
+    def withdrawCash(amount, password = USER_KASSIR):
+        setattr(v, 'Summ1', amount)
+        insist(v.CashOutcome, password)
+
+
+    def openCashRegister(drawer = 0, password = USER_KASSIR):
+        setattr(v, 'DrawerNumber', drawer)
+        insist(v.OpenDrawer, password)
+
+
+    # oo = Type.GetTypeFromProgID('Addin.DrvFR')
+    # v = Activator.CreateInstance(oo)
 
 
 # BASEDIR = path.dirname(path.abspath(__file__))
-chdir(BASEDIR)
-sysPath.append("printers/PosXML")
+# sysPath.append("printers\PosXML")
 import posxml
-sysPath.append("printers/Shtrih_M_By")
-import shtrihm as cm
-raise SystemExit
-
-# sysexit(1)
+# sysPath.append("printers\Shtrih_M_By")
+# import shtrihm as cm
+# cm.init( {'feedbackURL': 'https://api.piletilevi.ee/bo/feedback'} )
+# cm.uninit()
+# del cm
+# raise SystemExit
 
 # Set plp_filename environment variable from passed argument
 PLP_FILENAME = argv[1]
@@ -32,6 +279,11 @@ with open(SCHEMA_FILENAME, 'rU') as schema_file:
     schema = loadJSON(schema_file)
 with open(PLP_FILENAME, 'rU') as plp_data_file:
     PLP_JSON_DATA = loadJSON(plp_data_file, 'utf-8')
+with open('ECRModes.yaml', 'r') as ecrmode_table_file:
+    ECRMODE_TABLE = loadYAML(ecrmode_table_file)['ECRMode']
+v = win32com.client.Dispatch('Addin.DrvFR')
+
+raise SystemExit
 
 # import jsonschema
 print('Validating against {0}: {1}').format(SCHEMA_FILENAME, PLP_FILENAME)
@@ -145,7 +397,8 @@ if PLP_JSON_DATA['fiscalData']:
     operation = PLP_JSON_DATA['fiscalData']['operation']
     print('{0} operation from:\n{1}'.format(operation, PLP_FILENAME))
 
-    cm.init({'feedbackURL': 'https://api.piletilevi.ee/bo/feedback'})
+    cm
+    # cm.init({'feedbackURL': 'https://api.piletilevi.ee/bo/feedback'})
     cm.connect()
     cm.setMode2()
 

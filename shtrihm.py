@@ -8,9 +8,7 @@ from time            import sleep
 import win32com.client
 
 
-BASEDIR = path.dirname(path.abspath(__file__))
-with open(path.join(BASEDIR, 'ECRModes.yaml'), 'r') as ecrmode_table_file:
-    ECRMODE_TABLE = loadYAML(ecrmode_table_file)['ECRMode']
+# BASEDIR = path.dirname(path.abspath(__file__))
 
 USER_SADM = 30000
 USER_ADM = 29000
@@ -20,14 +18,26 @@ RETRY_SEC = 0.1
 TIMEOUT_SEC = 2
 
 OPTIONS = {'feedbackURL': False}
-def init(options):
-    global OPTIONS
-    OPTIONS['feedbackURL'] = options['feedbackURL']
+v = None
 
-v = win32com.client.Dispatch('Addin.DrvFR')
-del v
-print('bye')
-raise SystemExit
+def init(options):
+    global OPTIONS, v
+    v = win32com.client.Dispatch('Addin.DrvFR')
+    OPTIONS['feedbackURL'] = options['feedbackURL']
+    print('Hi {0}'.format(v))
+    v.Password = 30000
+
+def uninit():
+    global v
+    print('Bye {0}'.format(v))
+    del v
+
+
+# v = win32com.client.Dispatch('Addin.DrvFR')
+# print('bye {0}'.format(v))
+# pythoncom.CoUninitialize()
+# print('Bye')
+# raise SystemExit
 
 def ecr_mode_string(k):
     return str(k) + ":" + ECRMODE_TABLE[k]['name']
@@ -254,5 +264,3 @@ def openCashRegister(drawer = 0, password = USER_KASSIR):
 
 # oo = Type.GetTypeFromProgID('Addin.DrvFR')
 # v = Activator.CreateInstance(oo)
-
-prc()
