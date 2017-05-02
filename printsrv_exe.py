@@ -19,11 +19,12 @@ else:
 chdir(BASEDIR)
 
 class ShtrihM:
-    def __init__(self, plp_json_data):
+    def __init__(self, plp_json_data, password=None):
         self.PLP_JSON_DATA = plp_json_data
         self.USER_SADM     = 30000
         self.USER_ADM      = 29000
         self.USER_KASSIR   = 1000
+        self.password      = password if password else self.USER_KASSIR
         self.RETRY_SEC     = 0.1
         self.TIMEOUT_SEC   = 2
         self.v             = win32com.client.Dispatch('Addin.DrvFR')
@@ -31,20 +32,18 @@ class ShtrihM:
         self.connect()
         self.setMode2()
 
+
     def __enter__(self):
         return self
+
 
     def __exit__(self, exc_type, exc_value, traceback):
         del self.v
 
-    # v = win32com.client.Dispatch('Addin.DrvFR')
-    # print('bye {0}'.format(v))
-    # pythoncom.CoUninitialize()
-    # print('Bye')
-    # raise SystemExit
 
     def ecr_mode_string(self, k):
         return str(k) + ":" + ECRMODE_TABLE[k]['name']
+
 
     def prc(self):
         if self.v.ResultCode:
@@ -53,12 +52,13 @@ class ShtrihM:
             stdin.readline()
             exit(1)
 
+
     def feedback(self, feedback):
         print ('Sending "{0}" to "{1}"'.format(feedback, self.PLP_JSON_DATA['feedbackURL']))
 
-    def insist(self, method, password):
 
-        self.v.Password = password
+    def insist(self, method, password=None):
+        self.v.Password = password if password else self.password
         method()
         if self.v.ResultCode:
             feedback(str(self.v.ResultCode) + ':' + self.v.ResultCodeDescription)
@@ -76,33 +76,34 @@ class ShtrihM:
         setattr(self.v, 'ComNumber', 7)
         setattr(self.v, 'BaudRate', 6)
         # setattr(self.v, 'Timeout ', 100)
-        self.insist(self.v.WaitConnection, self.USER_KASSIR)
-        self.insist(self.v.Connect, self.USER_KASSIR)
+        self.insist(self.v.WaitConnection)
+        self.insist(self.v.Connect)
         self.prc()
 
 
     def closeShift(self):
         # print "performing PrintReportWithCleaning() (Press ENTER)"
         # stdin.readline()
-        self.insist(self.v.PrintReportWithCleaning, USER_ADM)
+        self.insist(self.v.PrintReportWithCleaning, self.USER_ADM)
         self.prc()
 
 
     def xReport(self):
         # print "performing PrintReportWithoutCleaning() (Press ENTER)"
-        self.insist(self.v.PrintReportWithoutCleaning, USER_ADM)
+        self.insist(self.v.PrintReportWithoutCleaning, self.USER_ADM)
         self.prc()
 
 
     def openShift(self):
-        self.insist(self.v.OpenSession, USER_ADM)
+        self.insist(self.v.OpenSession, self.USER_ADM)
         self.prc()
         # Shift will be actually opened with first recipe
 
 
     def sysAdminCancelCheck(self):
-        self.v.Password = USER_SADM
+        self.v.Password = self.USER_SADM
         self.v.SysAdminCancelCheck()
+        self.v.Password = 0
 
 
     def setMode2(self):
@@ -111,11 +112,11 @@ class ShtrihM:
         # print "Initial ECRMode " + self.ecr_mode_string(v.ECRMode)
 
         if self.v.ECRMode == 8:
-            self.insist(self.v.Beep, self.USER_KASSIR)
+            self.insist(self.v.Beep)
             print "Waiting for mode change"
             print "self.v.ECRMode8Status " + str(self.v.ECRMode8Status)
             while self.v.ECRMode == 8:
-                self.insist(self.v.GetShortECRStatus, self.USER_KASSIR)
+                self.insist(self.v.GetShortECRStatus)
                 sleep(RETRY_SEC)
                 timecount = timecount + RETRY_SEC
                 if timecount > TIMEOUT_SEC:
@@ -124,14 +125,14 @@ class ShtrihM:
                     sysAdminCancelCheck()
             print "ECRMode " + self.ecr_mode_string(self.v.ECRMode)
 
-        self.insist(self.v.ResetECR, self.USER_KASSIR)
+        self.insist(self.v.ResetECR)
         self.prc()
 
         if self.v.ECRMode == 0:
-            self.insist(self.v.Beep, self.USER_KASSIR)
+            self.insist(self.v.Beep)
             print "Waiting for mode change"
             while self.v.ECRMode == 0:
-                self.insist(self.v.GetShortECRStatus, self.USER_KASSIR)
+                self.insist(self.v.GetShortECRStatus)
                 sleep(RETRY_SEC)
 
         if self.v.ECRMode not in [2,3,4]:
@@ -142,16 +143,14 @@ class ShtrihM:
 
         if self.v.ECRMode == 3:
             print self.ecr_mode_string(self.v.ECRMode)
-            closeShift()
+            self.closeShift()
 
         if self.v.ECRMode == 4:
             print self.ecr_mode_string(self.v.ECRMode)
-            openShift()
+            self.openShift()
 
 
-    def sale(self, sales_options, payment_options, password):
-        if not password:
-            password = self.USER_KASSIR
+    def sale(self, sales_options, payment_options):
         for item in sales_options:
             # print('unpacking {0}'.format(item))
             for attr, value in {
@@ -165,8 +164,8 @@ class ShtrihM:
                 'StringForPrinting': item['name']
             }.iteritems():
                 # print 'Setting {0} = {1}'.format(attr, value)
-                setattr(v, attr, value)
-            self.insist(v.Sale, password)
+                setattr(self.v, attr, value)
+            self.insist(self.v.Sale)
 
         for item in payment_options:
             # print 'Setting from {0}'.format(item)
@@ -184,12 +183,11 @@ class ShtrihM:
 
         setattr(self.v, 'StringForPrinting', '')
         # setattr(self.v, 'StringForPrinting', '- - - - - - - - - - - - - - - - - - - -')
-        self.insist(self.v.CloseCheck, password)
+        self.insist(self.v.CloseCheck)
 
 
-    def returnSale(self, sales_options, payment_options, password):
-        if not password:
-            password = self.USER_KASSIR
+    def returnSale(self, sales_options, payment_options):
+
         for item in sales_options:
             # print('unpacking {0}'.format(item))
             for attr, value in {
@@ -204,7 +202,7 @@ class ShtrihM:
             }.iteritems():
                 # print 'Setting {0} = {1}'.format(attr, value)
                 setattr(self.v, attr, value)
-            self.insist(self.v.ReturnSale, password)
+            self.insist(self.v.ReturnSale)
 
         for item in payment_options:
             # print 'Setting from {0}'.format(item)
@@ -214,7 +212,7 @@ class ShtrihM:
         setattr(self.v, 'DiscountOnCheck', 0)
         setattr(self.v, 'StringForPrinting', '')
         # setattr(self.v, 'StringForPrinting', '- - - - - - - - - - - - - - - - - - - -')
-        self.insist(self.v.CloseCheck, password)
+        self.insist(self.v.CloseCheck)
 
 
     def printLine(self, string = ' '):
@@ -226,7 +224,7 @@ class ShtrihM:
             setattr(self.v, 'UseJournalRibbon', False)
             setattr(self.v, 'StringForPrinting', string.decode(encoding='UTF-8'))
             print ('Printing on receipt: "{0}"'.format(string.decode(encoding='UTF-8')))
-            self.insist(self.v.PrintString, self.USER_KASSIR)
+            self.insist(self.v.PrintString)
 
 
     def feed(self, feedLineCount = 4):
@@ -242,30 +240,114 @@ class ShtrihM:
             setattr(self.v, 'FeedAfterCut', True)
             setattr(self.v, 'FeedLineCount', feedAfterCutCount)
         setattr(self.v, 'CutType', partialCut)
-        self.insist(self.v.CutCheck, self.USER_KASSIR)
+        self.insist(self.v.CutCheck)
 
 
-    def insertCash(self, amount, password):
-        if not password:
-            password = self.USER_KASSIR
-        setattr(self.v, 'Summ1', amount)
-        self.insist(self.v.CashIncome, password)
+    def insertCash(self):
+        setattr(self.v, 'Summ1', self.PLP_JSON_DATA['fiscalData']['cashAmount'])
+        self.insist(self.v.CashIncome)
 
 
-    def withdrawCash(self, amount, password):
-        if not password:
-            password = self.USER_KASSIR
-        setattr(self.v, 'Summ1', amount)
-        self.insist(self.v.CashOutcome, password)
+    def withdrawCash(self):
+        setattr(self.v, 'Summ1', self.PLP_JSON_DATA['fiscalData']['cashAmount'])
+        self.insist(self.v.CashOutcome)
 
 
-    def openCashRegister(self, drawer, password):
+    def openCashRegister(self, drawer):
         if not drawer:
             drawer = 0
-        if not password:
-            password = self.USER_KASSIR
         setattr(self.v, 'DrawerNumber', drawer)
-        self.insist(self.v.OpenDrawer, password)
+        self.insist(self.v.OpenDrawer)
+
+
+    def cmsale(self):
+        card_payment_amount = 0
+        for payment in self.PLP_JSON_DATA['fiscalData']['payments']:
+            if payment['type'] == '4':
+                card_payment_amount += payment['cost']
+            print(payment['type'], card_payment_amount)
+
+        if card_payment_amount > 0:
+            global cm
+            posxml.init({'url': 'http://192.168.2.45:4445'})
+            posxml.post('CancelAllOperationsRequest', '')
+            response = posxml.post('TransactionRequest', {
+                'TransactionID': PLP_JSON_DATA['busnId'],
+                'Amount'       : card_payment_amount*100,
+                'CurrencyName' : 'EUR',
+                'PrintReceipt' : 2,
+                'Timeout'      : 100,
+                'Language'     : 'en',
+            })
+            print(dumpsJSON(response, indent=4))
+            print(response['ReturnCode'])
+            if response['ReturnCode'] != '0':
+                print(dumpsJSON(response, indent=4))
+                print(response['Reason'].encode('utf-8'))
+
+                posxml.waitForRemoveCardFromTerminal()
+
+
+        payment_method_total = {}
+        payment_method_total_validate = {}
+        payment_sum_failed = False
+
+        sales_options = []
+        payment_options = []
+
+        for payment in PLP_JSON_DATA['fiscalData']['payments']:
+            if payment['type'] not in payment_method_total:
+                payment_method_total[payment['type']] = 0
+                payment_method_total_validate[payment['type']] = 0
+            payment_method_total[payment['type']] += payment['cost']
+            # cm.printLine('{0} = {1}'.format(payment['name'], '%.2f' % payment['cost']))
+
+            payment_options.append({'cost': payment['cost'], 'type': payment['type']})
+
+            for component in payment['components']:
+                if not 'kkm' in component:
+                    continue
+                if not component['kkm']:
+                    continue
+                if not 'amount' in component:
+                    component['amount'] = 1
+                if 'ticketId' in component:
+                    component['name'] = '{0} {1}'.format(component['name'].encode('utf-8'), component['ticketId'])
+                payment_method_total_validate[payment['type']] += component['cost'] * component['amount']
+                sales_options.append(component)
+
+
+        for ix in payment_method_total:
+            if round(payment_method_total[ix], 2) != round(payment_method_total_validate[ix], 2):
+                # for i in range(0, 10):
+                    # cm.printLine()
+                print('------------------------------------')
+                print('     !!! FISCAL DATA ERROR !!!')
+                print('        In payment type {0}'.format(ix))
+                print('Sum of component costs | {0}'.format(payment_method_total_validate[ix]))
+                print('doesnot match          | !=')
+                print('sum of payment costs   | {0}'.format(payment_method_total[ix]))
+                print('------------------------------------')
+                self.printLine('------------------------------------')
+                self.printLine('     !!! FISCAL DATA ERROR !!!')
+                self.printLine('         In payment type {0}'.format(ix))
+                self.printLine('Sum of component costs | {0}'.format(payment_method_total_validate[ix]))
+                self.printLine('doesnot match          | !=')
+                self.printLine('sum of payment costs   | {0}'.format(payment_method_total[ix]))
+                self.printLine('------------------------------------')
+                for i in range(0, 3):
+                    self.printLine()
+                payment_sum_failed = True
+
+        if payment_sum_failed:
+            self.cut()
+        elif self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale':
+            self.sale(sales_options, payment_options)
+        elif self.PLP_JSON_DATA['fiscalData']['operation'] == 'refund':
+            self.returnSale(sales_options, payment_options)
+        else:
+            raise ValueError('operation={0} - must be sale/refund.'.format(self.PLP_JSON_DATA['fiscalData']['operation']))
+
 
 
 # BASEDIR = path.dirname(path.abspath(__file__))
@@ -303,148 +385,35 @@ with open(path.join(BASEDIR, 'package.json'), 'rU') as package_json_file:
     PACKAGE_JSON_DATA = loadJSON(package_json_file)
 
 
-def cmsale():
-    global PLP_JSON_DATA
-
-    card_payment_amount = 0
-    for payment in PLP_JSON_DATA['fiscalData']['payments']:
-        if payment['type'] == '4':
-            card_payment_amount += payment['cost']
-        print(payment['type'], card_payment_amount)
-
-    if card_payment_amount > 0:
-        global cm
-        posxml.init({'url': 'http://192.168.2.45:4445'})
-        posxml.post('CancelAllOperationsRequest', '')
-        response = posxml.post('TransactionRequest', {
-            'TransactionID': PLP_JSON_DATA['busnId'],
-            'Amount'       : card_payment_amount*100,
-            'CurrencyName' : 'EUR',
-            'PrintReceipt' : 2,
-            'Timeout'      : 100,
-            'Language'     : 'en',
-        })
-        print(dumpsJSON(response, indent=4))
-        print(response['ReturnCode'])
-        if response['ReturnCode'] != '0':
-            print(dumpsJSON(response, indent=4))
-            print(response['Reason'].encode('utf-8'))
-
-            posxml.waitForRemoveCardFromTerminal()
-
-
-    payment_method_total = {}
-    payment_method_total_validate = {}
-    payment_sum_failed = False
-
-    sales_options = []
-    payment_options = []
-
-    for payment in PLP_JSON_DATA['fiscalData']['payments']:
-        if payment['type'] not in payment_method_total:
-            payment_method_total[payment['type']] = 0
-            payment_method_total_validate[payment['type']] = 0
-        payment_method_total[payment['type']] += payment['cost']
-        # cm.printLine('{0} = {1}'.format(payment['name'], '%.2f' % payment['cost']))
-
-        payment_options.append({'cost': payment['cost'], 'type': payment['type']})
-
-        for component in payment['components']:
-            if not 'kkm' in component:
-                continue
-            if not component['kkm']:
-                continue
-            if not 'amount' in component:
-                component['amount'] = 1
-            if 'ticketId' in component:
-                component['name'] = '{0} {1}'.format(component['name'].encode('utf-8'), component['ticketId'])
-            payment_method_total_validate[payment['type']] += component['cost'] * component['amount']
-            sales_options.append(component)
-
-
-    for ix in payment_method_total:
-        if round(payment_method_total[ix], 2) != round(payment_method_total_validate[ix], 2):
-            # for i in range(0, 10):
-                # cm.printLine()
-            print('------------------------------------')
-            print('     !!! FISCAL DATA ERROR !!!')
-            print('        In payment type {0}'.format(ix))
-            print('Sum of component costs | {0}'.format(payment_method_total_validate[ix]))
-            print('doesnot match          | !=')
-            print('sum of payment costs   | {0}'.format(payment_method_total[ix]))
-            print('------------------------------------')
-            cm.printLine('------------------------------------')
-            cm.printLine('     !!! FISCAL DATA ERROR !!!')
-            cm.printLine('         In payment type {0}'.format(ix))
-            cm.printLine('Sum of component costs | {0}'.format(payment_method_total_validate[ix]))
-            cm.printLine('doesnot match          | !=')
-            cm.printLine('sum of payment costs   | {0}'.format(payment_method_total[ix]))
-            cm.printLine('------------------------------------')
-            for i in range(0, 3):
-                cm.printLine()
-            payment_sum_failed = True
-
-    if payment_sum_failed:
-        cm.cut()
-    elif PLP_JSON_DATA['fiscalData']['operation'] == 'sale':
-        cm.sale(sales_options, payment_options)
-    elif PLP_JSON_DATA['fiscalData']['operation'] == 'refund':
-        cm.returnSale(sales_options, payment_options)
-    else:
-        raise ValueError('operation={0} - must be sale/refund.'.format(PLP_JSON_DATA['fiscalData']['operation']))
-
-
 if PLP_JSON_DATA['fiscalData']:
-    VALID_OPERATIONS = ('cut', 'endshift', 'feed', 'insertcash', 'open_cachreg', 'refund', 'sale', 'startshift', 'withdrawcash', 'xreport')
-
-    operation = PLP_JSON_DATA['fiscalData']['operation']
-    print('{0} operation from:\n{1}'.format(operation, PLP_FILENAME))
-
     with ShtrihM(PLP_JSON_DATA) as cm:
-        cm.cut()
-        print('foo: {0}'.format(cm))
-    print('raise')
-    raise SystemExit
 
+        operation = PLP_JSON_DATA['fiscalData']['operation']
+        print('{0} operation from:\n{1}'.format(operation, PLP_FILENAME))
 
-    operations_a = {
-        'cut': cm.cut,
-        'endshift': cm.closeShift,
-        'feed': cm.feed,
-        'insertcash': cm.insertCash,
-        'open_cashreg': cm.openCashRegister,
-        'refund': cmsale,
-        'sale': cmsale,
-        'startshift': cm.openShift,
-        'withdrawcash': cm.withdrawCash,
-        'xreport': cm.xReport
-    }
-    print('operation {0}'.format(operation))
-    print('operation {0}'.format(operations_a[operation]))
-    exit(0)
+        operations_a = {
+            'cut': cm.cut,
+            'endshift': cm.closeShift,
+            'feed': cm.feed,
+            'insertcash': cm.insertCash,
+            'open_cashreg': cm.openCashRegister,
+            'refund': cm.cmsale,
+            'sale': cm.cmsale,
+            'startshift': cm.openShift,
+            'withdrawcash': cm.withdrawCash,
+            'xreport': cm.xReport
+        }
+        VALID_OPERATIONS = operations_a.keys()
+        if operation not in VALID_OPERATIONS:
+            raise ValueError('"operation" must be one of {0} in plp file. Got {1} instead.'.format(VALID_OPERATIONS, operation))
+        print('operation {0} in {1}'.format(operation, VALID_OPERATIONS))
+        print('operation {0}'.format(operations_a[operation]))
 
-    if operation == 'cut':
-        cm.cut()
-    elif operation == 'endshift':
-        cm.closeShift()
-    elif operation == 'feed':
-        cm.feed()
-    elif operation == 'insertcash':
-        cm.insertCash(PLP_JSON_DATA['fiscalData']['cashAmount'])
-    elif operation == 'open_cashreg':
-        cm.openCashRegister()
-    elif operation == 'refund':
-        cmsale()
-    elif operation == 'sale':
-        cmsale()
-    elif operation == 'startshift':
-        cm.openShift()
-    elif operation == 'withdrawcash':
-        cm.withdrawCash(PLP_JSON_DATA['fiscalData']['cashAmount'])
-    elif operation == 'xreport':
-        cm.xReport()
-    else:
-        raise ValueError('"operation" must be one of {0} in plp file.'.format(VALID_OPERATIONS))
+        operations_a[operation]()
+
+        print('raise')
+        exit(0)
+
 
     print('{0} operation from:\n{1} succeeded.'.format(operation, PLP_FILENAME))
 
