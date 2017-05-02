@@ -18,6 +18,7 @@ else:
     BASEDIR = path.dirname(unicode(__file__, sys.getfilesystemencoding( )))
 chdir(BASEDIR)
 
+
 class ShtrihM:
     def __init__(self, plp_json_data, password=None):
         self.PLP_JSON_DATA = plp_json_data
@@ -385,7 +386,7 @@ with open(path.join(BASEDIR, 'package.json'), 'rU') as package_json_file:
     PACKAGE_JSON_DATA = loadJSON(package_json_file)
 
 
-if PLP_JSON_DATA['fiscalData']:
+if PLP_JSON_DATA['fiscalData'] and False:
     with ShtrihM(PLP_JSON_DATA) as cm:
 
         operation = PLP_JSON_DATA['fiscalData']['operation']
@@ -411,12 +412,15 @@ if PLP_JSON_DATA['fiscalData']:
 
         operations_a[operation]()
 
-        print('raise')
-        exit(0)
-
-
     print('{0} operation from:\n{1} succeeded.'.format(operation, PLP_FILENAME))
 
+
+from PSPrint import PSPrint
+with PSPrint(PLP_JSON_DATA) as ps:
+    ps.helloWorld()
+
+print('helloWorld')
+exit(0)
 
 if PLP_JSON_DATA['ticketData']:
     print('Invoke ticket printing')

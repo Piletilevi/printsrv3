@@ -289,27 +289,6 @@ def set_section_font_indirect(section_cfg, postfix = ""):
         DEVICE_CONTEXT.SetTextColor(rgb2int(0, 0, 0))
     font_handle = win32gui.SelectObject(DEVICE_CONTEXT_HANDLE, font_handle)
 
-#################################################################
-def set_section_font(section_cfg, postfix = ""):
-    global DEVICE_CONTEXT
-    global DEVICE_CONTEXT_HANDLE
-    font_params = {}
-    font_params["name"] = section_cfg["font_name" + postfix]
-    font_params["height"] = int(section_cfg["font_height" + postfix])
-    try:
-        font_params["width"] = int(section_cfg["font_width" + postfix])
-    except:
-        pass
-    try:
-        font_params["weight"] = int(section_cfg["font_weight" + postfix])
-    except:
-        pass
-    font = win32ui.CreateFont(font_params)
-    try:
-        DEVICE_CONTEXT.SetTextColor(rgb2int(int(section_cfg["font_color_red" + postfix]), int(section_cfg["font_color_green" + postfix]), int(section_cfg["font_color_blue" + postfix])))
-    except:
-        DEVICE_CONTEXT.SetTextColor(rgb2int(0, 0, 0))
-    DEVICE_CONTEXT.SelectObject(font)
 
 #################################################################
 def print_text_value(section_cfg, value):
