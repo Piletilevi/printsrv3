@@ -161,41 +161,27 @@ km:
     font_weight: 500
     x: 610
     y: 444
-teenustext:
+extraFee:
   type: text
   instances:
   - font_name: Arial
     font_height: 25
     font_width: 10
     font_weight: 700
-    x: 180
-    y: 471
-teenus:
-  type: text
-  instances:
-  - font_name: Arial
-    font_height: 30
-    font_width: 12
-    font_weight: 1000
-    x: 325
-    y: 466
-teenuse:
-  type: text
-  instances:
-  - font_name: Arial
-    font_height: 22
-    font_width: 8
-    font_weight: 500
+    prefix: 'Плата за обслуживание в зале '
+    suffix: ' руб'
     x: 485
     y: 472
-teenuskm:
+serviceFee:
   type: text
   instances:
   - font_name: Arial
     font_height: 22
     font_width: 8
     font_weight: 500
-    x: 610
+    prefix: 'Сервисный сбор '
+    suffix: ' руб'
+    x: 485
     y: 472
 totaltext:
   type: text
