@@ -2,13 +2,14 @@
 ticketBarCode:
   type: code128
   common:
-    font_name: Code 128
-    width: 26
+    thickness: 10
+    width: 560
     height: 60
     orientation: 270
+    quietzone: true
   instances:
   - x: 1012
-    y: 85
+    y: 0
   - x: 112
     y: 85
 imageLeft:
@@ -134,7 +135,6 @@ priceGroup2:
     font_weight: 500
     x: 1035
     y: 311
-
 ticketPrice:
   type: text
   instances:
@@ -150,7 +150,6 @@ ticketPrice:
     font_weight: 500
     x: 1035
     y: 336
-    
 serviceFee:
   type: text
   instances:
@@ -168,7 +167,7 @@ extraFee:
     font_width: 10
     font_weight: 700
     prefix: 'Плата за обслуживание в зале '
-    suffix: ' руб'
+    suffix: " руб"
     x: 485
     y: 472
 totalText:
