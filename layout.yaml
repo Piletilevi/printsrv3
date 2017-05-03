@@ -143,7 +143,7 @@ ticketPrice:
     font_weight1: 500
     x1: 1035
     y1: 336
-hinde:
+serviceFee:
   type: text
   instances:
   - font_name: Arial
@@ -151,15 +151,6 @@ hinde:
     font_width: 8
     font_weight: 500
     x: 485
-    y: 444
-km:
-  type: text
-  instances:
-  - font_name: Arial
-    font_height: 22
-    font_width: 8
-    font_weight: 500
-    x: 610
     y: 444
 extraFee:
   type: text
@@ -172,18 +163,7 @@ extraFee:
     suffix: ' руб'
     x: 485
     y: 472
-serviceFee:
-  type: text
-  instances:
-  - font_name: Arial
-    font_height: 22
-    font_width: 8
-    font_weight: 500
-    prefix: 'Сервисный сбор '
-    suffix: ' руб'
-    x: 485
-    y: 472
-totaltext:
+totalText:
   type: text
   instances:
   - font_name: Arial
@@ -192,7 +172,7 @@ totaltext:
     font_weight: 1000
     x: 825
     y: 438
-total:
+totalPrice:
   type: text
   instances:
   - font_name: Arial
@@ -201,10 +181,10 @@ total:
     font_weight: 1000
     x: 825
     y: 466
-piletid:
+ticketId:
 - type: text
   common:
-    prefix: 'ID:'
+    prefix: 'ID: '
     font_name: Arial
     font_height: 25
     font_width: 10
@@ -218,7 +198,7 @@ piletid:
     y: 386
   - x: 1035
     y: 386
-lisatext1:
+infoText1:
   type: text
   instances:
   - font_name: Arial
@@ -227,7 +207,7 @@ lisatext1:
     font_weight: 500
     x: 325
     y: 105
-lisatext2:
+infoText2:
   type: text
   instances:
   - font_name: Arial
@@ -236,7 +216,7 @@ lisatext2:
     font_weight: 500
     x: 325
     y: 280
-lisatext3:
+infoText3:
   type: text
   instances:
   - font_name: Arial
@@ -245,7 +225,7 @@ lisatext3:
     font_weight: 500
     x: 325
     y: 305
-lisatext4:
+infoText4:
   type: text
   instances:
   - font_name: Arial
@@ -254,7 +234,7 @@ lisatext4:
     font_weight: 500
     x: 325
     y: 330
-lisatext5:
+infoText5:
   type: text
   instances:
   - font_name: Arial
@@ -263,12 +243,3 @@ lisatext5:
     font_weight: 500
     x: 325
     y: 355
-lisatunnus:
-  type: text
-  instances:
-  - font_name: Arial
-    font_height: 25
-    font_width: 10
-    font_weight: 500
-    x: 1035
-    y: 211
