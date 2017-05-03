@@ -134,15 +134,23 @@ priceGroup2:
     font_weight: 500
     x: 1035
     y: 311
+
 ticketPrice:
   type: text
   instances:
-  - font_name1: Arial
-    font_height1: 25
-    font_width1: 10
-    font_weight1: 500
-    x1: 1035
-    y1: 336
+  - font_name: Arial
+    font_height: 30
+    font_width: 12
+    font_weight: 1000
+    x: 1035
+    y: 336
+  - font_name: Arial
+    font_height: 25
+    font_width: 10
+    font_weight: 500
+    x: 1035
+    y: 336
+    
 serviceFee:
   type: text
   instances:
