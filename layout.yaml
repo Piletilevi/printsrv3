@@ -1,5 +1,5 @@
 ---
-code128id:
+ticketBarCode:
   type: code128
   common:
     font_name: Code 128
@@ -11,22 +11,22 @@ code128id:
     y: 85
   - x: 112
     y: 85
-piltleft:
+imageLeft:
   type: image
   instances:
   - x: 100
     y: 132
-pilttop:
+imageTop:
   type: image
   instances:
   - x: 325
     y: 501
-piltbot:
+imageBottom:
   type: image
   instances:
   - x: 325
     y: 501
-yritus1:
+eventName1:
   type: text
   instances:
   - font_name: Arial
@@ -35,7 +35,7 @@ yritus1:
     font_weight: 1000
     x: 325
     y: 137
-yritus2:
+eventName2:
   type: text
   instances:
   - font_name: Arial
@@ -44,7 +44,7 @@ yritus2:
     font_weight: 1000
     x: 325
     y: 174
-toimkoht:
+eventLocation:
   type: text
   instances:
   - font_name: Arial
@@ -53,7 +53,7 @@ toimkoht:
     font_weight: 1000
     x: 325
     y: 211
-aeg:
+eventDateTime:
   type: text
   instances:
   - font_name: Arial
@@ -62,7 +62,7 @@ aeg:
     font_weight: 1000
     x: 325
     y: 243
-sektor1:
+section1:
   type: text
   instances:
   - font_name: Arial
@@ -71,7 +71,7 @@ sektor1:
     font_weight: 1000
     x: 110
     y: 382
-rida1:
+row1:
   type: text
   instances:
   - font_name: Arial
@@ -80,7 +80,7 @@ rida1:
     font_weight: 1000
     x: 110
     y: 410
-koht1:
+seat1:
   type: text
   instances:
   - font_name: Arial
@@ -89,7 +89,7 @@ koht1:
     font_weight: 1000
     x: 110
     y: 438
-piletiliik1:
+priceGroup1:
   type: text
   instances:
   - font_name: Arial
@@ -98,7 +98,7 @@ piletiliik1:
     font_weight: 1000
     x: 325
     y: 410
-sektor2:
+section2:
   type: text
   instances:
   - font_name: Arial
@@ -107,7 +107,7 @@ sektor2:
     font_weight: 500
     x: 1035
     y: 236
-rida2:
+row2:
   type: text
   instances:
   - font_name: Arial
@@ -116,7 +116,7 @@ rida2:
     font_weight: 500
     x: 1035
     y: 261
-koht2:
+seat2:
   type: text
   instances:
   - font_name: Arial
@@ -125,7 +125,7 @@ koht2:
     font_weight: 500
     x: 1035
     y: 286
-piletiliik2:
+priceGroup2:
   type: text
   instances:
   - font_name: Arial
@@ -134,7 +134,7 @@ piletiliik2:
     font_weight: 500
     x: 1035
     y: 311
-hind:
+ticketPrice:
   type: text
   instances:
   - font_name1: Arial
