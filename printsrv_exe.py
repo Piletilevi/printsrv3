@@ -1,6 +1,7 @@
 # coding: utf-8
 
 import os, sys
+from io import open as iopen
 from os   import path, chdir
 from sys  import exit as sysexit, argv, path as sysPath
 from json import load as loadJSON, dumps as dumpsJSON
@@ -365,8 +366,23 @@ PLP_FILENAME = argv[1]
 SCHEMA_FILENAME = path.join(BASEDIR, 'printsrv', 'jsonschema', 'plp.json')
 with open(SCHEMA_FILENAME, 'rU') as schema_file:
     schema = loadJSON(schema_file)
-with open(PLP_FILENAME, 'rU') as plp_data_file:
+
+import codecs
+with codecs.open(PLP_FILENAME, 'r', encoding='utf-8') as f:
+    text = f.read()
+    print(type(text))
+    # print(text.encode('utf-8'))
+    # print(text)
+    txt = 'Type Сервисный сбор'
+    print(txt)
+    print(txt.decode('utf-8'))
+    print(unicode(txt))
+    # print(text.encode('utf-8').decode())
+    exit(0)
+
+with iopen(PLP_FILENAME, 'rU', encoding='utf-8') as plp_data_file:
     PLP_JSON_DATA = loadJSON(plp_data_file, 'utf-8')
+    print(PLP_JSON_DATA['salesPointCountry'].encode('string-escape'))
 with open('ECRModes.yaml', 'r') as ecrmode_table_file:
     ECRMODE_TABLE = loadYAML(ecrmode_table_file)['ECRMode']
 
@@ -417,7 +433,7 @@ if PLP_JSON_DATA['fiscalData'] and False:
 
 from PSPrint import PSPrint
 with PSPrint(PLP_JSON_DATA) as ps:
-    ps.helloWorld()
+    ps.printTickets(PLP_JSON_DATA['ticketData']['tickets'])
 
 print('helloWorld')
 exit(0)
