@@ -17,7 +17,7 @@ OPTIONS = { 'headers': { 'content-type': "application/xml" } }
 
 def init(options):
     global OPTIONS
-    for key, val in options.iteritems():
+    for key, val in options.items():
         OPTIONS[key] = val
 
 def post(func, data):

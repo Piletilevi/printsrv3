@@ -45,7 +45,7 @@ class PSPrint:
             print("E: exception while creating DEVICE_CONTEXT")
             raise e
 
-        with open('layout.yaml', 'r') as layout_file:
+        with open('layout.yaml', 'r', encoding='utf-8') as layout_file:
             self.PS_LAYOUT = loadYAML(layout_file)
 
 
@@ -83,6 +83,7 @@ class PSPrint:
     def _placeImage(self, x, y, url):
         windll.gdi32.TextOutW(self.DEVICE_CONTEXT_HANDLE, x, y, url, len(url))
 
+
     def _placeC128(self, text, x, y, width, height, thickness, rotate, quietzone):
         bmp = _c128image(text, int(width), int(height), quietzone)
         bmp.save('tmp1.jpeg', 'JPEG')
@@ -119,7 +120,9 @@ class PSPrint:
 
     def printTickets(self, tickets):
         for ticket in tickets:
+            self._startDocument()
             self.printTicket(ticket)
+            self._printDocument()
 
 
     def _getInstanceProperty(self, key, instance, field, mandatory=False):
@@ -133,16 +136,16 @@ class PSPrint:
 
 
     def printTicket(self, ticket):
-        print('ticket : {0}'.format(ticket.keys()))
-        print(unicode(ticket['infoText1']))
+        # print('ticket : {0}'.format(ticket.keys()))
         for layout_key in self.PS_LAYOUT.keys():
-            print('layout_key : {0}'.format(layout_key))
+            # print('layout_key : {0}'.format(layout_key))
             # print('{0} : {1}'.format(key,field))
             if layout_key not in ticket.keys():
-                print('{0} not in {1}'.format(layout_key, ticket.keys()))
+                print('{0} not in {1}\n'.format(layout_key, ticket.keys()))
                 continue
-            value = ticket[layout_key].encode('utf-8')
-            print('{0}: {1}'.format(layout_key, value))
+            field = self.PS_LAYOUT[layout_key]
+            value = ticket[layout_key]
+            # print('{0}: {1}, field:{2}'.format(layout_key, value, field))
             if value == '':
                 continue
 
@@ -159,7 +162,7 @@ class PSPrint:
                     prefix = self._getInstanceProperty('prefix', instance, field) or ''
                     suffix = self._getInstanceProperty('suffix', instance, field) or ''
                     self._setFont(font_name, font_width, font_height, font_weight, orientation=0)
-                    self._placeText(x, y, prefix + value + suffix)
+                    self._placeText(x, y, '{0}{1}{2}'.format(prefix + value + suffix))
                 continue
 
             elif field['type'] == 'image':

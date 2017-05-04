@@ -88,14 +88,14 @@
             "type": "fiscal",
             "printerName": "Shtrih_M_By",
             "printerRegNumber": "123456",
-            "comPortNumber": 3,
-            "comPortBaudRate": 9600,
+            "comPortNumber": 5,
+            "comPortBaudRate": 6,
             "readTimeout": 30,
             "writeTimeout": 30,
-            "adminPw": "",
-            "cashierPw": "",
+            "adminPw": "29000",
+            "cashierPw": "1000",
             "certUserPw": "",
-            "sysAdminPw": ""
+            "sysAdminPw": "30000"
         },
         "payments": [
             {

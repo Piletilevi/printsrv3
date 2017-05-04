@@ -6,6 +6,7 @@ from os   import path, chdir
 from sys  import exit as sysexit, argv, path as sysPath
 from json import load as loadJSON, dumps as dumpsJSON
 from yaml import load as loadYAML
+import fileinput
 # from re import match
 import win32com.client
 
@@ -14,18 +15,18 @@ import posxml
 from pyexpat import * # needed for py2exe ??
 
 if hasattr(sys, "frozen"):
-    BASEDIR = path.dirname(unicode(sys.executable, sys.getfilesystemencoding( )))
+    BASEDIR = path.dirname(sys.executable)
 else:
-    BASEDIR = path.dirname(unicode(__file__, sys.getfilesystemencoding( )))
+    BASEDIR = path.dirname(__file__)
 chdir(BASEDIR)
 
 
 class ShtrihM:
     def __init__(self, plp_json_data, password=None):
         self.PLP_JSON_DATA = plp_json_data
-        self.USER_SADM     = 30000
-        self.USER_ADM      = 29000
-        self.USER_KASSIR   = 1000
+        self.USER_SADM     = plp_json_data['fiscalData']['printerData']['sysAdminPw']
+        self.USER_ADM      = plp_json_data['fiscalData']['printerData']['adminPw']
+        self.USER_KASSIR   = plp_json_data['fiscalData']['printerData']['cashierPw']
         self.password      = password if password else self.USER_KASSIR
         self.RETRY_SEC     = 0.1
         self.TIMEOUT_SEC   = 2
@@ -49,34 +50,34 @@ class ShtrihM:
 
     def prc(self):
         if self.v.ResultCode:
-            print str(self.v.ResultCode) + ':' + self.v.ResultCodeDescription
-            print "ENTER to exit(1)"
-            stdin.readline()
+            print(str(self.v.ResultCode) + ':' + self.v.ResultCodeDescription)
+            print("ENTER to exit(1)")
+            input("Press Enter to continue...")
             exit(1)
 
 
     def feedback(self, feedback):
-        print ('Sending "{0}" to "{1}"'.format(feedback, self.PLP_JSON_DATA['feedbackURL']))
+        print('Sending "{0}" to "{1}"'.format(feedback, self.PLP_JSON_DATA['feedbackUrl']))
 
 
     def insist(self, method, password=None):
         self.v.Password = password if password else self.password
         method()
         if self.v.ResultCode:
-            feedback(str(self.v.ResultCode) + ':' + self.v.ResultCodeDescription)
+            self.feedback(str(self.v.ResultCode) + ':' + self.v.ResultCodeDescription)
 
             while self.v.ResultCode:
-                print str(self.v.ResultCode) + ':' + self.v.ResultCodeDescription
+                print(str(self.v.ResultCode) + ':' + self.v.ResultCodeDescription)
                 print('Method: {0}'.format(method))
-                print "ENTER to retry"
-                stdin.readline()
+                print("ENTER to retry")
+                input("Press Enter to continue...")
                 method()
         self.v.Password = 0
 
 
     def connect(self):
-        setattr(self.v, 'ComNumber', 7)
-        setattr(self.v, 'BaudRate', 6)
+        setattr(self.v, 'ComNumber', self.PLP_JSON_DATA['fiscalData']['printerData']['comPortNumber'])
+        setattr(self.v, 'BaudRate', self.PLP_JSON_DATA['fiscalData']['printerData']['comPortBaudRate'])
         # setattr(self.v, 'Timeout ', 100)
         self.insist(self.v.WaitConnection)
         self.insist(self.v.Connect)
@@ -84,14 +85,14 @@ class ShtrihM:
 
 
     def closeShift(self):
-        # print "performing PrintReportWithCleaning() (Press ENTER)"
-        # stdin.readline()
+        # print("performing PrintReportWithCleaning() (Press ENTER)")
+        # input("Press Enter to continue...")
         self.insist(self.v.PrintReportWithCleaning, self.USER_ADM)
         self.prc()
 
 
     def xReport(self):
-        # print "performing PrintReportWithoutCleaning() (Press ENTER)"
+        # print("performing PrintReportWithoutCleaning() (Press ENTER)")
         self.insist(self.v.PrintReportWithoutCleaning, self.USER_ADM)
         self.prc()
 
@@ -111,44 +112,44 @@ class ShtrihM:
     def setMode2(self):
         timecount = 0
 
-        # print "Initial ECRMode " + self.ecr_mode_string(v.ECRMode)
+        # print("Initial ECRMode " + self.ecr_mode_string(v.ECRMode))
 
         if self.v.ECRMode == 8:
             self.insist(self.v.Beep)
-            print "Waiting for mode change"
-            print "self.v.ECRMode8Status " + str(self.v.ECRMode8Status)
+            print("Waiting for mode change")
+            print("self.v.ECRMode8Status " + str(self.v.ECRMode8Status))
             while self.v.ECRMode == 8:
                 self.insist(self.v.GetShortECRStatus)
                 sleep(RETRY_SEC)
                 timecount = timecount + RETRY_SEC
                 if timecount > TIMEOUT_SEC:
                     timecount = 0
-                    print "sysAdminCancelCheck"
+                    print("sysAdminCancelCheck")
                     sysAdminCancelCheck()
-            print "ECRMode " + self.ecr_mode_string(self.v.ECRMode)
+            print("ECRMode " + self.ecr_mode_string(self.v.ECRMode))
 
         self.insist(self.v.ResetECR)
         self.prc()
 
         if self.v.ECRMode == 0:
             self.insist(self.v.Beep)
-            print "Waiting for mode change"
+            print("Waiting for mode change")
             while self.v.ECRMode == 0:
                 self.insist(self.v.GetShortECRStatus)
                 sleep(RETRY_SEC)
 
         if self.v.ECRMode not in [2,3,4]:
-            print "Can't go on with ECRMode: " + self.ecr_mode_string(self.v.ECRMode)
-            print "Exiting (Press ENTER)"
-            stdin.readline()
+            print("Can't go on with ECRMode: " + self.ecr_mode_string(self.v.ECRMode))
+            print("Exiting (Press ENTER)")
+            input("Press Enter to continue...")
             exit(1)
 
         if self.v.ECRMode == 3:
-            print self.ecr_mode_string(self.v.ECRMode)
+            print(self.ecr_mode_string(self.v.ECRMode))
             self.closeShift()
 
         if self.v.ECRMode == 4:
-            print self.ecr_mode_string(self.v.ECRMode)
+            print(self.ecr_mode_string(self.v.ECRMode))
             self.openShift()
 
 
@@ -164,24 +165,24 @@ class ShtrihM:
                 'Tax3': 0,
                 'Tax4': 0,
                 'StringForPrinting': item['name']
-            }.iteritems():
-                # print 'Setting {0} = {1}'.format(attr, value)
+            }.items():
+                # print('Setting {0} = {1}'.format(attr, value))
                 setattr(self.v, attr, value)
             self.insist(self.v.Sale)
 
         for item in payment_options:
-            # print 'Setting from {0}'.format(item)
+            # print('Setting from {0}'.format(item))
             attr = 'Summ{0}'.format(item['type'])
             setattr(self.v, attr, item['cost'])
 
         setattr(self.v, 'DiscountOnCheck', 0)
 
         # for x in xrange(1,4):
-        #    print 'Summ{0} = {1} + {2}'.format( x,
+        #    print('Summ{0} = {1} + {2}'.format( x,)
         #                                        getattr(self.v, 'Summ{0}'.format(x)),
         #                                        getattr(self.v, 'Tax{0}'.format(x)) )
-        # print self.v.DiscountOnCheck
-        # print self.v.StringForPrinting
+        # print(self.v.DiscountOnCheck)
+        # print(self.v.StringForPrinting)
 
         setattr(self.v, 'StringForPrinting', '')
         # setattr(self.v, 'StringForPrinting', '- - - - - - - - - - - - - - - - - - - -')
@@ -202,12 +203,12 @@ class ShtrihM:
                 'Tax4': 0,
                 'StringForPrinting': item['name'].decode(encoding='UTF-8')
             }.iteritems():
-                # print 'Setting {0} = {1}'.format(attr, value)
+                # print('Setting {0} = {1}'.format(attr, value))
                 setattr(self.v, attr, value)
             self.insist(self.v.ReturnSale)
 
         for item in payment_options:
-            # print 'Setting from {0}'.format(item)
+            # print('Setting from {0}'.format(item))
             attr = 'Summ{0}'.format(item['type'])
             setattr(self.v, attr, item['cost'])
 
@@ -225,7 +226,7 @@ class ShtrihM:
             setattr(self.v, 'UseReceiptRibbon', True)
             setattr(self.v, 'UseJournalRibbon', False)
             setattr(self.v, 'StringForPrinting', string.decode(encoding='UTF-8'))
-            print ('Printing on receipt: "{0}"'.format(string.decode(encoding='UTF-8')))
+            print('Printing on receipt: "{0}"'.format(string.decode(encoding='UTF-8')))
             self.insist(self.v.PrintString)
 
 
@@ -367,28 +368,15 @@ SCHEMA_FILENAME = path.join(BASEDIR, 'printsrv', 'jsonschema', 'plp.json')
 with open(SCHEMA_FILENAME, 'rU') as schema_file:
     schema = loadJSON(schema_file)
 
-import codecs
-with codecs.open(PLP_FILENAME, 'r', encoding='utf-8') as f:
-    text = f.read()
-    print(type(text))
-    # print(text.encode('utf-8'))
-    # print(text)
-    txt = 'Type Сервисный сбор'
-    print(txt)
-    print(txt.decode('utf-8'))
-    print(unicode(txt))
-    # print(text.encode('utf-8').decode())
-    exit(0)
-
 with iopen(PLP_FILENAME, 'rU', encoding='utf-8') as plp_data_file:
-    PLP_JSON_DATA = loadJSON(plp_data_file, 'utf-8')
-    print(PLP_JSON_DATA['salesPointCountry'].encode('string-escape'))
-with open('ECRModes.yaml', 'r') as ecrmode_table_file:
+    PLP_JSON_DATA = loadJSON(plp_data_file)
+    print(PLP_JSON_DATA['salesPointCountry'])
+with open('ECRModes.yaml', 'r', encoding='utf-8') as ecrmode_table_file:
     ECRMODE_TABLE = loadYAML(ecrmode_table_file)['ECRMode']
 
 
 # import jsonschema
-print('Validating against {0}: {1}').format(SCHEMA_FILENAME, PLP_FILENAME)
+print('Validating against {0}: {1}'.format(SCHEMA_FILENAME, PLP_FILENAME))
 # try:
 #     print('S: {0}'.format(schema))
 #     print('D: {0}'.format(PLP_JSON_DATA))
@@ -402,7 +390,7 @@ with open(path.join(BASEDIR, 'package.json'), 'rU') as package_json_file:
     PACKAGE_JSON_DATA = loadJSON(package_json_file)
 
 
-if PLP_JSON_DATA['fiscalData'] and False:
+if PLP_JSON_DATA['fiscalData'] or False:
     with ShtrihM(PLP_JSON_DATA) as cm:
 
         operation = PLP_JSON_DATA['fiscalData']['operation']
