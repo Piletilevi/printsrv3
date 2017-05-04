@@ -12,6 +12,18 @@ ticketBarCode:
     y: 0
   - x: 112
     y: 85
+
+salesPoint:
+  type: text
+  instances:
+  - font_name: Arial
+    font_height: 34
+    font_width: 14
+    font_weight: 1000
+    orientation: 270
+    x: 950
+    y: 100  
+
 imageLeft:
   type: image
   instances:
