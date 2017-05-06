@@ -37,21 +37,24 @@ def code128_image(data, width=560, height=100, quiet_zone=True):
         raise ImportError("PIL not found, only SVG output possible")
 
     barcode_widths = _format(data, thickness)
-    width = sum(barcode_widths)
+    _width = sum(barcode_widths)
     x = 0
 
     if quiet_zone:
-        width += 20 * thickness
+        _width += 20 * thickness
         x = 10 * thickness
 
     # Monochrome Image
-    img  = Image.new('1', (width, height), 1)
+    img  = Image.new('1', (_width, height), 1)
     draw = ImageDraw.Draw(img)
     draw_bar = True
-    for width in barcode_widths:
+    for _width in barcode_widths:
         if draw_bar:
-            draw.rectangle(((x, 0), (x + width - 1, height)), fill=0)
+            draw.rectangle(((x, 0), (x + _width - 1, height)), fill=0)
         draw_bar = not draw_bar
-        x += width
+        x += _width
 
-    return img.resize((width, height))
+    # print(img)
+    # print('dimensions: {0}'.format((img.size[0], img.size[1], width, height)))
+
+    return img.resize((width, height), Image.ANTIALIAS)
