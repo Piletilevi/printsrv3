@@ -152,8 +152,8 @@ ticketPrice:
     font_height: 30
     font_width: 12
     font_weight: 1000
-    x: 1035
-    y: 336
+    x: 325
+    y: 438
   - font_name: Arial
     font_height: 25
     font_width: 10
