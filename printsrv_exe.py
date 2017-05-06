@@ -213,11 +213,11 @@ class ShtrihM:
             exit(1)
 
         if self.v.ECRMode == 3:
-            print(self.ecr_mode_string(self.v.ECRMode))
+            # print(self.ecr_mode_string(self.v.ECRMode))
             self.closeShift()
 
         if self.v.ECRMode == 4:
-            print(self.ecr_mode_string(self.v.ECRMode))
+            # print(self.ecr_mode_string(self.v.ECRMode))
             self.openShift()
 
 
@@ -235,7 +235,7 @@ class ShtrihM:
                 'Tax4': 0,
                 'StringForPrinting': item['name']
             }.items():
-                print('Setting {0} = {1}'.format(attr, value))
+                # print('Setting {0} = {1}'.format(attr, value))
                 setattr(self.v, attr, value)
             self.insist(self.v.Sale)
 
@@ -338,12 +338,12 @@ class ShtrihM:
         for payment in self.PLP_JSON_DATA['fiscalData']['payments']:
             if payment['type'] == '4':
                 card_payment_amount += payment['cost']
-            print(payment['type'], card_payment_amount)
+            # print(payment['type'], card_payment_amount)
 
 
         if card_payment_amount > 0:
-            posxmlIP = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentSetting2']
-            posxmlPort = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentSetting3']
+            posxmlIP = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitIp']
+            posxmlPort = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitPort']
             with PosXML({'url': 'http://{0}:{1}'.format(posxmlIP,posxmlPort)}) as posxml:
                 posxml.post('CancelAllOperationsRequest', '')
                 response = posxml.post('TransactionRequest', {
@@ -356,14 +356,14 @@ class ShtrihM:
                 })
                 if response['ReturnCode'] != '0':
                     print(dumpsJSON(response, indent=4))
-                    print(response['Reason'])
+                    print('Card payment failed\n    {0}:{1}'.format(response['ReturnCode'], response['Reason']))
                     card_payment_failed = True
-                    self.printLine('------------------------------------')
-                    self.printLine('Card payment failed !!!')
-                    self.printLine('Code: {0}'.format(response['ReturnCode']))
-                    self.printLine('Reason: {0}'.format(response['Reason']))
-                    self.printLine('------------------------------------')
-                    self.cut()
+                    # self.printLine('------------------------------------')
+                    # self.printLine('Card payment failed !!!')
+                    # self.printLine('Code: {0}'.format(response['ReturnCode']))
+                    # self.printLine('Reason: {0}'.format(response['Reason']))
+                    # self.printLine('------------------------------------')
+                    # self.cut()
                     return False
 
         payment_method_total = {}
@@ -516,17 +516,24 @@ class PSPrint:
 
 
     def _placeC128(self, text, x, y, width, height, thickness, rotate, quietzone):
+        print('Placing {0}, x:{1}, y:{2}, w:{3}, h:{4}'.format(text, x, y, width, height))
+        file1 = 'tmp1.jpeg'
+        file2 = 'tmp2.jpeg'
         bmp = _c128image(text, int(width), int(height), quietzone)
-        bmp.save('tmp1.jpeg', 'JPEG')
-        bmp = Image.open('tmp1.jpeg')
-        bmp = bmp.rotate(rotate)
-        bmp.save('tmp2.jpeg', 'JPEG')
-        bmp = Image.open('tmp2.jpeg')
+        print('dimensions of {0}: {1}'.format(file1, bmp.size))
+        bmp.save(file1, 'JPEG')
+        bmp = Image.open(file1)
+        print('dimensions of {0}: {1}'.format(file1, bmp.size))
+        bmp = bmp.rotate(rotate, expand=True)
+        print('dimensions of {0}: {1}'.format(file2, bmp.size))
+        bmp.save(file2, 'JPEG')
+        bmp = Image.open(file2)
+        print('dimensions of {0}: {1}'.format(file2, bmp.size))
         dib = ImageWin.Dib(bmp)
         x = int(x)
         y = int(y)
         dib.draw(self.DEVICE_CONTEXT_HANDLE, (x, y, x + bmp.size[0], y + bmp.size[1]))
-        print('dimensions: {0}'.format((x, y, x + bmp.size[0], y + bmp.size[1])))
+        print('dimensions: {0}'.format(bmp))
         # exit(0)
 
 
@@ -593,7 +600,7 @@ class PSPrint:
                     prefix = self._getInstanceProperty('prefix', instance, field) or ''
                     suffix = self._getInstanceProperty('suffix', instance, field) or ''
                     self._setFont(font_name, font_width, font_height, font_weight, orientation=0)
-                    print('Placing {0}, {1}, {2}{3}{4}'.format(x, y, prefix, value, suffix))
+                    # print('Placing {0}, {1}, {2}{3}{4}'.format(x, y, prefix, value, suffix))
                     self._placeText(x, y, '{0}{1}{2}'.format(prefix, value, suffix))
                 continue
 
@@ -613,6 +620,7 @@ class PSPrint:
                     quietzone   = self._getInstanceProperty('quietzone', instance, field)       or False
                     if not (x and y):
                         continue
+                    print('Placing {0}, x:{1}, y:{2}, w:{3}, h:{4}'.format(value, x, y, width, height))
                     self._placeC128(value, x, y, width, height, thickness, orientation, quietzone)
                 continue
 
@@ -687,7 +695,7 @@ if PLP_JSON_DATA['fiscalData'] or False:
     with ShtrihM(PLP_JSON_DATA) as cm:
 
         operation = PLP_JSON_DATA['fiscalData']['operation']
-        print('{0} operation from:\n{1}'.format(operation, PLP_FILENAME))
+        # print('{0} operation from:\n{1}'.format(operation, PLP_FILENAME))
 
         operations_a = {
             'cut': cm.cut,
@@ -704,8 +712,8 @@ if PLP_JSON_DATA['fiscalData'] or False:
         VALID_OPERATIONS = operations_a.keys()
         if operation not in VALID_OPERATIONS:
             raise ValueError('"operation" must be one of {0} in plp file. Got {1} instead.'.format(VALID_OPERATIONS, operation))
-        print('operation {0} in {1}'.format(operation, VALID_OPERATIONS))
-        print('operation {0}'.format(operations_a[operation]))
+        # print('operation {0} in {1}'.format(operation, VALID_OPERATIONS))
+        # print('operation {0}'.format(operations_a[operation]))
 
         fiscal_failed = not operations_a[operation]()
 
@@ -715,12 +723,6 @@ if PLP_JSON_DATA['fiscalData'] or False:
         sys.exit()
 
 
-with PSPrint(PLP_JSON_DATA) as ps:
-    ps.printTickets(PLP_JSON_DATA['ticketData']['tickets'])
-
-print('helloWorld')
-exit(0)
-
 if PLP_JSON_DATA['ticketData']:
-    print('Invoke ticket printing')
-    print_ticket.doPrint(PLP_JSON_DATA)
+    with PSPrint(PLP_JSON_DATA) as ps:
+        ps.printTickets(PLP_JSON_DATA['ticketData']['tickets'])
