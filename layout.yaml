@@ -3,15 +3,16 @@ ticketBarCode:
   type: code128
   common:
     thickness: 10
-    width: 560
+    width: 500
     height: 60
     orientation: 270
     quietzone: true
   instances:
-  - x: 1012
+  - x: 960
     y: 50
-  - x: 112
+  - x: 55
     y: 85
+    width: 400
 salesPoint:
   type: text
   instances:
@@ -20,7 +21,7 @@ salesPoint:
     font_width: 14
     font_weight: 1000
     orientation: 270
-    x: 950
+    x: 900
     y: 100
 imageLeft:
   type: image

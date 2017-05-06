@@ -556,8 +556,8 @@ class PSPrint:
         self.DEVICE_CONTEXT.EndDoc()
 
 
-    def printTickets(self, tickets):
-        for ticket in tickets:
+    def printTickets(self):
+        for ticket in self.PLP_JSON_DATA['ticketData']['tickets']:
             self._startDocument()
             self.printTicket(ticket)
             self._printDocument()
@@ -578,13 +578,10 @@ class PSPrint:
         for layout_key in self.PS_LAYOUT.keys():
             # print('layout_key : {0}'.format(layout_key))
             # print('{0} : {1}'.format(key,field))
-            if layout_key not in ticket.keys():
-                print('{0} not in {1}\n'.format(layout_key, ticket.keys()))
-                continue
             field = self.PS_LAYOUT[layout_key]
-            value = ticket[layout_key]
-            # print('{0}: {1}, field:{2}'.format(layout_key, value, field))
+            value = ticket.get(layout_key, self.PLP_JSON_DATA.get(layout_key, ''))
             if value == '':
+                print('skip {0}'.format(layout_key))
                 continue
 
             if field['type'] == 'text':
@@ -597,9 +594,10 @@ class PSPrint:
                     y           = self._getInstanceProperty('y', instance, field)
                     if not (font_height and font_width and font_weight and x and y):
                         continue
-                    prefix = self._getInstanceProperty('prefix', instance, field) or ''
-                    suffix = self._getInstanceProperty('suffix', instance, field) or ''
-                    self._setFont(font_name, font_width, font_height, font_weight, orientation=0)
+                    orientation = self._getInstanceProperty('orientation', instance, field) or 0
+                    prefix      = self._getInstanceProperty('prefix', instance, field) or ''
+                    suffix      = self._getInstanceProperty('suffix', instance, field) or ''
+                    self._setFont(font_name, font_width, font_height, font_weight, orientation)
                     # print('Placing {0}, {1}, {2}{3}{4}'.format(x, y, prefix, value, suffix))
                     self._placeText(x, y, '{0}{1}{2}'.format(prefix, value, suffix))
                 continue
@@ -614,8 +612,9 @@ class PSPrint:
                     thickness   = self._getInstanceProperty('thickness', instance, field)       or 10
                     width       = self._getInstanceProperty('width', instance, field)           or 560
                     height      = self._getInstanceProperty('height', instance, field)          or 100
-                    x           = self._getInstanceProperty('x', instance, field)
-                    y           = self._getInstanceProperty('y', instance, field)
+                    x           = instance.get('x', field.get('common', {'x': False}).get('x', False))
+                    y           = instance.get('y', field.get('common', {'y': False}).get('y', False))
+                    # orientation = instance.get('orientation', field.get('common', {'orientation': 0}).get('orientation', 0))
                     orientation = self._getInstanceProperty('orientation', instance, field)     or 0
                     quietzone   = self._getInstanceProperty('quietzone', instance, field)       or False
                     if not (x and y):
@@ -684,7 +683,7 @@ PLP_FILENAME = argv[1]
 
 with open(PLP_FILENAME, 'rU', encoding='utf-8') as plp_data_file:
     PLP_JSON_DATA = loadJSON(plp_data_file)
-    print(PLP_JSON_DATA['salesPointCountry'])
+    # print(PLP_JSON_DATA['salesPointCountry'])
 
 with open(path.join(BASEDIR, 'package.json'), 'rU') as package_json_file:
     PACKAGE_JSON_DATA = loadJSON(package_json_file)
@@ -725,4 +724,4 @@ if PLP_JSON_DATA['fiscalData'] or False:
 
 if PLP_JSON_DATA['ticketData']:
     with PSPrint(PLP_JSON_DATA) as ps:
-        ps.printTickets(PLP_JSON_DATA['ticketData']['tickets'])
+        ps.printTickets()
