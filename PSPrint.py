@@ -162,7 +162,7 @@ class PSPrint:
                     prefix = self._getInstanceProperty('prefix', instance, field) or ''
                     suffix = self._getInstanceProperty('suffix', instance, field) or ''
                     self._setFont(font_name, font_width, font_height, font_weight, orientation=0)
-                    self._placeText(x, y, '{0}{1}{2}'.format(prefix + value + suffix))
+                    self._placeText(x, y, '{0}{1}{2}'.format(prefix, value, suffix))
                 continue
 
             elif field['type'] == 'image':

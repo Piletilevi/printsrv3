@@ -3,13 +3,10 @@
 import requests
 import xmltodict
 import json
-from os import path
-from sys import argv, stdin
+from sys import stdin
 from yaml import load as loadYAML
-import urllib
 from time import sleep
 
-# BASEDIR = path.dirname(path.abspath(__file__))
 with open('responses.yaml', 'r') as posxml_responses_file:
     PXRESPONSES = loadYAML(posxml_responses_file)
 

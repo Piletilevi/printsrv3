@@ -1,25 +1,89 @@
-# coding: utf-8
+# This Python file uses the following encoding: utf-8
 
-import os, sys
-from io import open as iopen
-from os   import path, chdir
-from sys  import exit as sysexit, argv, path as sysPath
-from json import load as loadJSON, dumps as dumpsJSON
-from yaml import load as loadYAML
-import fileinput
-# from re import match
-import win32com.client
 
-# import print_ticket
-import posxml
-from pyexpat import * # needed for py2exe ??
+# PosXML module
+import                    requests
+import                    xmltodict
+from json import dumps as dumpsJSON
+from sys  import          stdin
+from yaml import load  as loadYAML
+from time import          sleep
 
-if hasattr(sys, "frozen"):
-    BASEDIR = path.dirname(sys.executable)
-else:
-    BASEDIR = path.dirname(__file__)
-chdir(BASEDIR)
+class PosXML:
+    def __init__(self, options):
+        self.OPTIONS = { 'headers': { 'content-type': "application/xml" } }
+        for key, val in options.items():
+            self.OPTIONS[key] = val
+        with open('responses.yaml', 'r') as posxml_responses_file:
+            self.PXRESPONSES = loadYAML(posxml_responses_file)
 
+
+    def __enter__(self):
+        print('with PosXML')
+        return self
+
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        print('without PosXML')
+        pass
+
+
+    def post(self, func, data):
+        dict = { 'PosXML': { '@version':'7.2.0', } }
+        dict['PosXML'][func] = data
+        payload_xml = xmltodict.unparse(dict, pretty=True).encode('utf-8')
+        http_response = requests.post(self.OPTIONS['url'], data=payload_xml, headers=self.OPTIONS['headers'])
+        response = xmltodict.parse(http_response.content)['PosXML']
+        try:
+            # find if any key in response matches one of expected response keys
+            responseKey = [key for key in self.PXRESPONSES[func] if key in response][0]
+        except Exception as e:
+            print('Expected responses: "' + ';'.join(self.PXRESPONSES[func])
+                + '" not present in returned response keys: "'
+                + ';'.join(response.keys()) + '".')
+            print(json.dumps(response, indent=4, encoding='utf-8'))
+            print('Take a screenshot')
+            stdin.readline()
+            raise
+        if response[responseKey]['ReturnCode'] != '0' and not response[responseKey]['Reason']:
+            response[responseKey]['Reason'] = 'ReturnCode: ' + response[responseKey]['ReturnCode']
+        return response[responseKey]
+
+
+    def beep(self):
+        self.post('DoBeepRequest', {'Frequency1':2000, 'Duration1':40})
+
+    def message(self, destination, message):
+        self.post('DisplayMessageRequest', {
+            'Action':1,
+            'BackLight':1,
+            'Destination':destination,
+            'Line2': message.encode('utf-8')
+        })
+    def resetMessages(self):
+        self.post('DisplayMessageRequest', {
+            'Action':0
+        })
+
+    def waitForRemoveCardFromTerminal(self):
+        response = self.post('GetTerminalStatusRequest', '')
+        CardStatus = response['CardStatus']
+        if CardStatus != '0':
+            print('Remove card from terminal')
+            # message(2,'Remove card from terminal')
+        while CardStatus != '0':
+            self.beep()
+            sleep(0.3)
+            CardStatus = self.post('GetTerminalStatusRequest', '')['CardStatus']
+        self.resetMessages()
+
+
+# ShtrihM module
+import                    win32com.client
+import                    posxml
+from yaml import load  as loadYAML
+from json import load  as loadJSON
+from json import dumps as dumpsJSON
 
 class ShtrihM:
     def __init__(self, plp_json_data, password=None):
@@ -32,20 +96,26 @@ class ShtrihM:
         self.TIMEOUT_SEC   = 2
         self.v             = win32com.client.Dispatch('Addin.DrvFR')
 
+        with open('ECRModes.yaml', 'r', encoding='utf-8') as ecrmode_table_file:
+            self.ECRMODE_TABLE = loadYAML(ecrmode_table_file)['ECRMode']
+
         self.connect()
+        setattr(self.v, 'CodePage', 1) # Russian
         self.setMode2()
 
 
     def __enter__(self):
+        print('with ShtrihM')
         return self
 
 
     def __exit__(self, exc_type, exc_value, traceback):
+        print('without ShtrihM')
         del self.v
 
 
     def ecr_mode_string(self, k):
-        return str(k) + ":" + ECRMODE_TABLE[k]['name']
+        return str(k) + ":" + self.ECRMODE_TABLE[k]['name']
 
 
     def prc(self):
@@ -85,22 +155,22 @@ class ShtrihM:
 
 
     def closeShift(self):
-        # print("performing PrintReportWithCleaning() (Press ENTER)")
-        # input("Press Enter to continue...")
         self.insist(self.v.PrintReportWithCleaning, self.USER_ADM)
         self.prc()
+        return True
 
 
     def xReport(self):
-        # print("performing PrintReportWithoutCleaning() (Press ENTER)")
         self.insist(self.v.PrintReportWithoutCleaning, self.USER_ADM)
         self.prc()
+        return True
 
 
     def openShift(self):
+        # Shift will be actually opened with first recipe
         self.insist(self.v.OpenSession, self.USER_ADM)
         self.prc()
-        # Shift will be actually opened with first recipe
+        return True
 
 
     def sysAdminCancelCheck(self):
@@ -112,20 +182,18 @@ class ShtrihM:
     def setMode2(self):
         timecount = 0
 
-        # print("Initial ECRMode " + self.ecr_mode_string(v.ECRMode))
-
         if self.v.ECRMode == 8:
             self.insist(self.v.Beep)
             print("Waiting for mode change")
             print("self.v.ECRMode8Status " + str(self.v.ECRMode8Status))
             while self.v.ECRMode == 8:
                 self.insist(self.v.GetShortECRStatus)
-                sleep(RETRY_SEC)
-                timecount = timecount + RETRY_SEC
-                if timecount > TIMEOUT_SEC:
+                sleep(self.RETRY_SEC)
+                timecount = timecount + self.RETRY_SEC
+                if timecount > self.TIMEOUT_SEC:
                     timecount = 0
                     print("sysAdminCancelCheck")
-                    sysAdminCancelCheck()
+                    self.sysAdminCancelCheck()
             print("ECRMode " + self.ecr_mode_string(self.v.ECRMode))
 
         self.insist(self.v.ResetECR)
@@ -136,7 +204,7 @@ class ShtrihM:
             print("Waiting for mode change")
             while self.v.ECRMode == 0:
                 self.insist(self.v.GetShortECRStatus)
-                sleep(RETRY_SEC)
+                sleep(self.RETRY_SEC)
 
         if self.v.ECRMode not in [2,3,4]:
             print("Can't go on with ECRMode: " + self.ecr_mode_string(self.v.ECRMode))
@@ -154,6 +222,7 @@ class ShtrihM:
 
 
     def sale(self, sales_options, payment_options):
+        self.v.Password = self.USER_KASSIR
         for item in sales_options:
             # print('unpacking {0}'.format(item))
             for attr, value in {
@@ -166,7 +235,7 @@ class ShtrihM:
                 'Tax4': 0,
                 'StringForPrinting': item['name']
             }.items():
-                # print('Setting {0} = {1}'.format(attr, value))
+                print('Setting {0} = {1}'.format(attr, value))
                 setattr(self.v, attr, value)
             self.insist(self.v.Sale)
 
@@ -176,13 +245,6 @@ class ShtrihM:
             setattr(self.v, attr, item['cost'])
 
         setattr(self.v, 'DiscountOnCheck', 0)
-
-        # for x in xrange(1,4):
-        #    print('Summ{0} = {1} + {2}'.format( x,)
-        #                                        getattr(self.v, 'Summ{0}'.format(x)),
-        #                                        getattr(self.v, 'Tax{0}'.format(x)) )
-        # print(self.v.DiscountOnCheck)
-        # print(self.v.StringForPrinting)
 
         setattr(self.v, 'StringForPrinting', '')
         # setattr(self.v, 'StringForPrinting', '- - - - - - - - - - - - - - - - - - - -')
@@ -201,7 +263,7 @@ class ShtrihM:
                 'Tax2': 0,
                 'Tax3': 0,
                 'Tax4': 0,
-                'StringForPrinting': item['name'].decode(encoding='UTF-8')
+                'StringForPrinting': item['name']
             }.iteritems():
                 # print('Setting {0} = {1}'.format(attr, value))
                 setattr(self.v, attr, value)
@@ -225,14 +287,16 @@ class ShtrihM:
         else:
             setattr(self.v, 'UseReceiptRibbon', True)
             setattr(self.v, 'UseJournalRibbon', False)
-            setattr(self.v, 'StringForPrinting', string.decode(encoding='UTF-8'))
-            print('Printing on receipt: "{0}"'.format(string.decode(encoding='UTF-8')))
+            # setattr(self.v, 'StringForPrinting', 'Сервисный сбор')
+            setattr(self.v, 'StringForPrinting', string)
+            print('Printing on receipt: "{0}"'.format(string))
             self.insist(self.v.PrintString)
 
 
     def feed(self, feedLineCount = 4):
-        for x in xrange(0, feedLineCount):
+        for x in range(0, feedLineCount):
             self.printLine()
+        return True
 
 
     def cut(self, feedAfterCutCount = 0, partialCut = True):
@@ -244,16 +308,19 @@ class ShtrihM:
             setattr(self.v, 'FeedLineCount', feedAfterCutCount)
         setattr(self.v, 'CutType', partialCut)
         self.insist(self.v.CutCheck)
+        return True
 
 
     def insertCash(self):
         setattr(self.v, 'Summ1', self.PLP_JSON_DATA['fiscalData']['cashAmount'])
         self.insist(self.v.CashIncome)
+        return True
 
 
     def withdrawCash(self):
         setattr(self.v, 'Summ1', self.PLP_JSON_DATA['fiscalData']['cashAmount'])
         self.insist(self.v.CashOutcome)
+        return True
 
 
     def openCashRegister(self, drawer):
@@ -261,35 +328,43 @@ class ShtrihM:
             drawer = 0
         setattr(self.v, 'DrawerNumber', drawer)
         self.insist(self.v.OpenDrawer)
+        return True
 
 
     def cmsale(self):
         card_payment_amount = 0
+        card_payment_failed = False
+
         for payment in self.PLP_JSON_DATA['fiscalData']['payments']:
             if payment['type'] == '4':
                 card_payment_amount += payment['cost']
             print(payment['type'], card_payment_amount)
 
+
         if card_payment_amount > 0:
-            global cm
-            posxml.init({'url': 'http://192.168.2.45:4445'})
-            posxml.post('CancelAllOperationsRequest', '')
-            response = posxml.post('TransactionRequest', {
-                'TransactionID': PLP_JSON_DATA['busnId'],
-                'Amount'       : card_payment_amount*100,
-                'CurrencyName' : 'EUR',
-                'PrintReceipt' : 2,
-                'Timeout'      : 100,
-                'Language'     : 'en',
-            })
-            print(dumpsJSON(response, indent=4))
-            print(response['ReturnCode'])
-            if response['ReturnCode'] != '0':
-                print(dumpsJSON(response, indent=4))
-                print(response['Reason'].encode('utf-8'))
-
-                posxml.waitForRemoveCardFromTerminal()
-
+            posxmlIP = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentSetting2']
+            posxmlPort = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentSetting3']
+            with PosXML({'url': 'http://{0}:{1}'.format(posxmlIP,posxmlPort)}) as posxml:
+                posxml.post('CancelAllOperationsRequest', '')
+                response = posxml.post('TransactionRequest', {
+                    'TransactionID': self.PLP_JSON_DATA['fiscalData']['businessTransactionId'],
+                    'Amount'       : card_payment_amount * 100,
+                    'CurrencyName' : 'EUR',
+                    'PrintReceipt' : 2,
+                    'Timeout'      : 100,
+                    # 'Language'     : 'en',
+                })
+                if response['ReturnCode'] != '0':
+                    print(dumpsJSON(response, indent=4))
+                    print(response['Reason'])
+                    card_payment_failed = True
+                    self.printLine('------------------------------------')
+                    self.printLine('Card payment failed !!!')
+                    self.printLine('Code: {0}'.format(response['ReturnCode']))
+                    self.printLine('Reason: {0}'.format(response['Reason']))
+                    self.printLine('------------------------------------')
+                    self.cut()
+                    return False
 
         payment_method_total = {}
         payment_method_total_validate = {}
@@ -298,12 +373,11 @@ class ShtrihM:
         sales_options = []
         payment_options = []
 
-        for payment in PLP_JSON_DATA['fiscalData']['payments']:
+        for payment in self.PLP_JSON_DATA['fiscalData']['payments']:
             if payment['type'] not in payment_method_total:
                 payment_method_total[payment['type']] = 0
                 payment_method_total_validate[payment['type']] = 0
             payment_method_total[payment['type']] += payment['cost']
-            # cm.printLine('{0} = {1}'.format(payment['name'], '%.2f' % payment['cost']))
 
             payment_options.append({'cost': payment['cost'], 'type': payment['type']})
 
@@ -315,15 +389,12 @@ class ShtrihM:
                 if not 'amount' in component:
                     component['amount'] = 1
                 if 'ticketId' in component:
-                    component['name'] = '{0} {1}'.format(component['name'].encode('utf-8'), component['ticketId'])
+                    component['name'] = '{0} {1}'.format(component['name'], component['ticketId'])
                 payment_method_total_validate[payment['type']] += component['cost'] * component['amount']
                 sales_options.append(component)
 
-
         for ix in payment_method_total:
             if round(payment_method_total[ix], 2) != round(payment_method_total_validate[ix], 2):
-                # for i in range(0, 10):
-                    # cm.printLine()
                 print('------------------------------------')
                 print('     !!! FISCAL DATA ERROR !!!')
                 print('        In payment type {0}'.format(ix))
@@ -351,6 +422,244 @@ class ShtrihM:
         else:
             raise ValueError('operation={0} - must be sale/refund.'.format(self.PLP_JSON_DATA['fiscalData']['operation']))
 
+        return True
+
+
+# PSPrint module
+import                                    win32ui
+import                                    win32gui
+import                                    win32print
+from ctypes       import                  windll
+from yaml         import load          as loadYAML
+from code128image import code128_image as _c128image
+from PIL          import                  ImageWin
+from PIL          import                  Image
+
+class PSPrint:
+    def __init__(self, plp_json_data):
+        self.PLP_JSON_DATA = plp_json_data
+
+        printer = self.PLP_JSON_DATA['ticketData']['printerData']['printerName']
+        try:
+            hprinter = win32print.OpenPrinter(printer)
+        except:
+            print("E: exception while opening printer")
+            raise e
+
+        try:
+            devmode = win32print.GetPrinter(hprinter, 2)["pDevMode"]
+        except Exception as e:
+            print("E: exception while opening devmode")
+            raise e
+
+        try:
+            devmode.Orientation = 2
+        except:
+            print("Setting orientation failed: {0}".format(sys.exc_info()[0]))
+
+        printjobs = win32print.EnumJobs(hprinter, 0, 999)
+        while len(printjobs) != 0:
+            ret = windll.user32.MessageBoxW(0, "Printer has old jobs in queue".decode(), "Check printer!".decode(), 0x40 | 0x0) #OK only
+            printjobs = win32print.EnumJobs(hprinter, 0, 999)
+
+        try:
+            self.DEVICE_CONTEXT_HANDLE = win32gui.CreateDC("WINSPOOL", printer, devmode)
+        except Exception as e:
+            print("E: exception while creating DEVICE_CONTEXT_HANDLE")
+            raise e
+
+        try:
+            self.DEVICE_CONTEXT = win32ui.CreateDCFromHandle(self.DEVICE_CONTEXT_HANDLE)
+        except Exception as e:
+            print("E: exception while creating DEVICE_CONTEXT")
+            raise e
+
+        with open('layout.yaml', 'r', encoding='utf-8') as layout_file:
+            self.PS_LAYOUT = loadYAML(layout_file)
+
+
+    def __enter__(self):
+        print('with PSPrint')
+        return self
+
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        print('without PSPrint')
+        pass
+
+
+    def _setFont(self, font_name, w=None, h=None, weight=None, orientation=0):
+        if font_name is not None:
+            _log_font = [font_name]
+            def callback(font, tm, fonttype, _font):
+                if font.lfFaceName == _font[0]:
+                    _font[0]=font
+                return True
+            win32gui.EnumFontFamilies(self.DEVICE_CONTEXT_HANDLE, None, callback, _log_font)
+            self.log_font = _log_font[0]
+
+        self.log_font.lfWidth = int(w)
+        self.log_font.lfHeight = int(h)
+        self.log_font.lfWeight = int(weight)
+        self.log_font.lfOrientation = int(orientation) * 10
+        self.log_font.lfEscapement = int(orientation) * 10
+        font_handle = win32gui.CreateFontIndirect(self.log_font)
+        win32gui.SelectObject(self.DEVICE_CONTEXT_HANDLE, font_handle)
+
+
+    def _placeText(self, x, y, text):
+        windll.gdi32.TextOutW(self.DEVICE_CONTEXT_HANDLE, x, y, text, len(text))
+
+
+    def _placeImage(self, x, y, url):
+        windll.gdi32.TextOutW(self.DEVICE_CONTEXT_HANDLE, x, y, url, len(url))
+
+
+    def _placeC128(self, text, x, y, width, height, thickness, rotate, quietzone):
+        bmp = _c128image(text, int(width), int(height), quietzone)
+        bmp.save('tmp1.jpeg', 'JPEG')
+        bmp = Image.open('tmp1.jpeg')
+        bmp = bmp.rotate(rotate)
+        bmp.save('tmp2.jpeg', 'JPEG')
+        bmp = Image.open('tmp2.jpeg')
+        dib = ImageWin.Dib(bmp)
+        x = int(x)
+        y = int(y)
+        dib.draw(self.DEVICE_CONTEXT_HANDLE, (x, y, x + bmp.size[0], y + bmp.size[1]))
+        print('dimensions: {0}'.format((x, y, x + bmp.size[0], y + bmp.size[1])))
+        # exit(0)
+
+
+    def _startDocument(self):
+        # print("DEVICE_CONTEXT.SetMapMode")
+        self.DEVICE_CONTEXT.SetMapMode(1)
+        # print("DEVICE_CONTEXT.StartDoc")
+        self.DEVICE_CONTEXT.StartDoc("ticket.txt")
+        # print("DEVICE_CONTEXT.StartPage")
+        self.DEVICE_CONTEXT.StartPage()
+        # print("win32ui.CreateFont");
+        font = win32ui.CreateFont({"name": "Arial", "height": 16})
+        # print("DEVICE_CONTEXT.SelectObject")
+        self.DEVICE_CONTEXT.SelectObject(font)
+        # print("DEVICE_CONTEXT.SelectObject DONE")
+
+
+    def _printDocument(self):
+        self.DEVICE_CONTEXT.EndPage()
+        self.DEVICE_CONTEXT.EndDoc()
+
+
+    def printTickets(self, tickets):
+        for ticket in tickets:
+            self._startDocument()
+            self.printTicket(ticket)
+            self._printDocument()
+
+
+    def _getInstanceProperty(self, key, instance, field, mandatory=False):
+        if key in instance:
+            return instance.get(key)
+        if key in field.get('common', []):
+            return field.get('common').get(key)
+        if mandatory:
+            print('Text without {0} - {1}'.format(key, field))
+        return None
+
+
+    def printTicket(self, ticket):
+        # print('ticket : {0}'.format(ticket.keys()))
+        for layout_key in self.PS_LAYOUT.keys():
+            # print('layout_key : {0}'.format(layout_key))
+            # print('{0} : {1}'.format(key,field))
+            if layout_key not in ticket.keys():
+                print('{0} not in {1}\n'.format(layout_key, ticket.keys()))
+                continue
+            field = self.PS_LAYOUT[layout_key]
+            value = ticket[layout_key]
+            # print('{0}: {1}, field:{2}'.format(layout_key, value, field))
+            if value == '':
+                continue
+
+            if field['type'] == 'text':
+                for instance in field['instances']:
+                    font_name   = self._getInstanceProperty('font_name', instance, field)
+                    font_height = self._getInstanceProperty('font_height', instance, field)
+                    font_width  = self._getInstanceProperty('font_width', instance, field)
+                    font_weight = self._getInstanceProperty('font_weight', instance, field)
+                    x           = self._getInstanceProperty('x', instance, field)
+                    y           = self._getInstanceProperty('y', instance, field)
+                    if not (font_height and font_width and font_weight and x and y):
+                        continue
+                    prefix = self._getInstanceProperty('prefix', instance, field) or ''
+                    suffix = self._getInstanceProperty('suffix', instance, field) or ''
+                    self._setFont(font_name, font_width, font_height, font_weight, orientation=0)
+                    print('Placing {0}, {1}, {2}{3}{4}'.format(x, y, prefix, value, suffix))
+                    self._placeText(x, y, '{0}{1}{2}'.format(prefix, value, suffix))
+                continue
+
+            elif field['type'] == 'image':
+                for instance in field['instances']:
+                    self._placeImage(x, y, value, orientation)
+                continue
+
+            elif field['type'] == 'code128':
+                for instance in field['instances']:
+                    thickness   = self._getInstanceProperty('thickness', instance, field)       or 10
+                    width       = self._getInstanceProperty('width', instance, field)           or 560
+                    height      = self._getInstanceProperty('height', instance, field)          or 100
+                    x           = self._getInstanceProperty('x', instance, field)
+                    y           = self._getInstanceProperty('y', instance, field)
+                    orientation = self._getInstanceProperty('orientation', instance, field)     or 0
+                    quietzone   = self._getInstanceProperty('quietzone', instance, field)       or False
+                    if not (x and y):
+                        continue
+                    self._placeC128(value, x, y, width, height, thickness, orientation, quietzone)
+                continue
+
+
+    def helloWorld(self):
+        self._startDocument()
+        text = u'Hello, WORLD!'
+        self._setFont(font_name='Arial', w=12, h=30, weight=500, orientation=0)
+        self._placeText(250, 250, text)
+        self._setFont(font_name='Arial', w=24, h=50, weight=1000, orientation=0)
+        self._placeText(150, 150, text)
+        # self._placeC128('650', '6', '3', '100', '1234567890123456', 90)
+        self._printDocument()
+
+
+# Main
+
+from time import sleep, time
+start_time = time()
+
+import                    sys
+from os   import          path
+from os   import          chdir
+from sys  import exit  as sysexit
+from sys  import          argv
+from sys  import path  as sysPath
+from json import load  as loadJSON
+from json import dumps as dumpsJSON
+from yaml import load  as loadYAML
+import                    fileinput
+import                    requests
+
+
+# from PSPrint import PSPrint
+# from ShtrihM import ShtrihM
+# sys.exit("--- {0} seconds ---".format(time() - start_time))
+
+
+# from pyexpat import * # needed for py2exe ??
+
+if hasattr(sys, "frozen"):
+    BASEDIR = path.dirname(sys.executable)
+else:
+    BASEDIR = path.dirname(__file__)
+chdir(BASEDIR)
+
+
 
 
 # BASEDIR = path.dirname(path.abspath(__file__))
@@ -364,32 +673,16 @@ class ShtrihM:
 
 # Set plp_filename environment variable from passed argument
 PLP_FILENAME = argv[1]
-SCHEMA_FILENAME = path.join(BASEDIR, 'printsrv', 'jsonschema', 'plp.json')
-with open(SCHEMA_FILENAME, 'rU') as schema_file:
-    schema = loadJSON(schema_file)
 
-with iopen(PLP_FILENAME, 'rU', encoding='utf-8') as plp_data_file:
+with open(PLP_FILENAME, 'rU', encoding='utf-8') as plp_data_file:
     PLP_JSON_DATA = loadJSON(plp_data_file)
     print(PLP_JSON_DATA['salesPointCountry'])
-with open('ECRModes.yaml', 'r', encoding='utf-8') as ecrmode_table_file:
-    ECRMODE_TABLE = loadYAML(ecrmode_table_file)['ECRMode']
-
-
-# import jsonschema
-print('Validating against {0}: {1}'.format(SCHEMA_FILENAME, PLP_FILENAME))
-# try:
-#     print('S: {0}'.format(schema))
-#     print('D: {0}'.format(PLP_JSON_DATA))
-#     jsonschema.validate(PLP_JSON_DATA, schema)
-# except jsonschema.exceptions.ValidationError as ve:
-#     print("JSON validation ERROR\n")
-#     print( "{0}\n".format(ve))
-#     raise ve
 
 with open(path.join(BASEDIR, 'package.json'), 'rU') as package_json_file:
     PACKAGE_JSON_DATA = loadJSON(package_json_file)
 
 
+fiscal_failed = False
 if PLP_JSON_DATA['fiscalData'] or False:
     with ShtrihM(PLP_JSON_DATA) as cm:
 
@@ -414,12 +707,14 @@ if PLP_JSON_DATA['fiscalData'] or False:
         print('operation {0} in {1}'.format(operation, VALID_OPERATIONS))
         print('operation {0}'.format(operations_a[operation]))
 
-        operations_a[operation]()
+        fiscal_failed = not operations_a[operation]()
 
-    print('{0} operation from:\n{1} succeeded.'.format(operation, PLP_FILENAME))
+    print('{0} operation from:\n{1} {2}.'.format(operation, PLP_FILENAME, ('failed' if fiscal_failed else 'succeeded')))
+    if fiscal_failed:
+        print('Bye.')
+        sys.exit()
 
 
-from PSPrint import PSPrint
 with PSPrint(PLP_JSON_DATA) as ps:
     ps.printTickets(PLP_JSON_DATA['ticketData']['tickets'])
 
@@ -429,7 +724,3 @@ exit(0)
 if PLP_JSON_DATA['ticketData']:
     print('Invoke ticket printing')
     print_ticket.doPrint(PLP_JSON_DATA)
-
-
-# C:\github\printsrv\printsrv_exe.py "C:\github\printsrv\printers\Shtrih_M_By\PLP prototypes\sale_cash.plp"
-# C:\github\printsrv\printsrv_exe.py "C:\github\printsrv\printers\Shtrih_M_By\PLP prototypes\sale_gt_card.plp"

@@ -1,9 +1,10 @@
 # coding: utf-8
 
 from distutils.core import setup
-import py2exe, os, jsonschema
+import py2exe as build_exe
+import os, jsonschema
 
-from py2exe.build_exe import py2exe as build_exe
+# from py2exe.build_exe import py2exe as build_exe
 
 class JsonSchemaCollector(build_exe):
     """
