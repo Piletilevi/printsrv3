@@ -1,22 +1,25 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
+from distutils.core import setup
+import sys, py2exe
 
-import sys
-from cx_Freeze import setup, Executable
+sys.argv.append('py2exe')
 
-# Dependencies are automatically detected, but it might need fine tuning.
-build_exe_options = {
-    "packages": ["os"]
-}
+OPTIONS = [
+    {
+        "script": "printsrv.py",
+        "dest_base": "printsrv"
+    }
+]
 
-# GUI applications require a different base on Windows (the default is for a
-# console application).
-base = None
-if sys.platform == "win32":
-    base = "Win32GUI"
-
-setup(  name = "printsrv",
-        version = "3.0.0",
-        description = "Piletirevi Printing Service",
-        options = {"build_exe": build_exe_options},
-        executables = [Executable("printsrv_exe.py", base="win32gui")])
+setup(
+	# cmdclass={"py2exe": JsonSchemaCollector},
+    options = {
+        'py2exe': {
+            'bundle_files': 3,
+            'includes': ['requests', 'xmltodict', 'json', 'yaml', 'time', 'urllib3', 'win32com', 'posxml', 'win32ui', 'win32gui', 'win32print', 'ctypes', 'queue'],
+            'excludes': ['tkinter'],
+        }
+    },
+    zipfile = None, #'printsrv-lib.zip',
+    console = OPTIONS,
+    data_files = [ ( '.', ['layout.yaml', 'responses.yaml', 'package.json', 'ECRModes.yaml'] ) ],
+)
