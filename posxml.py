@@ -1,13 +1,20 @@
 # coding: utf-8
 
-import requests
-import xmltodict
-import json
-from sys import stdin
-from yaml import load as loadYAML
-from time import sleep
+import                    requests
+import                    xmltodict
+import                    json
+import                    sys
+from os   import          path
+from sys  import          stdin
+from yaml import load as  loadYAML
+from time import          sleep
 
-with open('responses.yaml', 'r') as posxml_responses_file:
+if hasattr(sys, "frozen"):
+    BASEDIR = path.dirname(sys.executable)
+else:
+    BASEDIR = path.dirname(__file__)
+
+with open(path.join(BASEDIR, 'responses.yaml'), 'r') as posxml_responses_file:
     PXRESPONSES = loadYAML(posxml_responses_file)
 
 OPTIONS = { 'headers': { 'content-type': "application/xml" } }

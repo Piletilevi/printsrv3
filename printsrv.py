@@ -23,7 +23,6 @@ class PosXML:
     def __init__(self, feedback, options):
         self.feedback = feedback
         self.OPTIONS = { 'headers': { 'content-type': "application/xml" } }
-        self.feedback = feedback
         for key, val in options.items():
             self.OPTIONS[key] = val
         with open('responses.yaml', 'r') as posxml_responses_file:
@@ -365,9 +364,8 @@ class ShtrihM:
                     # 'Language'     : 'en',
                 })
                 if response['ReturnCode'] != '0':
-                    self.feedback('Card payment failed\n    {0}:{1}'.format(response['ReturnCode'], response['Reason']))
-                    print(dumpsJSON(response, indent=4))
-                    print('Card payment failed\n    {0}:{1}'.format(response['ReturnCode'], response['Reason']))
+                    self.feedback('Card payment failed\n    {0}:{1}'.format(response['ReturnCode'], response['Reason']), False)
+                    # print('Card payment failed\n    {0}:{1}'.format(response['ReturnCode'], response['Reason']))
                     card_payment_failed = True
                     # self.printLine('------------------------------------')
                     # self.printLine('Card payment failed !!!')
@@ -657,6 +655,7 @@ from sys  import exit  as sysexit
 from sys  import          argv
 from sys  import path  as sysPath
 from json import load  as loadJSON
+from json import loads as loadsJSON
 from json import dumps as dumpsJSON
 from yaml import load  as loadYAML
 import                    fileinput
@@ -676,15 +675,6 @@ else:
 chdir(BASEDIR)
 
 
-# BASEDIR = path.dirname(path.abspath(__file__))
-# sysPath.append("printers\PosXML")
-# sysPath.append("printers\Shtrih_M_By")
-# import shtrihm as cm
-# cm.init( {'feedbackURL': 'https://api.piletilevi.ee/bo/feedback'} )
-# cm.uninit()
-# del cm
-# raise SystemExit
-
 # Set plp_filename environment variable from passed argument
 PLP_FILENAME = argv[1]
 
@@ -696,14 +686,26 @@ with open(PLP_FILENAME, 'rU', encoding='utf-8') as plp_data_file:
 # with open(path.join(BASEDIR, 'package.json'), 'rU') as package_json_file:
 #     PACKAGE_JSON_DATA = loadJSON(package_json_file)
 
-print(PLP_JSON_DATA['feedbackUrl'])
+with open('feedbackTemplate.json', 'rU', encoding='utf-8') as feedback_template_file:
+    FEEDBACK_TEMPLATE = loadJSON(feedback_template_file)
+    FEEDBACK_TEMPLATE['feedbackToken'] = PLP_JSON_DATA.get('feedbackToken')
+    FEEDBACK_TEMPLATE['operationToken'] = PLP_JSON_DATA.get('operationToken')
+    FEEDBACK_TEMPLATE['businessTransactionId'] = PLP_JSON_DATA.get('fiscalData', {'businessTransactionId':''}).get('businessTransactionId', '')
+    FEEDBACK_TEMPLATE['operation'] = PLP_JSON_DATA.get('fiscalData').get('operation')
 
-def feedback(feedback):
-    print('Sending "{0}" to "{1}"'.format(feedback, PLP_JSON_DATA['feedbackUrl']))
+def feedback(feedback, success=True):
+    FEEDBACK_TEMPLATE['status'] = success
+    FEEDBACK_TEMPLATE['feedBackMessage'] = feedback
+
+    _fburl = PLP_JSON_DATA.get('feedbackUrl', PLP_JSON_DATA.get('feedBackurl'))
+    print('Sending "{0}" to "{1}"'.format(dumpsJSON(FEEDBACK_TEMPLATE, indent=4), _fburl))
+    headers = {'Content-type': 'application/json'}
+    r = requests.post(_fburl, allow_redirects=True, timeout=30, json=FEEDBACK_TEMPLATE)
+    print('BO response: {0}'.format(dumpsJSON(loadsJSON(r.text), indent=4)))
 
 
 fiscal_failed = False
-if PLP_JSON_DATA['fiscalData'] or False:
+if 'fiscalData' in PLP_JSON_DATA:
     with ShtrihM(feedback, PLP_JSON_DATA) as cm:
 
         operation = PLP_JSON_DATA['fiscalData']['operation']
@@ -736,7 +738,7 @@ if PLP_JSON_DATA['fiscalData'] or False:
         bye()
 
 
-if PLP_JSON_DATA['ticketData']:
+if 'ticketData' in PLP_JSON_DATA:
     with PSPrint(feedback, PLP_JSON_DATA) as ps:
         ps.printTickets()
 
