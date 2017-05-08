@@ -5,6 +5,12 @@ from sys import exit
 start_time = time()
 
 
+import os
+import signal
+def bye():
+    os.kill(os.getpid(), signal.SIGTERM)
+
+
 # PosXML module
 import                    requests
 import                    xmltodict
@@ -14,8 +20,10 @@ from yaml import load  as loadYAML
 from time import          sleep
 
 class PosXML:
-    def __init__(self, options):
+    def __init__(self, feedback, options):
+        self.feedback = feedback
         self.OPTIONS = { 'headers': { 'content-type': "application/xml" } }
+        self.feedback = feedback
         for key, val in options.items():
             self.OPTIONS[key] = val
         with open('responses.yaml', 'r') as posxml_responses_file:
@@ -90,7 +98,8 @@ from json import load  as loadJSON
 from json import dumps as dumpsJSON
 
 class ShtrihM:
-    def __init__(self, plp_json_data, password=None):
+    def __init__(self, feedback, plp_json_data, password=None):
+        self.feedback      = feedback
         self.PLP_JSON_DATA = plp_json_data
         self.USER_SADM     = plp_json_data['fiscalData']['printerData']['sysAdminPw']
         self.USER_ADM      = plp_json_data['fiscalData']['printerData']['adminPw']
@@ -99,6 +108,7 @@ class ShtrihM:
         self.RETRY_SEC     = 0.1
         self.TIMEOUT_SEC   = 2
         self.v             = win32com.client.Dispatch('Addin.DrvFR')
+        self.feedback('foo')
 
         with open('ECRModes.yaml', 'r', encoding='utf-8') as ecrmode_table_file:
             self.ECRMODE_TABLE = loadYAML(ecrmode_table_file)['ECRMode']
@@ -128,10 +138,6 @@ class ShtrihM:
             print("ENTER to exit(1)")
             input("Press Enter to continue...")
             exit(1)
-
-
-    def feedback(self, feedback):
-        print('Sending "{0}" to "{1}"'.format(feedback, self.PLP_JSON_DATA['feedbackUrl']))
 
 
     def insist(self, method, password=None):
@@ -348,7 +354,7 @@ class ShtrihM:
         if card_payment_amount > 0:
             posxmlIP = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitIp']
             posxmlPort = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitPort']
-            with PosXML({'url': 'http://{0}:{1}'.format(posxmlIP,posxmlPort)}) as posxml:
+            with PosXML(feedback, {'url': 'http://{0}:{1}'.format(posxmlIP,posxmlPort)}) as posxml:
                 posxml.post('CancelAllOperationsRequest', '')
                 response = posxml.post('TransactionRequest', {
                     'TransactionID': self.PLP_JSON_DATA['fiscalData']['businessTransactionId'],
@@ -359,6 +365,7 @@ class ShtrihM:
                     # 'Language'     : 'en',
                 })
                 if response['ReturnCode'] != '0':
+                    self.feedback('Card payment failed\n    {0}:{1}'.format(response['ReturnCode'], response['Reason']))
                     print(dumpsJSON(response, indent=4))
                     print('Card payment failed\n    {0}:{1}'.format(response['ReturnCode'], response['Reason']))
                     card_payment_failed = True
@@ -440,7 +447,8 @@ from PIL          import                  ImageWin
 from PIL          import                  Image
 
 class PSPrint:
-    def __init__(self, plp_json_data):
+    def __init__(self, feedback, plp_json_data):
+        self.feedback = feedback
         self.PLP_JSON_DATA = plp_json_data
 
         printer = self.PLP_JSON_DATA['ticketData']['printerData']['printerName']
@@ -657,7 +665,7 @@ import                    requests
 
 # from PSPrint import PSPrint
 # from ShtrihM import ShtrihM
-# sys.exit("--- {0} seconds ---".format(time() - start_time))
+# bye("--- {0} seconds ---".format(time() - start_time))
 
 # from pyexpat import * # needed for py2exe ??
 
@@ -685,13 +693,18 @@ with open(PLP_FILENAME, 'rU', encoding='utf-8') as plp_data_file:
     # print(PLP_JSON_DATA['salesPointCountry'])
 
 
-with open(path.join(BASEDIR, 'package.json'), 'rU') as package_json_file:
-    PACKAGE_JSON_DATA = loadJSON(package_json_file)
+# with open(path.join(BASEDIR, 'package.json'), 'rU') as package_json_file:
+#     PACKAGE_JSON_DATA = loadJSON(package_json_file)
+
+print(PLP_JSON_DATA['feedbackUrl'])
+
+def feedback(feedback):
+    print('Sending "{0}" to "{1}"'.format(feedback, PLP_JSON_DATA['feedbackUrl']))
 
 
 fiscal_failed = False
 if PLP_JSON_DATA['fiscalData'] or False:
-    with ShtrihM(PLP_JSON_DATA) as cm:
+    with ShtrihM(feedback, PLP_JSON_DATA) as cm:
 
         operation = PLP_JSON_DATA['fiscalData']['operation']
         # print('{0} operation from:\n{1}'.format(operation, PLP_FILENAME))
@@ -720,11 +733,11 @@ if PLP_JSON_DATA['fiscalData'] or False:
     print('{0} operation from:\n{1} {2}.'.format(operation, PLP_FILENAME, ('failed' if fiscal_failed else 'succeeded')))
     if fiscal_failed:
         print('Bye.')
-        sys.exit()
+        bye()
 
 
 if PLP_JSON_DATA['ticketData']:
-    with PSPrint(PLP_JSON_DATA) as ps:
+    with PSPrint(feedback, PLP_JSON_DATA) as ps:
         ps.printTickets()
 
-sys.exit()
+bye()
