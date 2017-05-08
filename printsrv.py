@@ -1,5 +1,9 @@
 # This Python file uses the following encoding: utf-8
 
+from time import time
+from sys import exit
+start_time = time()
+
 
 # PosXML module
 import                    requests
@@ -637,9 +641,7 @@ class PSPrint:
 
 # Main
 
-from time import sleep, time
-start_time = time()
-
+from time import          sleep
 import                    sys
 from os   import          path
 from os   import          chdir
@@ -657,7 +659,6 @@ import                    requests
 # from ShtrihM import ShtrihM
 # sys.exit("--- {0} seconds ---".format(time() - start_time))
 
-
 # from pyexpat import * # needed for py2exe ??
 
 if hasattr(sys, "frozen"):
@@ -665,8 +666,6 @@ if hasattr(sys, "frozen"):
 else:
     BASEDIR = path.dirname(__file__)
 chdir(BASEDIR)
-
-
 
 
 # BASEDIR = path.dirname(path.abspath(__file__))
@@ -685,6 +684,7 @@ with open(PLP_FILENAME, 'rU', encoding='utf-8') as plp_data_file:
     PLP_JSON_DATA = loadJSON(plp_data_file)
     # print(PLP_JSON_DATA['salesPointCountry'])
 
+
 with open(path.join(BASEDIR, 'package.json'), 'rU') as package_json_file:
     PACKAGE_JSON_DATA = loadJSON(package_json_file)
 
@@ -695,6 +695,7 @@ if PLP_JSON_DATA['fiscalData'] or False:
 
         operation = PLP_JSON_DATA['fiscalData']['operation']
         # print('{0} operation from:\n{1}'.format(operation, PLP_FILENAME))
+
 
         operations_a = {
             'cut': cm.cut,
@@ -725,3 +726,5 @@ if PLP_JSON_DATA['fiscalData'] or False:
 if PLP_JSON_DATA['ticketData']:
     with PSPrint(PLP_JSON_DATA) as ps:
         ps.printTickets()
+
+sys.exit()
