@@ -193,15 +193,19 @@
         "fiscalData": {
             "type": "object",
             "properties": {
+                "businessTransactionId": {
+                  "type": "string"
+                },
                 "cardPaymentUnitSettings": {
                     "type": "object",
                     "properties": {
-                        "cardPaymentUnit": {
-                            "type": "string"
-                        }
+                        "cardPaymentUnit": { "type": "string" },
+                        "cardPaymentSettingXml": { "type": "string" },
+                        "cardPaymentSettingIp": { "type": "string" },
+                        "cardPaymentSettingPort": { "type": "string" }
                     },
                     "required": [
-                        "cardPaymentUnit"
+                        "cardPaymentUnit","cardPaymentSettingIp","cardPaymentSettingPort"
                     ]
                 },
                 "printerData": {
@@ -241,7 +245,7 @@
                         "cashierPw": {
                             "type": "string"
                         },
-                        "certUserPw": {
+                        "adminPw": {
                             "type": "string"
                         },
                         "sysAdminPw": {
@@ -258,7 +262,7 @@
                 }
             },
             "required": [
-                "printerData"
+                "printerData", "businessTransactionId", "operation"
             ]
         },
         "insertCash": {
