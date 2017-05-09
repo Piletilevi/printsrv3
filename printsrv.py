@@ -43,22 +43,26 @@ class PosXML:
         dict = { 'PosXML': { '@version':'7.2.0', } }
         dict['PosXML'][func] = data
         payload_xml = xmltodict.unparse(dict, pretty=True).encode('utf-8')
-        http_response = requests.post(self.OPTIONS['url'], data=payload_xml, headers=self.OPTIONS['headers'])
+
+        try:
+            http_response = requests.post(self.OPTIONS['url'], data=payload_xml, headers=self.OPTIONS['headers'])
+        except requests.exceptions.RequestException as e:
+            self.feedback({'code': '', 'message': e.__str__()}, False)
+            self.bye()
+
         response = xmltodict.parse(http_response.content)['PosXML']
         try:
             # find if any key in response matches one of expected response keys
             responseKey = [key for key in self.PXRESPONSES[func] if key in response][0]
         except Exception as e:
-            print('Expected responses: "' + ';'.join(self.PXRESPONSES[func])
-                + '" not present in returned response keys: "'
-                + ';'.join(response.keys()) + '".')
-            print(json.dumps(response, indent=4, encoding='utf-8'))
-            print('Take a screenshot')
-            stdin.readline()
-            raise
-        if response[responseKey]['ReturnCode'] != '0' and not response[responseKey]['Reason']:
-            response[responseKey]['Reason'] = 'ReturnCode: ' + response[responseKey]['ReturnCode']
-        return response[responseKey]
+            self.feedback({'code': '', 'message': 'Expected responses: "{0}" not present in returned response keys: "{1}".'.format(';'.join(self.PXRESPONSES[func]), ';'.join(response.keys()))}, False)
+            self.bye()
+
+        if response[responseKey]['ReturnCode'] != '0':
+            self.feedback({
+                'code': response[responseKey]['ReturnCode'],
+                'message': response[responseKey]['Reason'] or response[responseKey]['ReturnCode']}, False)
+            self.bye()
 
 
     def beep(self):
