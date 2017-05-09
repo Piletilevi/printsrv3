@@ -261,7 +261,7 @@ class ShtrihM:
                 'Tax3': 0,
                 'Tax4': 0,
                 'StringForPrinting': item['name']
-            }.iteritems():
+            }.items():
                 # print('Setting {0} = {1}'.format(attr, value))
                 setattr(self.v, attr, value)
             self._insist(self.v.ReturnSale)
@@ -354,7 +354,7 @@ class ShtrihM:
             self.bye()
 
 
-    def prepareSale():
+    def prepareSale(self):
         payment_method_total = {}
         payment_method_total_validate = {}
         payment_sum_failed = False
