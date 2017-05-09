@@ -20,6 +20,6 @@ setup(
         }
     },
     zipfile = None, #'printsrv-lib.zip',
-    console = OPTIONS,
+    windows = OPTIONS,
     data_files = [ ( '.', ['layout.yaml', 'responses.yaml', 'package.json', 'ECRModes.yaml', 'feedbackTemplate.json'] ) ],
 )

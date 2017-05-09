@@ -317,9 +317,7 @@ class ShtrihM:
         self._insist(self.v.CashOutcome)
 
 
-    def openCashRegister(self, drawer):
-        if not drawer:
-            drawer = 0
+    def openCashRegister(self, drawer=0):
         setattr(self.v, 'DrawerNumber', drawer)
         self._insist(self.v.OpenDrawer)
 
@@ -743,7 +741,7 @@ def doFiscal():
         'endshift':     {'operation': cm.closeShift,       },
         'feed':         {'operation': cm.feed,             },
         'insertcash':   {'operation': cm.insertCash,       'reverse': cm.withdrawCash},
-        'open_cashreg': {'operation': cm.openCashRegister, },
+        'opencashreg':  {'operation': cm.openCashRegister, },
         'refund':       {'operation': cm.cmsale,           },
         'sale':         {'operation': cm.cmsale,           },
         'startshift':   {'operation': noop                 },
