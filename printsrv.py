@@ -420,13 +420,16 @@ class ShtrihM:
             posxmlPort = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitPort']
             with PosXML(self.feedback, self.bye, {'url': 'http://{0}:{1}'.format(posxmlIP,posxmlPort)}) as posxml:
                 posxml.post('CancelAllOperationsRequest', '')
-                response = posxml.post('TransactionRequest', {
-                    'TransactionID': self.PLP_JSON_DATA['fiscalData']['businessTransactionId'],
-                    'Amount'       : card_payment_amount * 100,
-                    'CurrencyName' : 'EUR',
-                    'PrintReceipt' : 2,
-                    'Timeout'      : 100,
-                })
+                response = posxml.post(
+                    ('TransactionRequest' if (self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale') else 'RefundTransactionRequest'),
+                    {
+                        'TransactionID': self.PLP_JSON_DATA['fiscalData']['businessTransactionId'],
+                        'Amount'       : card_payment_amount * 100,
+                        'CurrencyName' : 'EUR',
+                        'PrintReceipt' : 2,
+                        'Timeout'      : 100,
+                    }
+                )
                 if response['ReturnCode'] != '0':
                     self.feedback({'code': response['ReturnCode'], 'message': 'Card payment failed: {0}'.format(response['Reason'])}, False)
                     self.bye()
@@ -713,7 +716,8 @@ def feedback(feedback, success=True, reverse=None):
 
     if r.status_code != requests.codes.ok:
         print('{0}; status_code={1}'.format(r.headers['content-type'], r.status_code))
-        cleanup()
+        if reverse:
+            reverse()
         bye()
 
     try:
@@ -722,36 +726,39 @@ def feedback(feedback, success=True, reverse=None):
         print(e)
         input("Press Enter to continue...")
         print('BO response: {0}'.format(r.text))
-        cleanup()
+        if reverse:
+            reverse()
         bye()
 
     print('BO response: {0}'.format(dumpsJSON(response_json, indent=4)))
 
+
+def noop():
+    pass
+
 def doFiscal():
-    def reverseSale():
-        None
-
-    operations_a = {
-        'cut':          {'operation': cm.cut,              'reverse': None},
-        'endshift':     {'operation': cm.closeShift,       'reverse': None},
-        'feed':         {'operation': cm.feed,             'reverse': None},
-        'insertcash':   {'operation': cm.insertCash,       'reverse': cm.withdrawCash},
-        'open_cashreg': {'operation': cm.openCashRegister, 'reverse': None},
-        'refund':       {'operation': cm.refund,           'reverse': None},
-        'sale':         {'operation': cm.cmsale,           'reverse': cm.refund},
-        'startshift':   {'operation': cm.openShift,        'reverse': None},
-        'withdrawcash': {'operation': cm.withdrawCash,     'reverse': cm.insertCash},
-        'xreport':      {'operation': cm.xReport,          'reverse': None},
-    }
-    VALID_OPERATIONS = operations_a.keys()
-    operation = PLP_JSON_DATA['fiscalData']['operation']
-    if operation not in VALID_OPERATIONS:
-        raise ValueError('"operation" must be one of {0} in plp file. Got {1} instead.'.format(VALID_OPERATIONS, operation))
-
     with ShtrihM(feedback, bye, PLP_JSON_DATA) as cm:
+        operations_a = {
+        'cut':          {'operation': cm.cut,              },
+        'endshift':     {'operation': cm.closeShift,       },
+        'feed':         {'operation': cm.feed,             },
+        'insertcash':   {'operation': cm.insertCash,       'reverse': cm.withdrawCash},
+        'open_cashreg': {'operation': cm.openCashRegister, },
+        'refund':       {'operation': cm.cmsale,           },
+        'sale':         {'operation': cm.cmsale,           },
+        'startshift':   {'operation': noop                 },
+        'withdrawcash': {'operation': cm.withdrawCash,     'reverse': cm.insertCash},
+        'xreport':      {'operation': cm.xReport,          },
+        }
+        VALID_OPERATIONS = operations_a.keys()
+        operation = PLP_JSON_DATA['fiscalData']['operation']
+        if operation not in VALID_OPERATIONS:
+            raise ValueError('"operation" must be one of {0} in plp file. Got {1} instead.'.format(VALID_OPERATIONS, operation))
+
         operations_a[operation]['operation']()
 
-    feedback({'code': '0', 'message': 'Fiscal succeeded'}, success=True, reverse=operations_a[operation]['reverse'])
+    feedback({'code': '0', 'message': 'Fiscal succeeded'}, success=True, reverse=operations_a[operation].get('reverse', None))
+
 
 if 'fiscalData' in PLP_JSON_DATA:
     doFiscal()
