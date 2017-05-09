@@ -30,12 +30,12 @@ class PosXML:
 
 
     def __enter__(self):
-        print('with PosXML')
+        print('Enter PosXML')
         return self
 
 
     def __exit__(self, exc_type, exc_value, traceback):
-        print('without PosXML')
+        print('Exit PosXML')
         pass
 
 
@@ -118,12 +118,12 @@ class ShtrihM:
 
 
     def __enter__(self):
-        print('with ShtrihM')
+        print('Enter ShtrihM')
         return self
 
 
     def __exit__(self, exc_type, exc_value, traceback):
-        print('without ShtrihM')
+        print('Exit ShtrihM')
         del self.v
 
 
@@ -139,8 +139,9 @@ class ShtrihM:
             self.bye()
 
 
-    def insist(self, method, password=None):
+    def _insist(self, method, password=None):
         self.v.Password = password if password else self.password
+        print('Method: {0}'.format(method))
         method()
         self.prc()
         # if self.v.ResultCode:
@@ -159,36 +160,36 @@ class ShtrihM:
         setattr(self.v, 'ComNumber', self.PLP_JSON_DATA['fiscalData']['printerData']['comPortNumber'])
         setattr(self.v, 'BaudRate', self.PLP_JSON_DATA['fiscalData']['printerData']['comPortBaudRate'])
         # setattr(self.v, 'Timeout ', 100)
-        self.insist(self.v.WaitConnection)
-        self.insist(self.v.Connect)
+        self._insist(self.v.WaitConnection)
+        self._insist(self.v.Connect)
 
 
     def closeShift(self):
-        self.insist(self.v.PrintReportWithCleaning, self.USER_ADM)
+        self._insist(self.v.PrintReportWithCleaning, self.USER_ADM)
 
 
     def xReport(self):
-        self.insist(self.v.PrintReportWithoutCleaning, self.USER_ADM)
+        self._insist(self.v.PrintReportWithoutCleaning, self.USER_ADM)
 
 
     def openShift(self):
         # Shift will be actually opened with first recipe
-        self.insist(self.v.OpenSession, self.USER_ADM)
+        self._insist(self.v.OpenSession, self.USER_ADM)
 
 
     def sysAdminCancelCheck(self):
-        self.insist(self.v.SysAdminCancelCheck, self.USER_SADM)
+        self._insist(self.v.SysAdminCancelCheck, self.USER_SADM)
 
 
     def setMode2(self):
         timecount = 0
 
         if self.v.ECRMode == 8:
-            self.insist(self.v.Beep)
+            self._insist(self.v.Beep)
             print("Waiting for mode change")
             print("self.v.ECRMode8Status " + str(self.v.ECRMode8Status))
             while self.v.ECRMode == 8:
-                self.insist(self.v.GetShortECRStatus)
+                self._insist(self.v.GetShortECRStatus)
                 sleep(self.RETRY_SEC)
                 timecount = timecount + self.RETRY_SEC
                 if timecount > self.TIMEOUT_SEC:
@@ -197,13 +198,13 @@ class ShtrihM:
                     self.sysAdminCancelCheck()
             print("ECRMode " + self.ecr_mode_string(self.v.ECRMode))
 
-        self.insist(self.v.ResetECR)
+        self._insist(self.v.ResetECR)
 
         if self.v.ECRMode == 0:
-            self.insist(self.v.Beep)
+            self._insist(self.v.Beep)
             print("Waiting for mode change")
             while self.v.ECRMode == 0:
-                self.insist(self.v.GetShortECRStatus)
+                self._insist(self.v.GetShortECRStatus)
                 sleep(self.RETRY_SEC)
 
         if self.v.ECRMode not in [2,3,4]:
@@ -233,7 +234,7 @@ class ShtrihM:
             }.items():
                 # print('Setting {0} = {1}'.format(attr, value))
                 setattr(self.v, attr, value)
-            self.insist(self.v.Sale)
+            self._insist(self.v.Sale)
 
         for item in payment_options:
             # print('Setting from {0}'.format(item))
@@ -244,7 +245,7 @@ class ShtrihM:
 
         setattr(self.v, 'StringForPrinting', '')
         # setattr(self.v, 'StringForPrinting', '- - - - - - - - - - - - - - - - - - - -')
-        self.insist(self.v.CloseCheck)
+        self._insist(self.v.CloseCheck)
 
 
     def returnSale(self, sales_options, payment_options):
@@ -263,7 +264,7 @@ class ShtrihM:
             }.iteritems():
                 # print('Setting {0} = {1}'.format(attr, value))
                 setattr(self.v, attr, value)
-            self.insist(self.v.ReturnSale)
+            self._insist(self.v.ReturnSale)
 
         for item in payment_options:
             # print('Setting from {0}'.format(item))
@@ -273,7 +274,7 @@ class ShtrihM:
         setattr(self.v, 'DiscountOnCheck', 0)
         setattr(self.v, 'StringForPrinting', '')
         # setattr(self.v, 'StringForPrinting', '- - - - - - - - - - - - - - - - - - - -')
-        self.insist(self.v.CloseCheck)
+        self._insist(self.v.CloseCheck)
 
 
     def printLine(self, string = ' '):
@@ -286,7 +287,7 @@ class ShtrihM:
             # setattr(self.v, 'StringForPrinting', 'Сервисный сбор')
             setattr(self.v, 'StringForPrinting', string)
             print('Printing on receipt: "{0}"'.format(string))
-            self.insist(self.v.PrintString)
+            self._insist(self.v.PrintString)
 
 
     def feed(self, feedLineCount = 4):
@@ -302,53 +303,60 @@ class ShtrihM:
             setattr(self.v, 'FeedAfterCut', True)
             setattr(self.v, 'FeedLineCount', feedAfterCutCount)
         setattr(self.v, 'CutType', partialCut)
-        self.insist(self.v.CutCheck)
+        self._insist(self.v.CutCheck)
 
 
     def insertCash(self):
+        print('insertCash')
         setattr(self.v, 'Summ1', self.PLP_JSON_DATA['fiscalData']['cashAmount'])
-        self.insist(self.v.CashIncome)
+        self._insist(self.v.CashIncome)
 
 
     def withdrawCash(self):
         setattr(self.v, 'Summ1', self.PLP_JSON_DATA['fiscalData']['cashAmount'])
-        self.insist(self.v.CashOutcome)
+        self._insist(self.v.CashOutcome)
 
 
     def openCashRegister(self, drawer):
         if not drawer:
             drawer = 0
         setattr(self.v, 'DrawerNumber', drawer)
-        self.insist(self.v.OpenDrawer)
+        self._insist(self.v.OpenDrawer)
 
 
-    def cmsale(self):
+    def reverseSale(self):
         card_payment_amount = 0
-        card_payment_failed = False
-
         for payment in self.PLP_JSON_DATA['fiscalData']['payments']:
             if payment['type'] == '4':
                 card_payment_amount += payment['cost']
-            # print(payment['type'], card_payment_amount)
-
 
         if card_payment_amount > 0:
             posxmlIP = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitIp']
             posxmlPort = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitPort']
             with PosXML(self.feedback, self.bye, {'url': 'http://{0}:{1}'.format(posxmlIP,posxmlPort)}) as posxml:
                 posxml.post('CancelAllOperationsRequest', '')
-                response = posxml.post('TransactionRequest', {
-                    'TransactionID': self.PLP_JSON_DATA['fiscalData']['businessTransactionId'],
-                    'Amount'       : card_payment_amount * 100,
-                    'CurrencyName' : 'EUR',
-                    'PrintReceipt' : 2,
-                    'Timeout'      : 100,
-                    # 'Language'     : 'en',
+                response = posxml.post('ReverseTransactionRequest', {
+                'TransactionID': self.PLP_JSON_DATA['fiscalData']['businessTransactionId'],
+                'Amount'       : card_payment_amount * 100,
+                'CurrencyName' : 'EUR',
+                'PrintReceipt' : 1,
+                'Timeout'      : 100,
+                'ForcedAction' : 1,
                 })
                 if response['ReturnCode'] != '0':
-                    self.feedback({'code': response['ReturnCode'], 'message': 'Card payment failed: {0}'.format(response['Reason'])}, False)
+                    self.feedback({'code': response['ReturnCode'], 'message': 'Reverse sale failed: {0}'.format(response['Reason'])}, False)
                     self.bye()
 
+        (sales_options, payment_options) = self.prepareSale()
+
+        if self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale':
+            self.returnSale(sales_options, payment_options)
+        else:
+            self.feedback({'code': '1', 'message': 'operation={0} - must be sale.'.format(self.PLP_JSON_DATA['fiscalData']['operation'])}, False)
+            self.bye()
+
+
+    def prepareSale():
         payment_method_total = {}
         payment_method_total_validate = {}
         payment_sum_failed = False
@@ -398,6 +406,33 @@ class ShtrihM:
                 self.feedback({'code': '1', 'message': 'Fiscal data error: Sum of component costs ({0}) doesnot match sum of payment costs ({1})'.format(payment_method_total_validate[ix], payment_method_total[ix])}, False)
                 self.bye()
 
+        return (sales_options, payment_options)
+
+
+    def cmsale(self):
+        card_payment_amount = 0
+        for payment in self.PLP_JSON_DATA['fiscalData']['payments']:
+            if payment['type'] == '4':
+                card_payment_amount += payment['cost']
+
+        if card_payment_amount > 0:
+            posxmlIP = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitIp']
+            posxmlPort = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitPort']
+            with PosXML(self.feedback, self.bye, {'url': 'http://{0}:{1}'.format(posxmlIP,posxmlPort)}) as posxml:
+                posxml.post('CancelAllOperationsRequest', '')
+                response = posxml.post('TransactionRequest', {
+                    'TransactionID': self.PLP_JSON_DATA['fiscalData']['businessTransactionId'],
+                    'Amount'       : card_payment_amount * 100,
+                    'CurrencyName' : 'EUR',
+                    'PrintReceipt' : 2,
+                    'Timeout'      : 100,
+                })
+                if response['ReturnCode'] != '0':
+                    self.feedback({'code': response['ReturnCode'], 'message': 'Card payment failed: {0}'.format(response['Reason'])}, False)
+                    self.bye()
+
+        (sales_options, payment_options) = self.prepareSale()
+
         if self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale':
             self.sale(sales_options, payment_options)
         elif self.PLP_JSON_DATA['fiscalData']['operation'] == 'refund':
@@ -427,19 +462,19 @@ class PSPrint:
         try:
             hprinter = win32print.OpenPrinter(printer)
         except Exception as e:
-            self.feedback({'code': '', 'message': e}, False)
+            self.feedback({'code': '', 'message': e.__str__()}, False)
             self.bye()
 
         try:
             devmode = win32print.GetPrinter(hprinter, 2)['pDevMode']
         except Exception as e:
-            self.feedback({'code': '', 'message': e}, False)
+            self.feedback({'code': '', 'message': e.__str__()}, False)
             self.bye()
 
         try:
             devmode.Orientation = 2
         except Exception as e:
-            self.feedback({'code': '', 'message': e}, False)
+            self.feedback({'code': '', 'message': e.__str__()}, False)
             self.bye()
 
         printjobs = win32print.EnumJobs(hprinter, 0, 999)
@@ -450,13 +485,13 @@ class PSPrint:
         try:
             self.DEVICE_CONTEXT_HANDLE = win32gui.CreateDC('WINSPOOL', printer, devmode)
         except Exception as e:
-            self.feedback({'code': '', 'message': e}, False)
+            self.feedback({'code': '', 'message': e.__str__()}, False)
             self.bye()
 
         try:
             self.DEVICE_CONTEXT = win32ui.CreateDCFromHandle(self.DEVICE_CONTEXT_HANDLE)
         except Exception as e:
-            self.feedback({'code': '', 'message': e}, False)
+            self.feedback({'code': '', 'message': e.__str__()}, False)
             self.bye()
 
         with open('layout.yaml', 'r', encoding='utf-8') as layout_file:
@@ -464,12 +499,12 @@ class PSPrint:
 
 
     def __enter__(self):
-        print('with PSPrint')
+        print('Enter PSPrint')
         return self
 
 
     def __exit__(self, exc_type, exc_value, traceback):
-        print('without PSPrint')
+        print('Exit PSPrint')
         pass
 
 
@@ -666,7 +701,8 @@ with open('feedbackTemplate.json', 'rU', encoding='utf-8') as feedback_template_
     FEEDBACK_TEMPLATE['businessTransactionId'] = PLP_JSON_DATA.get('fiscalData', {'businessTransactionId':''}).get('businessTransactionId', '')
     FEEDBACK_TEMPLATE['operation'] = PLP_JSON_DATA.get('fiscalData').get('operation')
 
-def feedback(feedback, success=True):
+
+def feedback(feedback, success=True, reverse=None):
     FEEDBACK_TEMPLATE['status'] = success
     FEEDBACK_TEMPLATE['feedBackMessage'] = feedback.get('message')
 
@@ -674,35 +710,51 @@ def feedback(feedback, success=True):
     print('Sending "{0}" to "{1}"'.format(dumpsJSON(FEEDBACK_TEMPLATE, indent=4), _fburl))
     headers = {'Content-type': 'application/json'}
     r = requests.post(_fburl, allow_redirects=True, timeout=30, json=FEEDBACK_TEMPLATE)
-    print('BO response: {0}'.format(dumpsJSON(loadsJSON(r.text), indent=4)))
 
+    if r.status_code != requests.codes.ok:
+        print('{0}; status_code={1}'.format(r.headers['content-type'], r.status_code))
+        cleanup()
+        bye()
+
+    try:
+        response_json = r.json()
+    except Exception as e:
+        print(e)
+        input("Press Enter to continue...")
+        print('BO response: {0}'.format(r.text))
+        cleanup()
+        bye()
+
+    print('BO response: {0}'.format(dumpsJSON(response_json, indent=4)))
+
+def doFiscal():
+    def reverseSale():
+        None
+
+    operations_a = {
+        'cut':          {'operation': cm.cut,              'reverse': None},
+        'endshift':     {'operation': cm.closeShift,       'reverse': None},
+        'feed':         {'operation': cm.feed,             'reverse': None},
+        'insertcash':   {'operation': cm.insertCash,       'reverse': cm.withdrawCash},
+        'open_cashreg': {'operation': cm.openCashRegister, 'reverse': None},
+        'refund':       {'operation': cm.refund,           'reverse': None},
+        'sale':         {'operation': cm.cmsale,           'reverse': cm.refund},
+        'startshift':   {'operation': cm.openShift,        'reverse': None},
+        'withdrawcash': {'operation': cm.withdrawCash,     'reverse': cm.insertCash},
+        'xreport':      {'operation': cm.xReport,          'reverse': None},
+    }
+    VALID_OPERATIONS = operations_a.keys()
+    operation = PLP_JSON_DATA['fiscalData']['operation']
+    if operation not in VALID_OPERATIONS:
+        raise ValueError('"operation" must be one of {0} in plp file. Got {1} instead.'.format(VALID_OPERATIONS, operation))
+
+    with ShtrihM(feedback, bye, PLP_JSON_DATA) as cm:
+        operations_a[operation]['operation']()
+
+    feedback({'code': '0', 'message': 'Fiscal succeeded'}, success=True, reverse=operations_a[operation]['reverse'])
 
 if 'fiscalData' in PLP_JSON_DATA:
-    with ShtrihM(feedback, bye, PLP_JSON_DATA) as cm:
-
-        operation = PLP_JSON_DATA['fiscalData']['operation']
-        # print('{0} operation from:\n{1}'.format(operation, PLP_FILENAME))
-
-
-        operations_a = {
-            'cut': cm.cut,
-            'endshift': cm.closeShift,
-            'feed': cm.feed,
-            'insertcash': cm.insertCash,
-            'open_cashreg': cm.openCashRegister,
-            'refund': cm.cmsale,
-            'sale': cm.cmsale,
-            'startshift': cm.openShift,
-            'withdrawcash': cm.withdrawCash,
-            'xreport': cm.xReport
-        }
-        VALID_OPERATIONS = operations_a.keys()
-        if operation not in VALID_OPERATIONS:
-            raise ValueError('"operation" must be one of {0} in plp file. Got {1} instead.'.format(VALID_OPERATIONS, operation))
-        # print('operation {0} in {1}'.format(operation, VALID_OPERATIONS))
-        # print('operation {0}'.format(operations_a[operation]))
-
-    feedback({'code': '0', 'message': 'Fiscal succeeded'}, True)
+    doFiscal()
 
 
 if 'ticketData' in PLP_JSON_DATA:
