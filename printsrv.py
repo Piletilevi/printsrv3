@@ -1,7 +1,6 @@
 # This Python file uses the following encoding: utf-8
 
 from time import time
-from sys import exit
 start_time = time()
 
 
@@ -20,9 +19,10 @@ from yaml import load  as loadYAML
 from time import          sleep
 
 class PosXML:
-    def __init__(self, feedback, options):
+    def __init__(self, feedback, bye, options):
         self.feedback = feedback
-        self.OPTIONS = { 'headers': { 'content-type': "application/xml" } }
+        self.bye      = bye
+        self.OPTIONS  = { 'headers': { 'content-type': "application/xml" } }
         for key, val in options.items():
             self.OPTIONS[key] = val
         with open('responses.yaml', 'r') as posxml_responses_file:
@@ -91,14 +91,15 @@ class PosXML:
 
 # ShtrihM module
 import                    win32com.client
-import                    posxml
+# import                    posxml
 from yaml import load  as loadYAML
 from json import load  as loadJSON
 from json import dumps as dumpsJSON
 
 class ShtrihM:
-    def __init__(self, feedback, plp_json_data, password=None):
+    def __init__(self, feedback, bye, plp_json_data, password=None):
         self.feedback      = feedback
+        self.bye           = bye
         self.PLP_JSON_DATA = plp_json_data
         self.USER_SADM     = plp_json_data['fiscalData']['printerData']['sysAdminPw']
         self.USER_ADM      = plp_json_data['fiscalData']['printerData']['adminPw']
@@ -107,7 +108,6 @@ class ShtrihM:
         self.RETRY_SEC     = 0.1
         self.TIMEOUT_SEC   = 2
         self.v             = win32com.client.Dispatch('Addin.DrvFR')
-        self.feedback('foo')
 
         with open('ECRModes.yaml', 'r', encoding='utf-8') as ecrmode_table_file:
             self.ECRMODE_TABLE = loadYAML(ecrmode_table_file)['ECRMode']
@@ -134,23 +134,24 @@ class ShtrihM:
     def prc(self):
         if self.v.ResultCode:
             print(str(self.v.ResultCode) + ':' + self.v.ResultCodeDescription)
-            print("ENTER to exit(1)")
-            input("Press Enter to continue...")
-            exit(1)
+            self.feedback({'code': str(self.v.ResultCode), 'message': self.v.ResultCodeDescription}, False)
+            # input("Press Enter to continue...")
+            self.bye()
 
 
     def insist(self, method, password=None):
         self.v.Password = password if password else self.password
         method()
-        if self.v.ResultCode:
-            self.feedback(str(self.v.ResultCode) + ':' + self.v.ResultCodeDescription)
-
-            while self.v.ResultCode:
-                print(str(self.v.ResultCode) + ':' + self.v.ResultCodeDescription)
-                print('Method: {0}'.format(method))
-                print("ENTER to retry")
-                input("Press Enter to continue...")
-                method()
+        self.prc()
+        # if self.v.ResultCode:
+        #     self.feedback({'code': str(self.v.ResultCode), 'message': self.v.ResultCodeDescription}, False)
+        #
+        #     while self.v.ResultCode:
+        #         print(str(self.v.ResultCode) + ':' + self.v.ResultCodeDescription)
+        #         print('Method: {0}'.format(method))
+        #         print("ENTER to retry")
+        #         input("Press Enter to continue...")
+        #         method()
         self.v.Password = 0
 
 
@@ -160,32 +161,23 @@ class ShtrihM:
         # setattr(self.v, 'Timeout ', 100)
         self.insist(self.v.WaitConnection)
         self.insist(self.v.Connect)
-        self.prc()
 
 
     def closeShift(self):
         self.insist(self.v.PrintReportWithCleaning, self.USER_ADM)
-        self.prc()
-        return True
 
 
     def xReport(self):
         self.insist(self.v.PrintReportWithoutCleaning, self.USER_ADM)
-        self.prc()
-        return True
 
 
     def openShift(self):
         # Shift will be actually opened with first recipe
         self.insist(self.v.OpenSession, self.USER_ADM)
-        self.prc()
-        return True
 
 
     def sysAdminCancelCheck(self):
-        self.v.Password = self.USER_SADM
-        self.v.SysAdminCancelCheck()
-        self.v.Password = 0
+        self.insist(self.v.SysAdminCancelCheck, self.USER_SADM)
 
 
     def setMode2(self):
@@ -206,7 +198,6 @@ class ShtrihM:
             print("ECRMode " + self.ecr_mode_string(self.v.ECRMode))
 
         self.insist(self.v.ResetECR)
-        self.prc()
 
         if self.v.ECRMode == 0:
             self.insist(self.v.Beep)
@@ -216,17 +207,13 @@ class ShtrihM:
                 sleep(self.RETRY_SEC)
 
         if self.v.ECRMode not in [2,3,4]:
-            print("Can't go on with ECRMode: " + self.ecr_mode_string(self.v.ECRMode))
-            print("Exiting (Press ENTER)")
-            input("Press Enter to continue...")
-            exit(1)
+            self.feedback({'code': 1, 'message': "Can't go on with ECRMode: " + self.ecr_mode_string(self.v.ECRMode)})
+            self.bye()
 
         if self.v.ECRMode == 3:
-            # print(self.ecr_mode_string(self.v.ECRMode))
             self.closeShift()
 
         if self.v.ECRMode == 4:
-            # print(self.ecr_mode_string(self.v.ECRMode))
             self.openShift()
 
 
@@ -305,7 +292,6 @@ class ShtrihM:
     def feed(self, feedLineCount = 4):
         for x in range(0, feedLineCount):
             self.printLine()
-        return True
 
 
     def cut(self, feedAfterCutCount = 0, partialCut = True):
@@ -317,19 +303,16 @@ class ShtrihM:
             setattr(self.v, 'FeedLineCount', feedAfterCutCount)
         setattr(self.v, 'CutType', partialCut)
         self.insist(self.v.CutCheck)
-        return True
 
 
     def insertCash(self):
         setattr(self.v, 'Summ1', self.PLP_JSON_DATA['fiscalData']['cashAmount'])
         self.insist(self.v.CashIncome)
-        return True
 
 
     def withdrawCash(self):
         setattr(self.v, 'Summ1', self.PLP_JSON_DATA['fiscalData']['cashAmount'])
         self.insist(self.v.CashOutcome)
-        return True
 
 
     def openCashRegister(self, drawer):
@@ -337,7 +320,6 @@ class ShtrihM:
             drawer = 0
         setattr(self.v, 'DrawerNumber', drawer)
         self.insist(self.v.OpenDrawer)
-        return True
 
 
     def cmsale(self):
@@ -353,7 +335,7 @@ class ShtrihM:
         if card_payment_amount > 0:
             posxmlIP = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitIp']
             posxmlPort = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitPort']
-            with PosXML(feedback, {'url': 'http://{0}:{1}'.format(posxmlIP,posxmlPort)}) as posxml:
+            with PosXML(self.feedback, self.bye, {'url': 'http://{0}:{1}'.format(posxmlIP,posxmlPort)}) as posxml:
                 posxml.post('CancelAllOperationsRequest', '')
                 response = posxml.post('TransactionRequest', {
                     'TransactionID': self.PLP_JSON_DATA['fiscalData']['businessTransactionId'],
@@ -364,16 +346,8 @@ class ShtrihM:
                     # 'Language'     : 'en',
                 })
                 if response['ReturnCode'] != '0':
-                    self.feedback('Card payment failed\n    {0}:{1}'.format(response['ReturnCode'], response['Reason']), False)
-                    # print('Card payment failed\n    {0}:{1}'.format(response['ReturnCode'], response['Reason']))
-                    card_payment_failed = True
-                    # self.printLine('------------------------------------')
-                    # self.printLine('Card payment failed !!!')
-                    # self.printLine('Code: {0}'.format(response['ReturnCode']))
-                    # self.printLine('Reason: {0}'.format(response['Reason']))
-                    # self.printLine('------------------------------------')
-                    # self.cut()
-                    return False
+                    self.feedback({'code': response['ReturnCode'], 'message': 'Card payment failed: {0}'.format(response['Reason'])}, False)
+                    self.bye()
 
         payment_method_total = {}
         payment_method_total_validate = {}
@@ -420,18 +394,17 @@ class ShtrihM:
                 self.printLine('------------------------------------')
                 for i in range(0, 3):
                     self.printLine()
-                payment_sum_failed = True
 
-        if payment_sum_failed:
-            self.cut()
-        elif self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale':
+                self.feedback({'code': '1', 'message': 'Fiscal data error: Sum of component costs ({0}) doesnot match sum of payment costs ({1})'.format(payment_method_total_validate[ix], payment_method_total[ix])}, False)
+                self.bye()
+
+        if self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale':
             self.sale(sales_options, payment_options)
         elif self.PLP_JSON_DATA['fiscalData']['operation'] == 'refund':
             self.returnSale(sales_options, payment_options)
         else:
-            raise ValueError('operation={0} - must be sale/refund.'.format(self.PLP_JSON_DATA['fiscalData']['operation']))
-
-        return True
+            self.feedback({'code': '1', 'message': 'operation={0} - must be sale/refund.'.format(self.PLP_JSON_DATA['fiscalData']['operation'])}, False)
+            self.bye()
 
 
 # PSPrint module
@@ -445,44 +418,46 @@ from PIL          import                  ImageWin
 from PIL          import                  Image
 
 class PSPrint:
-    def __init__(self, feedback, plp_json_data):
-        self.feedback = feedback
+    def __init__(self, feedback, bye, plp_json_data):
+        self.feedback      = feedback
+        self.bye           = bye
         self.PLP_JSON_DATA = plp_json_data
 
         printer = self.PLP_JSON_DATA['ticketData']['printerData']['printerName']
         try:
             hprinter = win32print.OpenPrinter(printer)
-        except:
-            print("E: exception while opening printer")
-            raise e
+        except Exception as e:
+            self.feedback({'code': '', 'message': e}, False)
+            self.bye()
 
         try:
-            devmode = win32print.GetPrinter(hprinter, 2)["pDevMode"]
+            devmode = win32print.GetPrinter(hprinter, 2)['pDevMode']
         except Exception as e:
-            print("E: exception while opening devmode")
-            raise e
+            self.feedback({'code': '', 'message': e}, False)
+            self.bye()
 
         try:
             devmode.Orientation = 2
-        except:
-            print("Setting orientation failed: {0}".format(sys.exc_info()[0]))
+        except Exception as e:
+            self.feedback({'code': '', 'message': e}, False)
+            self.bye()
 
         printjobs = win32print.EnumJobs(hprinter, 0, 999)
         while len(printjobs) != 0:
-            ret = windll.user32.MessageBoxW(0, "Printer has old jobs in queue".decode(), "Check printer!".decode(), 0x40 | 0x0) #OK only
+            ret = windll.user32.MessageBoxW(0, 'Printer has old jobs in queue'.decode(), 'Check printer!'.decode(), 0x40 | 0x0) #OK only
             printjobs = win32print.EnumJobs(hprinter, 0, 999)
 
         try:
-            self.DEVICE_CONTEXT_HANDLE = win32gui.CreateDC("WINSPOOL", printer, devmode)
+            self.DEVICE_CONTEXT_HANDLE = win32gui.CreateDC('WINSPOOL', printer, devmode)
         except Exception as e:
-            print("E: exception while creating DEVICE_CONTEXT_HANDLE")
-            raise e
+            self.feedback({'code': '', 'message': e}, False)
+            self.bye()
 
         try:
             self.DEVICE_CONTEXT = win32ui.CreateDCFromHandle(self.DEVICE_CONTEXT_HANDLE)
         except Exception as e:
-            print("E: exception while creating DEVICE_CONTEXT")
-            raise e
+            self.feedback({'code': '', 'message': e}, False)
+            self.bye()
 
         with open('layout.yaml', 'r', encoding='utf-8') as layout_file:
             self.PS_LAYOUT = loadYAML(layout_file)
@@ -544,7 +519,6 @@ class PSPrint:
         y = int(y)
         dib.draw(self.DEVICE_CONTEXT_HANDLE, (x, y, x + bmp.size[0], y + bmp.size[1]))
         print('dimensions: {0}'.format(bmp))
-        # exit(0)
 
 
     def _startDocument(self):
@@ -651,7 +625,6 @@ from time import          sleep
 import                    sys
 from os   import          path
 from os   import          chdir
-from sys  import exit  as sysexit
 from sys  import          argv
 from sys  import path  as sysPath
 from json import load  as loadJSON
@@ -695,7 +668,7 @@ with open('feedbackTemplate.json', 'rU', encoding='utf-8') as feedback_template_
 
 def feedback(feedback, success=True):
     FEEDBACK_TEMPLATE['status'] = success
-    FEEDBACK_TEMPLATE['feedBackMessage'] = feedback
+    FEEDBACK_TEMPLATE['feedBackMessage'] = feedback.get('message')
 
     _fburl = PLP_JSON_DATA.get('feedbackUrl', PLP_JSON_DATA.get('feedBackurl'))
     print('Sending "{0}" to "{1}"'.format(dumpsJSON(FEEDBACK_TEMPLATE, indent=4), _fburl))
@@ -704,9 +677,8 @@ def feedback(feedback, success=True):
     print('BO response: {0}'.format(dumpsJSON(loadsJSON(r.text), indent=4)))
 
 
-fiscal_failed = False
 if 'fiscalData' in PLP_JSON_DATA:
-    with ShtrihM(feedback, PLP_JSON_DATA) as cm:
+    with ShtrihM(feedback, bye, PLP_JSON_DATA) as cm:
 
         operation = PLP_JSON_DATA['fiscalData']['operation']
         # print('{0} operation from:\n{1}'.format(operation, PLP_FILENAME))
@@ -730,16 +702,11 @@ if 'fiscalData' in PLP_JSON_DATA:
         # print('operation {0} in {1}'.format(operation, VALID_OPERATIONS))
         # print('operation {0}'.format(operations_a[operation]))
 
-        fiscal_failed = not operations_a[operation]()
-
-    print('{0} operation from:\n{1} {2}.'.format(operation, PLP_FILENAME, ('failed' if fiscal_failed else 'succeeded')))
-    if fiscal_failed:
-        print('Bye.')
-        bye()
+    feedback({'code': '0', 'message': 'Fiscal succeeded'}, True)
 
 
 if 'ticketData' in PLP_JSON_DATA:
-    with PSPrint(feedback, PLP_JSON_DATA) as ps:
+    with PSPrint(feedback, bye, PLP_JSON_DATA) as ps:
         ps.printTickets()
 
 bye()
