@@ -25,6 +25,7 @@ salesPoint:
     y: 100
 imageLeft:
   type: image
+  orientation: 270 
   instances:
   - x: 100
     y: 132
