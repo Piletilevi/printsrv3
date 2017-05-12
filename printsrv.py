@@ -25,7 +25,7 @@ class PosXML:
         self.OPTIONS  = { 'headers': { 'content-type': "application/xml" } }
         for key, val in options.items():
             self.OPTIONS[key] = val
-        with open('responses.yaml', 'r') as posxml_responses_file:
+        with open('posxml_responses.yaml', 'r') as posxml_responses_file:
             self.PXRESPONSES = loadYAML(posxml_responses_file)
 
 
@@ -732,7 +732,7 @@ def feedback(feedback, success=True, reverse=None):
             reverse()
         bye()
 
-    print('BO response: {0}'.format(dumpsJSON(response_json, indent=4)))
+        print('BO response: {0}'.format(dumpsJSON(response_json, indent=4)))
 
 
 def noop():
