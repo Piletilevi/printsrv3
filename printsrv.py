@@ -161,8 +161,14 @@ class ShtrihM:
 
 
     def connect(self):
+        _baud_rate = self.PLP_JSON_DATA['fiscalData']['printerData']['comPortBaudRate']
+        if _baud_rate > 6:
+            _baud_rates = {2400: 0, 4800: 1, 9600: 2, 19200: 3, 38400: 4, 57600: 5, 115200: 6}
+            _baud_rate = _baud_rates[_baud_rate] if _baud_rate in _baud_rates else -1
+        if _baud_rate < 0:
+            raise ValueError('Unsupported baud rate for fiscal register. {0} not in {1}.'.format(self.PLP_JSON_DATA['fiscalData']['printerData']['comPortBaudRate'], _baud_rates))
         setattr(self.v, 'ComNumber', self.PLP_JSON_DATA['fiscalData']['printerData']['comPortNumber'])
-        setattr(self.v, 'BaudRate', self.PLP_JSON_DATA['fiscalData']['printerData']['comPortBaudRate'])
+        setattr(self.v, 'BaudRate', _baud_rate)
         # setattr(self.v, 'Timeout ', 100)
         self._insist(self.v.WaitConnection)
         self._insist(self.v.Connect)
