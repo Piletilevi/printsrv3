@@ -22,7 +22,14 @@ setup(
     zipfile = None, #'printsrv-lib.zip',
     console = OPTIONS,
     data_files = [
-        ( '.', ['layout.yaml', 'posxml_responses.yaml', 'package.json', 'ECRModes.yaml', 'feedbackTemplate.json'] ),
+        ( 'options', [ 'options\\layout.yaml'
+                     , 'options\\posxml_responses.yaml'
+                     , 'options\\fiscal_reply.yaml'
+                     , 'options\\ECRModes.yaml'
+                     , 'options\\feedbackTemplate.json'
+                     ]
+        ),
+        ( '.', ['package.json'] ),
         ( 'img', [] )
     ],
 )
