@@ -1,8 +1,10 @@
 # CHANGELOG
 
 ### 3.0.0 JSON
+- xx/05/2017, Mihkel Putrinš
+  - Completely rewritten in python 3
 - xx/02/2017, Mihkel Putrinš
-- BO provides complete fiscal and ticket information in single JSON
+  - BO provides complete fiscal and ticket information in single JSON
 
 ...
 
