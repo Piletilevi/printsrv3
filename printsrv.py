@@ -801,6 +801,7 @@ def feedback(feedback, success=True, reverse=None):
 
     try:
         response_json = r.json()
+        print('BO response: {0}'.format(dumpsJSON(response_json, indent=4)))
     except Exception as e:
         print(e)
         input("Press Enter to continue...")
@@ -809,7 +810,6 @@ def feedback(feedback, success=True, reverse=None):
             reverse()
         bye()
 
-        print('BO response: {0}'.format(dumpsJSON(response_json, indent=4)))
 
 
 def noop():
@@ -840,7 +840,7 @@ def doFiscal():
     fiscal_reply_fn = path.join(self.BASEDIR, 'config', 'fiscal_reply.yaml')
     with open(ecrmode_fn, 'r', encoding='utf-8') as fiscal_reply_file:
         FISCAL_REPLY = loadYAML(fiscal_reply_file)
-    
+
     if _amount == 0:
         reply_message = FISCAL_REPLY[operation]['reply']
     else:
