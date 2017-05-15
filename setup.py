@@ -15,18 +15,20 @@ setup(
     options = {
         'py2exe': {
             'bundle_files': 3,
-            'includes': ['requests', 'xmltodict', 'json', 'yaml', 'time', 'urllib3', 'win32com', 'posxml', 'win32ui', 'win32gui', 'win32print', 'ctypes', 'queue'],
+            'includes': ['requests', 'xmltodict', 'json', 'yaml', 'time'
+                        , 'urllib3', 'win32com', 'posxml', 'win32ui', 'win32gui'
+                        , 'win32print', 'ctypes', 'queue'],
             'excludes': ['tkinter'],
         }
     },
     zipfile = None, #'printsrv-lib.zip',
     console = OPTIONS,
     data_files = [
-        ( 'options', [ 'options\\layout.yaml'
-                     , 'options\\posxml_responses.yaml'
-                     , 'options\\fiscal_reply.yaml'
-                     , 'options\\ECRModes.yaml'
-                     , 'options\\feedbackTemplate.json'
+        ( 'config', [ 'config\\layout.yaml'
+                     , 'config\\posxml_responses.yaml'
+                     , 'config\\fiscal_reply.yaml'
+                     , 'config\\ECRModes.yaml'
+                     , 'config\\feedbackTemplate.json'
                      ]
         ),
         ( '.', ['package.json'] ),

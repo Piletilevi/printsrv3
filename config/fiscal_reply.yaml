@@ -1,4 +1,9 @@
+# coding: utf-8
+
 ---
+test:
+  foo: äö
+  baz: õü
 insertCash:
   reply: "Наличные успешно внесены"
   exactReply: "{0} рублей успешно внесены"

@@ -1,3 +1,5 @@
+# coding: utf-8
+
 ---
 ticketBarCode:
   type: code128
@@ -25,7 +27,7 @@ salesPoint:
     y: 100
 imageLeft:
   type: image
-  orientation: 270 
+  orientation: 270
   instances:
   - x: 100
     y: 132
