@@ -11,16 +11,16 @@ cut:
 feed:
   reply: "Протяжка осуществлена"
   exactReply: ""
-startShift:
+startshift:
   reply: "Смена начата"
   exactReply: ""
-endShift:
+endshift:
   reply: "Смена закончена"
   exactReply: ""
-xReport:
+xreport:
   reply: "Промежутончый отчет (X-отчет) распечатан"
   exactReply: ""
-openCashReg:
+opencashreg:
   reply: "Денежный ящик открыт"
   exactReply: ""
 sale:

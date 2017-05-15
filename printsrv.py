@@ -11,12 +11,13 @@ def bye():
 
 
 # PosXML module
-import                    requests
-import                    xmltodict
-from json import dumps as dumpsJSON
-from sys  import          stdin
-from yaml import load  as loadYAML
-from time import          sleep
+import                                    requests
+import                                    xmltodict
+from os           import path          as path
+from json         import dumps         as dumpsJSON
+from sys          import                  stdin
+from yaml         import load          as loadYAML
+from time         import                  sleep
 
 class PosXML:
     def __init__(self, feedback, bye, options):
@@ -25,7 +26,13 @@ class PosXML:
         self.OPTIONS  = { 'headers': { 'content-type': "application/xml" } }
         for key, val in options.items():
             self.OPTIONS[key] = val
-        with open('posxml_responses.yaml', 'r') as posxml_responses_file:
+        if hasattr(sys, "frozen"):
+            self.BASEDIR = path.dirname(sys.executable)
+        else:
+            self.BASEDIR = path.dirname(__file__)
+            chdir(self.BASEDIR)
+        posxml_responses_fn = path.join(self.BASEDIR, 'config', 'posxml_responses.yaml')
+        with open(posxml_responses_fn, 'r') as posxml_responses_file:
             self.PXRESPONSES = loadYAML(posxml_responses_file)
 
 
@@ -94,11 +101,12 @@ class PosXML:
 
 
 # ShtrihM module
-import                    win32com.client
-# import                    posxml
-from yaml import load  as loadYAML
-from json import load  as loadJSON
-from json import dumps as dumpsJSON
+import                                    win32com.client
+# import                                    posxml
+from os           import path          as path
+from yaml         import load          as loadYAML
+from json         import load          as loadJSON
+from json         import dumps         as dumpsJSON
 
 class ShtrihM:
     def __init__(self, feedback, bye, plp_json_data, password=None):
@@ -112,8 +120,14 @@ class ShtrihM:
         self.RETRY_SEC     = 0.1
         self.TIMEOUT_SEC   = 2
         self.v             = win32com.client.Dispatch('Addin.DrvFR')
+        if hasattr(sys, "frozen"):
+            self.BASEDIR   = path.dirname(sys.executable)
+        else:
+            self.BASEDIR   = path.dirname(__file__)
+            chdir(self.BASEDIR)
 
-        with open('ECRModes.yaml', 'r', encoding='utf-8') as ecrmode_table_file:
+        ecrmode_fn = path.join(self.BASEDIR, 'config', 'ECRModes.yaml')
+        with open(ecrmode_fn, 'r', encoding='utf-8') as ecrmode_table_file:
             self.ECRMODE_TABLE = loadYAML(ecrmode_table_file)['ECRMode']
 
         self.connect()
@@ -356,18 +370,19 @@ class ShtrihM:
                     self.feedback({'code': response['ReturnCode'], 'message': 'Reverse sale failed: {0}'.format(response['Reason'])}, False)
                     self.bye()
 
-        (sales_options, payment_options) = self.prepareSale()
+        (sales_options, payment_options, sum_of_payments) = self.prepareSale()
 
         if self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale':
             self.returnSale(sales_options, payment_options)
         else:
             self.feedback({'code': '1', 'message': 'operation={0} - must be sale.'.format(self.PLP_JSON_DATA['fiscalData']['operation'])}, False)
             self.bye()
+        return sum_of_payments
 
 
     def prepareSale(self):
-        payment_method_total = {}
-        payment_method_total_validate = {}
+        payment_method_total = {'sum': 0}
+        payment_method_total_validate = {'sum': 0}
         payment_sum_failed = False
 
         sales_options = []
@@ -378,6 +393,7 @@ class ShtrihM:
                 payment_method_total[payment['type']] = 0
                 payment_method_total_validate[payment['type']] = 0
             payment_method_total[payment['type']] += payment['cost']
+            payment_method_total['sum']           += payment['cost']
 
             payment_options.append({'cost': payment['cost'], 'type': payment['type']})
 
@@ -391,6 +407,7 @@ class ShtrihM:
                 if 'ticketId' in component:
                     component['name'] = '{0} {1}'.format(component['name'], component['ticketId'])
                 payment_method_total_validate[payment['type']] += component['cost'] * component['amount']
+                payment_method_total_validate['sum']           += component['cost'] * component['amount']
                 sales_options.append(component)
 
         for ix in payment_method_total:
@@ -415,7 +432,7 @@ class ShtrihM:
                 self.feedback({'code': '1', 'message': 'Fiscal data error: Sum of component costs ({0}) doesnot match sum of payment costs ({1})'.format(payment_method_total_validate[ix], payment_method_total[ix])}, False)
                 self.bye()
 
-        return (sales_options, payment_options)
+        return (sales_options, payment_options, payment_method_total_validate['sum'])
 
 
     def cmsale(self):
@@ -443,7 +460,7 @@ class ShtrihM:
                     self.feedback({'code': response['ReturnCode'], 'message': 'Card payment failed: {0}'.format(response['Reason'])}, False)
                     self.bye()
 
-        (sales_options, payment_options) = self.prepareSale()
+        (sales_options, payment_options, sum_of_payments) = self.prepareSale()
 
         if self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale':
             self.sale(sales_options, payment_options)
@@ -452,7 +469,7 @@ class ShtrihM:
         else:
             self.feedback({'code': '1', 'message': 'operation={0} - must be sale/refund.'.format(self.PLP_JSON_DATA['fiscalData']['operation'])}, False)
             self.bye()
-
+        return sum_of_payments
 
 # PSPrint module
 import                                    win32ui
@@ -514,7 +531,8 @@ class PSPrint:
             self.feedback({'code': '', 'message': e.__str__()}, False)
             self.bye()
 
-        with open('layout.yaml', 'r', encoding='utf-8') as layout_file:
+        layout_fn = path.join(self.BASEDIR, 'config', 'layout.yaml')
+        with open(layout_fn, 'r', encoding='utf-8') as layout_file:
             self.PS_LAYOUT = loadYAML(layout_file)
 
 
@@ -757,7 +775,8 @@ with open(PLP_FILENAME, 'rU', encoding='utf-8') as plp_data_file:
 # with open(path.join(BASEDIR, 'package.json'), 'rU') as package_json_file:
 #     PACKAGE_JSON_DATA = loadJSON(package_json_file)
 
-with open('feedbackTemplate.json', 'rU', encoding='utf-8') as feedback_template_file:
+fbtmpl_fn = path.join(BASEDIR, 'config', 'feedbackTemplate.json')
+with open(fbtmpl_fn, 'rU', encoding='utf-8') as feedback_template_file:
     FEEDBACK_TEMPLATE = loadJSON(feedback_template_file)
     FEEDBACK_TEMPLATE['feedbackToken'] = PLP_JSON_DATA.get('feedbackToken')
     FEEDBACK_TEMPLATE['operationToken'] = PLP_JSON_DATA.get('operationToken')
@@ -797,6 +816,7 @@ def noop():
     pass
 
 def doFiscal():
+    _amount = 0
     with ShtrihM(feedback, bye, PLP_JSON_DATA) as cm:
         operations_a = {
         'cut':          {'operation': cm.cut,              },
@@ -815,9 +835,18 @@ def doFiscal():
         if operation not in VALID_OPERATIONS:
             raise ValueError('"operation" must be one of {0} in plp file. Got {1} instead.'.format(VALID_OPERATIONS, operation))
 
-        operations_a[operation]['operation']()
+        _amount = operations_a[operation]['operation']() or 0
 
-    feedback({'code': '0', 'message': 'Fiscal succeeded'}, success=True, reverse=operations_a[operation].get('reverse', None))
+    fiscal_reply_fn = path.join(self.BASEDIR, 'config', 'fiscal_reply.yaml')
+    with open(ecrmode_fn, 'r', encoding='utf-8') as fiscal_reply_file:
+        FISCAL_REPLY = loadYAML(fiscal_reply_file)
+    
+    if _amount == 0:
+        reply_message = FISCAL_REPLY[operation]['reply']
+    else:
+        reply_message = FISCAL_REPLY[operation]['exactReply'].format(amount)
+
+    feedback({'code': '0', 'message': reply_message}, success=True, reverse=operations_a[operation].get('reverse', None))
 
 
 if 'fiscalData' in PLP_JSON_DATA:
