@@ -103,6 +103,7 @@ class ShtrihM:
     def openShift(self):
         # Shift will be actually opened with first recipe
         self._insist(self.v.OpenSession, self.USER_ADM)
+        self._insist(self.v.Beep)
 
 
     def sysAdminCancelCheck(self):

@@ -22,16 +22,17 @@ setup(
         }
     },
     zipfile = None, #'printsrv-lib.zip',
-    console = OPTIONS,
+    windows = OPTIONS,
+    # console = OPTIONS,
     data_files = [
         ( 'config', [ 'config\\layout.yaml'
-                     , 'config\\posxml_responses.yaml'
-                     , 'config\\fiscal_reply.yaml'
-                     , 'config\\ECRModes.yaml'
-                     , 'config\\feedbackTemplate.json'
-                     ]
+                    , 'config\\posxml_responses.yaml'
+                    , 'config\\fiscal_reply.yaml'
+                    , 'config\\ECRModes.yaml'
+                    , 'config\\feedbackTemplate.json'
+                    ]
         ),
-        ( '.', ['package.json'] ),
-        ( 'img', [] )
+        ( '.',      ['package.json'] ),
+        ( 'img',    [] )
     ],
 )
