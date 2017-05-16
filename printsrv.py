@@ -23,6 +23,9 @@ from sys  import path  as sysPath
 from yaml import load  as loadYAML
 from yaml import dump  as dumpYAML
 
+import                    win_unicode_console
+win_unicode_console.enable()
+
 from ShtrihM import ShtrihM
 from PSPrint import PSPrint
 
@@ -37,16 +40,16 @@ chdir(BASEDIR)
 # Set plp_filename environment variable from passed argument
 PLP_FILENAME = argv[1]
 
-with open(PLP_FILENAME, 'rU', encoding='utf-8') as plp_data_file:
+with open(PLP_FILENAME, 'r', encoding='utf-8') as plp_data_file:
     PLP_JSON_DATA = loadJSON(plp_data_file)
     # print(PLP_JSON_DATA['salesPointCountry'])
 
 
-# with open(path.join(BASEDIR, 'package.json'), 'rU') as package_json_file:
+# with open(path.join(BASEDIR, 'package.json'), 'r') as package_json_file:
 #     PACKAGE_JSON_DATA = loadJSON(package_json_file)
 
 fbtmpl_fn = path.join(BASEDIR, 'config', 'feedbackTemplate.json')
-with open(fbtmpl_fn, 'rU', encoding='utf-8') as feedback_template_file:
+with open(fbtmpl_fn, 'r', encoding='utf-8') as feedback_template_file:
     FEEDBACK_TEMPLATE = loadJSON(feedback_template_file)
     FEEDBACK_TEMPLATE['feedbackToken'] = PLP_JSON_DATA.get('feedbackToken')
     FEEDBACK_TEMPLATE['operationToken'] = PLP_JSON_DATA.get('operationToken')
@@ -117,7 +120,7 @@ def doFiscal():
     else:
         reply_message = FISCAL_REPLY[operation]['exactReply'].format(_amount)
 
-    # print('reply_message: {0}'.format(reply_message).encode(sys.stdout.encoding, errors='replace'))
+    print('reply_message: {0}'.format(reply_message))
     feedback({'code': '0', 'message': reply_message}, success=True, reverse=operations_a[operation].get('reverse', None))
 
 

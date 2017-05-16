@@ -2,7 +2,7 @@
 
 # ShtrihM module
 import                                    win32com.client
-import                                    posxml
+from PosXML       import                  PosXML
 import                                    sys
 from os           import                  chdir
 from os           import path          as path

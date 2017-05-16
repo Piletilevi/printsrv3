@@ -3,6 +3,7 @@
 # PosXML module
 import                                    requests
 import                                    xmltodict
+import                                    sys
 from os           import path          as path
 from json         import dumps         as dumpsJSON
 from sys          import                  stdin
