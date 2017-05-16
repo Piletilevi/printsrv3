@@ -73,7 +73,6 @@ class PSPrint:
 
     def __exit__(self, exc_type, exc_value, traceback):
         print('Exit PSPrint')
-        pass
 
 
     def _setFont(self, font_name, w=None, h=None, weight=None, orientation=0):

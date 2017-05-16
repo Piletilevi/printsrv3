@@ -35,7 +35,6 @@ class PosXML:
 
     def __exit__(self, exc_type, exc_value, traceback):
         print('Exit PosXML')
-        pass
 
 
     def post(self, func, data):
