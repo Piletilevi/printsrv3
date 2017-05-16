@@ -2,6 +2,7 @@
 Ticket printer driver  
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6e27ab962edd41e380c34a5189afa328)](https://www.codacy.com/app/mihkel-putrinsh/printsrv3?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Piletilevi/printsrv3&amp;utm_campaign=Badge_Grade)
 
+
 ### Contents:
 
 - [Prerequisites checklist](https://github.com/Piletilevi/printsrv/blob/master/README.md#prerequisites-checklist)
