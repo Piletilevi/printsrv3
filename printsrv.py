@@ -1,4 +1,4 @@
-# This Python file uses the following encoding: utf-8
+# -*- coding: utf-8 -*-
 
 from time import time
 start_time = time()
@@ -105,28 +105,19 @@ def doFiscal():
         if operation not in VALID_OPERATIONS:
             raise ValueError('"operation" must be one of {0} in plp file. Got {1} instead.'.format(VALID_OPERATIONS, operation))
 
-        # _amount = operations_a[operation]['operation']() or 0
-        _amount = 0
+        _amount = operations_a[operation]['operation']() or 0
 
     fiscal_reply_fn = path.join(BASEDIR, 'config', 'fiscal_reply.yaml')
-    with open(fiscal_reply_fn, 'r') as fiscal_reply_file:
-        # _str = fiscal_reply_file.read()
-        # print(_str)
+    fiscal_reply_ofn = path.join(BASEDIR, 'tmp.txt')
+    with open(fiscal_reply_fn, 'r', encoding='utf-8') as fiscal_reply_file:
         FISCAL_REPLY = loadYAML(fiscal_reply_file)
-        # jsonstring = dumpsJSON(FISCAL_REPLY)
-        # jsonstring = dumpsJSON(FISCAL_REPLY, ensure_ascii=False)
-        # print(dumpYAML(loadYAML(fiscal_reply_file).get('test')))
-        # print(jsonstring)
-        # print(FISCAL_REPLY['insertCash']['reply'])
-        # print(dumpsJSON(FISCAL_REPLY, indent=4, ensure_ascii=False).encode('utf8'))
 
     if _amount == 0:
         reply_message = FISCAL_REPLY[operation]['reply']
     else:
         reply_message = FISCAL_REPLY[operation]['exactReply'].format(_amount)
 
-    print('exactReply: {0}'.format(FISCAL_REPLY[operation]['reply']))
-    print('reply_message: ', reply_message)
+    # print('reply_message: {0}'.format(reply_message).encode(sys.stdout.encoding, errors='replace'))
     feedback({'code': '0', 'message': reply_message}, success=True, reverse=operations_a[operation].get('reverse', None))
 
 

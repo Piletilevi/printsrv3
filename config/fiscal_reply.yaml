@@ -1,13 +1,10 @@
 # coding: utf-8
 
 ---
-test:
-  foo: äö
-  baz: õü
-insertCash:
+insertcash:
   reply: "Наличные успешно внесены"
   exactReply: "{0} рублей успешно внесены"
-withdrawCash:
+withdrawcash:
   reply: "Наличные успешно изъяты"
   exactReply: "{0} рублей успешно изъяты"
 cut:

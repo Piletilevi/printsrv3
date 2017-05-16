@@ -238,11 +238,13 @@ class ShtrihM:
         print('insertCash')
         setattr(self.v, 'Summ1', self.PLP_JSON_DATA['fiscalData']['cashAmount'])
         self._insist(self.v.CashIncome)
+        return self.PLP_JSON_DATA['fiscalData']['cashAmount']
 
 
     def withdrawCash(self):
         setattr(self.v, 'Summ1', self.PLP_JSON_DATA['fiscalData']['cashAmount'])
         self._insist(self.v.CashOutcome)
+        return self.PLP_JSON_DATA['fiscalData']['cashAmount']
 
 
     def openCashRegister(self, drawer=0):
