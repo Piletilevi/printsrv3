@@ -76,17 +76,18 @@ def feedback(feedback, success=True, reverse=None):
         response_json = r.json()
         print('BO response: {0}'.format(dumpsJSON(response_json, indent=4)))
     except Exception as e:
-        print(e)
-        input("Press Enter to continue...")
-        print('BO response: {0}'.format(r.text))
+        import ctypes
+        ctypes.windll.user32.MessageBoxW(0, "Feedback failed", "Reversing operation", 0)
+        # print(e)
+        # print('BO response: {0}'.format(r.text))
         if reverse:
             reverse()
         bye()
 
 
-
 def noop():
     pass
+
 
 def doFiscal():
     _amount = 0
@@ -97,8 +98,8 @@ def doFiscal():
         'feed':         {'operation': cm.feed,             },
         'insertcash':   {'operation': cm.insertCash,       'reverse': cm.withdrawCash},
         'opencashreg':  {'operation': cm.openCashRegister, },
-        'refund':       {'operation': cm.cmsale,           },
-        'sale':         {'operation': cm.cmsale,           },
+        'refund':       {'operation': cm.cmsale,           'reverse': cm.reverseSale},
+        'sale':         {'operation': cm.cmsale,           'reverse': cm.reverseSale},
         'startshift':   {'operation': noop                 },
         'withdrawcash': {'operation': cm.withdrawCash,     'reverse': cm.insertCash},
         'xreport':      {'operation': cm.xReport,          },

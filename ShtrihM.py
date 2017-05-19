@@ -45,7 +45,7 @@ class ShtrihM:
 
     def __exit__(self, exc_type, exc_value, traceback):
         print('Exit ShtrihM')
-        del self.v
+        # del self.v
 
 
     def ecr_mode_string(self, k):
@@ -53,7 +53,7 @@ class ShtrihM:
 
 
     def prc(self):
-        print('self.v.ResultCodeDescription: {0}'.format(self.v.ResultCodeDescription))
+        # print('self.v.ResultCodeDescription: {0}'.format(self.v.ResultCodeDescription))
         if self.v.ResultCode:
             print(str(self.v.ResultCode) + ':' + self.v.ResultCodeDescription)
             self.feedback({'code': str(self.v.ResultCode), 'message': self.v.ResultCodeDescription}, False)
@@ -163,37 +163,10 @@ class ShtrihM:
             }.items():
                 # print('Setting {0} = {1}'.format(attr, value))
                 setattr(self.v, attr, value)
-            self._insist(self.v.Sale)
-
-        for item in payment_options:
-            # print('Setting from {0}'.format(item))
-            attr = 'Summ{0}'.format(item['type'])
-            setattr(self.v, attr, item['cost'])
-
-        setattr(self.v, 'DiscountOnCheck', 0)
-
-        setattr(self.v, 'StringForPrinting', '')
-        # setattr(self.v, 'StringForPrinting', '- - - - - - - - - - - - - - - - - - - -')
-        self._insist(self.v.CloseCheck)
-
-
-    def returnSale(self, sales_options, payment_options):
-
-        for item in sales_options:
-            # print('unpacking {0}'.format(item))
-            for attr, value in {
-                'Quantity': item['amount'],
-                'Price': item['cost'],
-                # 'Department': 1,
-                'Tax1': item['vatGroup'],
-                'Tax2': 0,
-                'Tax3': 0,
-                'Tax4': 0,
-                'StringForPrinting': item['name']
-            }.items():
-                # print('Setting {0} = {1}'.format(attr, value))
-                setattr(self.v, attr, value)
-            self._insist(self.v.ReturnSale)
+            if self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale':
+                self._insist(self.v.Sale)
+            elif self.PLP_JSON_DATA['fiscalData']['operation'] == 'refund':
+                self._insist(self.v.ReturnSale)
 
         for item in payment_options:
             # print('Setting from {0}'.format(item))
@@ -254,37 +227,12 @@ class ShtrihM:
 
 
     def reverseSale(self):
-        card_payment_amount = 0
-        for payment in self.PLP_JSON_DATA['fiscalData']['payments']:
-            if payment['type'] == '4':
-                card_payment_amount += payment['cost']
-
-        posxmlIP      = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitIp']   or False
-        posxmlPort    = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitPort'] or False
-        posxmlVersion = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitXml']  or False
-        if card_payment_amount > 0 and posxmlIP and posxmlPort and posxmlVersion == "PosXML 7.2.0":
-            with PosXML(self.feedback, self.bye, {'url': 'http://{0}:{1}'.format(posxmlIP,posxmlPort)}) as posxml:
-                posxml.post('CancelAllOperationsRequest', '')
-                response = posxml.post('ReverseTransactionRequest', {
-                'TransactionID': self.PLP_JSON_DATA['fiscalData']['businessTransactionId'],
-                'Amount'       : card_payment_amount * 100,
-                'CurrencyName' : 'EUR',
-                'PrintReceipt' : 1,
-                'Timeout'      : 100,
-                'ForcedAction' : 1,
-                })
-                if response['ReturnCode'] != '0':
-                    self.feedback({'code': response['ReturnCode'], 'message': 'Reverse sale failed: {0}'.format(response['Reason'])}, False)
-                    self.bye()
-
-        (sales_options, payment_options, sum_of_payments) = self.prepareSale()
-
         if self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale':
-            self.returnSale(sales_options, payment_options)
-        else:
-            self.feedback({'code': '1', 'message': 'operation={0} - must be sale.'.format(self.PLP_JSON_DATA['fiscalData']['operation'])}, False)
-            self.bye()
-        return sum_of_payments
+            self.PLP_JSON_DATA['fiscalData']['operation'] = 'refund'
+        elif self.PLP_JSON_DATA['fiscalData']['operation'] == 'refund':
+            self.PLP_JSON_DATA['fiscalData']['operation'] = 'sale'
+
+        self.cmsale()
 
 
     def prepareSale(self):
@@ -368,12 +316,5 @@ class ShtrihM:
                     self.bye()
 
         (sales_options, payment_options, sum_of_payments) = self.prepareSale()
-
-        if self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale':
-            self.sale(sales_options, payment_options)
-        elif self.PLP_JSON_DATA['fiscalData']['operation'] == 'refund':
-            self.returnSale(sales_options, payment_options)
-        else:
-            self.feedback({'code': '1', 'message': 'operation={0} - must be sale/refund.'.format(self.PLP_JSON_DATA['fiscalData']['operation'])}, False)
-            self.bye()
+        self.sale(sales_options, payment_options)
         return sum_of_payments
