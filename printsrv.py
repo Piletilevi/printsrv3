@@ -30,11 +30,7 @@ from ShtrihM import ShtrihM
 from PSPrint import PSPrint
 
 
-if hasattr(sys, "frozen"):
-    BASEDIR = path.dirname(sys.executable)
-else:
-    BASEDIR = path.dirname(__file__)
-chdir(BASEDIR)
+BASEDIR = path.dirname(sys.executable) if hasattr(sys, "frozen") else path.dirname(__file__)
 
 
 # Set plp_filename environment variable from passed argument

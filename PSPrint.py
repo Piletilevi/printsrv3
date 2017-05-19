@@ -19,11 +19,8 @@ class PSPrint:
         self.feedback      = feedback
         self.bye           = bye
         self.PLP_JSON_DATA = plp_json_data
-        if hasattr(sys, "frozen"):
-            self.BASEDIR = path.dirname(sys.executable)
-        else:
-            self.BASEDIR = path.dirname(__file__)
-        chdir(self.BASEDIR)
+        self.BASEDIR = path.dirname(sys.executable) if hasattr(sys, "frozen") else path.dirname(__file__)
+        # chdir(self.BASEDIR)
 
         printer = self.PLP_JSON_DATA['ticketData']['printerData']['printerName']
         try:

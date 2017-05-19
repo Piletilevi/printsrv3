@@ -18,11 +18,8 @@ class PosXML:
         self.OPTIONS  = { 'headers': { 'content-type': "application/xml" } }
         for key, val in options.items():
             self.OPTIONS[key] = val
-        if hasattr(sys, "frozen"):
-            self.BASEDIR = path.dirname(sys.executable)
-        else:
-            self.BASEDIR = path.dirname(__file__)
-        chdir(self.BASEDIR)
+        self.BASEDIR = path.dirname(sys.executable) if hasattr(sys, "frozen") else path.dirname(__file__)
+        # chdir(self.BASEDIR)
         posxml_responses_fn = path.join(self.BASEDIR, 'config', 'posxml_responses.yaml')
         with open(posxml_responses_fn, 'r') as posxml_responses_file:
             self.PXRESPONSES = loadYAML(posxml_responses_file)
@@ -61,6 +58,8 @@ class PosXML:
                 'code': response[responseKey]['ReturnCode'],
                 'message': response[responseKey]['Reason'] or response[responseKey]['ReturnCode']}, False)
             self.bye()
+
+        return response[responseKey]
 
 
     def beep(self):

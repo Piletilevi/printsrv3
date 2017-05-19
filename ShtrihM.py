@@ -23,11 +23,8 @@ class ShtrihM:
         self.TIMEOUT_SEC   = 2
         self.password      = self.USER_KASSIR
         self.v             = win32com.client.Dispatch('Addin.DrvFR')
-        if hasattr(sys, "frozen"):
-            self.BASEDIR   = path.dirname(sys.executable)
-        else:
-            self.BASEDIR   = path.dirname(__file__)
-        chdir(self.BASEDIR)
+        self.BASEDIR       = path.dirname(sys.executable) if hasattr(sys, "frozen") else path.dirname(__file__)
+        # chdir(self.BASEDIR)
 
         ecrmode_fn = path.join(self.BASEDIR, 'config', 'ECRModes.yaml')
         with open(ecrmode_fn, 'r', encoding='utf-8') as ecrmode_table_file:
@@ -302,7 +299,7 @@ class ShtrihM:
             with PosXML(self.feedback, self.bye, {'url': 'http://{0}:{1}'.format(posxmlIP,posxmlPort)}) as posxml:
                 posxml.post('CancelAllOperationsRequest', '')
                 response = posxml.post(
-                    ('TransactionRequest' if (self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale') else 'RefundTransactionRequest'),
+                    'TransactionRequest' if (self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale') else 'RefundTransactionRequest',
                     {
                         'TransactionID': self.PLP_JSON_DATA['fiscalData']['businessTransactionId'],
                         'Amount'       : card_payment_amount * 100,
@@ -311,6 +308,7 @@ class ShtrihM:
                         'Timeout'      : 100,
                     }
                 )
+                print(response)
                 if response['ReturnCode'] != '0':
                     self.feedback({'code': response['ReturnCode'], 'message': 'Card payment failed: {0}'.format(response['Reason'])}, False)
                     self.bye()
