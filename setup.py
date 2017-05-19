@@ -16,7 +16,7 @@ setup(
         'py2exe': {
             'bundle_files': 3,
             'includes': ['requests', 'xmltodict', 'json', 'yaml', 'time'
-                        , 'urllib3', 'win32com', 'posxml', 'win32ui', 'win32gui'
+                        , 'urllib3', 'win32com', 'PosXML', 'win32ui', 'win32gui'
                         , 'win32print', 'ctypes', 'queue'],
             'excludes': ['tkinter'],
         }
