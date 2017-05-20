@@ -35,9 +35,11 @@ class PosXML:
 
 
     def post(self, func, data):
+        print('data', data)
         dict = { 'PosXML': { '@version':'7.2.0', } }
         dict['PosXML'][func] = data
         payload_xml = xmltodict.unparse(dict, pretty=True).encode('utf-8')
+        print('payload_xml', payload_xml)
 
         try:
             http_response = requests.post(self.OPTIONS['url'], data=payload_xml, headers=self.OPTIONS['headers'])
@@ -46,6 +48,8 @@ class PosXML:
             self.bye()
 
         response = xmltodict.parse(http_response.content)['PosXML']
+        print('response', response)
+
         try:
             # find if any key in response matches one of expected response keys
             responseKey = [key for key in self.PXRESPONSES[func] if key in response][0]

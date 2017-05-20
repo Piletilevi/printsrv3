@@ -9,6 +9,7 @@ from os           import path          as path
 from yaml         import load          as loadYAML
 from json         import load          as loadJSON
 from json         import dumps         as dumpsJSON
+from time         import                  sleep
 
 class ShtrihM:
     def __init__(self, feedback, bye, plp_json_data, password=None):
@@ -304,7 +305,7 @@ class ShtrihM:
                     _transactionRequest,
                     {
                         'TransactionID': self.PLP_JSON_DATA['fiscalData'][_transactionIdField],
-                        'Amount'       : card_payment_amount * 100,
+                        'Amount'       : int(round(card_payment_amount * 100)),
                         'CurrencyName' : 'EUR',
                         'PrintReceipt' : 2,
                         'Timeout'      : 100,
