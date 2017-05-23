@@ -7,13 +7,27 @@ import                                    win32print
 import                                    requests
 import                                    sys
 import                                    math
+import                                    yaml
+from collections  import                  OrderedDict
 from os           import                  chdir
 from os           import path          as path
 from ctypes       import                  windll
-from yaml         import load          as loadYAML
 from code128image import code128_image as _c128image
 from PIL          import                  ImageWin
 from PIL          import                  Image
+
+
+def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=OrderedDict):
+    class OrderedLoader(Loader):
+        pass
+    def construct_mapping(loader, node):
+        loader.flatten_mapping(node)
+        return object_pairs_hook(loader.construct_pairs(node))
+    OrderedLoader.add_constructor(
+        yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
+        construct_mapping)
+    return yaml.load(stream, OrderedLoader)
+
 
 class PSPrint:
     def __init__(self, feedback, bye, plp_json_data):
@@ -61,7 +75,7 @@ class PSPrint:
 
         layout_fn = path.join(self.BASEDIR, 'config', 'layout.yaml')
         with open(layout_fn, 'r', encoding='utf-8') as layout_file:
-            self.PS_LAYOUT = loadYAML(layout_file)
+            self.PS_LAYOUT = ordered_load(layout_file, yaml.SafeLoader)
 
 
     def __enter__(self):
@@ -96,11 +110,26 @@ class PSPrint:
         windll.gdi32.TextOutW(self.DEVICE_CONTEXT_HANDLE, x, y, text, len(text))
 
 
+    def _indexedRotate(self, degrees):
+        return math.floor((degrees % 360) / 90 + 0.5)
+
+
+    def _rotatePicture(self, _picture, degrees):
+        _temp_fn = '{0}_{1}.png'.format(path.join(self.BASEDIR, 'img', 'temprotate'), degrees)
+        # print('rotating: ', degrees)
+        _picture = _picture.transpose((self._indexedRotate(degrees) - 1) % 3 + 2)
+        # print('r. dimensions of {0}: {1}'.format(_temp_fn, _picture.size))
+        _picture.save(_temp_fn, 'png')
+        _picture = Image.open(_temp_fn)
+        return _picture
+
+
     def _placeImage(self, x, y, url, rotate):
-        rotate = math.floor((rotate%360)/90+0.5)
+        # print('\nPlacing {0}, x:{1}, y:{2}, rotate:{3}'.format('picture', x, y, rotate))
+        # rotate = self._indexedRotate(rotate)
         _picture_fn = '{0}_{1}.png'.format(path.join(self.BASEDIR, 'img', path.basename(url)), rotate)
-        print('url: ', url)
-        print('_picture_fn: ', _picture_fn)
+        # print('url: ', url)
+        # print('_picture_fn: ', _picture_fn)
         if not path.isfile(_picture_fn):
             try:
                 r = requests.get(url, verify=False)
@@ -125,8 +154,7 @@ class PSPrint:
                     fd.write(chunk)
             _picture = Image.open(_picture_fn)
             if rotate:
-                print('rotating: ', rotate*90)
-                _picture = _picture.transpose((rotate-1)%3 + 2)
+                _picture = self._rotatePicture(_picture, rotate)
 
             print('save')
             _picture.save(_picture_fn, 'PNG')
@@ -139,27 +167,27 @@ class PSPrint:
 
 
     def _placeC128(self, text, x, y, width, height, thickness, rotate, quietzone):
-        rotate = math.floor((rotate%360)/90+0.5)
-        print('Placing {0}, x:{1}, y:{2}, w:{3}, h:{4}'.format(text, x, y, width, height))
+        # rotate = self._indexedRotate(rotate)
+        # print('\nPlacing {0}, x:{1}, y:{2}, w:{3}, h:{4}'.format(text, x, y, width, height))
         file1 = '{0}_1_{1}.png'.format(path.join(self.BASEDIR, 'img', 'tmp'), rotate)
         file2 = '{0}_2_{1}.png'.format(path.join(self.BASEDIR, 'img', 'tmp'), rotate)
         _picture = _c128image(text, int(width), int(height), quietzone)
-        print('dimensions of {0}: {1}'.format(file1, _picture.size))
+        # print('0. dimensions of {0}: {1}'.format(file1, _picture.size))
         _picture.save(file1, 'JPEG')
         _picture = Image.open(file1)
-        print('dimensions of {0}: {1}'.format(file1, _picture.size))
+        # print('a. dimensions of {0}: {1}'.format(file1, _picture.size))
         if rotate:
-            print('rotating: ', rotate*90)
-            _picture = _picture.transpose((rotate-1)%3 + 2)
-            print('dimensions of {0}: {1}'.format(file2, _picture.size))
-        _picture.save(file2, 'png')
-        _picture = Image.open(file2)
-        print('dimensions of {0}: {1}'.format(file2, _picture.size))
+            # print('rotating: ', rotate*90)
+            _picture = self._rotatePicture(_picture, rotate)
+            # print('dimensions of {0}: {1}'.format(file2, _picture.size))
+        # _picture.save(file2, 'png')
+        # _picture = Image.open(file2)
+        # print('b. dimensions of {0}: {1}'.format(file2, _picture.size))
         dib = ImageWin.Dib(_picture)
         x = int(x)
         y = int(y)
         dib.draw(self.DEVICE_CONTEXT_HANDLE, (x, y, x + _picture.size[0], y + _picture.size[1]))
-        print('dimensions: {0}'.format(_picture))
+        # print('dimensions: {0}'.format(_picture))
 
 
     def _startDocument(self):
@@ -201,7 +229,7 @@ class PSPrint:
     def printTicket(self, ticket):
         # print('ticket : {0}'.format(ticket.keys()))
         for layout_key in self.PS_LAYOUT.keys():
-            # print('layout_key : {0}'.format(layout_key))
+            print('layout_key : {0}'.format(layout_key))
             # print('{0} : {1}'.format(key,field))
             field = self.PS_LAYOUT[layout_key]
             value = ticket.get(layout_key, self.PLP_JSON_DATA.get(layout_key, ''))
@@ -231,6 +259,7 @@ class PSPrint:
                 for instance in field['instances']:
                     x           = self._getInstanceProperty('x', instance, field)
                     y           = self._getInstanceProperty('y', instance, field)
+                    orientation = self._getInstanceProperty('orientation', instance, field)     or 0
                     self._placeImage(x, y, value, orientation)
                 continue
 
@@ -246,6 +275,6 @@ class PSPrint:
                     quietzone   = self._getInstanceProperty('quietzone', instance, field)       or False
                     if not (x and y):
                         continue
-                    print('Placing {0}, x:{1}, y:{2}, w:{3}, h:{4}'.format(value, x, y, width, height))
+                    # print('Placing {0}, x:{1}, y:{2}, w:{3}, h:{4}'.format(value, x, y, width, height))
                     self._placeC128(value, x, y, width, height, thickness, orientation, quietzone)
                 continue
