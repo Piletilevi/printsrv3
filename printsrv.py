@@ -7,6 +7,7 @@ from os import kill
 from os import getpid
 import signal
 def bye():
+    input("Press Enter to continue...")
     kill(getpid(), signal.SIGTERM)
 
 import                    fileinput
@@ -122,7 +123,11 @@ def doFiscal():
 
 
 if 'fiscalData' in PLP_JSON_DATA:
-    doFiscal()
+    try:
+        doFiscal()
+    except Exception as e:
+        print("Unexpected error: {0}".format(e), sys.exc_info())
+        bye()
 
 
 if 'ticketData' in PLP_JSON_DATA:
