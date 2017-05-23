@@ -4,6 +4,7 @@
 import                                    win32ui
 import                                    win32gui
 import                                    win32print
+import                                    requests
 import                                    sys
 import                                    math
 from os           import                  chdir
@@ -100,7 +101,7 @@ class PSPrint:
         _picture_fn = '{0}_{1}.png'.format(path.join(self.BASEDIR, 'img', path.basename(url)), rotate)
         print('url: ', url)
         print('_picture_fn: ', _picture_fn)
-        if not os.path.isfile(_picture_fn):
+        if not path.isfile(_picture_fn):
             try:
                 r = requests.get(url, verify=False)
                 r.raise_for_status()
@@ -228,6 +229,8 @@ class PSPrint:
 
             elif field['type'] == 'image':
                 for instance in field['instances']:
+                    x           = self._getInstanceProperty('x', instance, field)
+                    y           = self._getInstanceProperty('y', instance, field)
                     self._placeImage(x, y, value, orientation)
                 continue
 
