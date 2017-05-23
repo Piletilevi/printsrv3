@@ -115,6 +115,9 @@ class PSPrint:
 
 
     def _rotatePicture(self, _picture, degrees):
+        if degrees % 360 == 0:
+            return _picture
+
         _temp_fn = '{0}_{1}.png'.format(path.join(self.BASEDIR, 'img', 'temprotate'), degrees)
         _picture = _picture.transpose((self._indexedRotate(degrees) - 1) % 3 + 2)
         _picture.save(_temp_fn, 'png')
@@ -146,9 +149,7 @@ class PSPrint:
                 print('with ', _picture_fn)
                 for chunk in r.iter_content(chunk_size=128):
                     fd.write(chunk)
-            _picture = Image.open(_picture_fn)
-            if rotate:
-                _picture = self._rotatePicture(_picture, rotate)
+            _picture = self._rotatePicture(Image.open(_picture_fn), rotate)
 
             print('save')
             _picture.save(_picture_fn, 'PNG')
@@ -161,11 +162,8 @@ class PSPrint:
     def _placeC128(self, text, x, y, width, height, thickness, rotate, quietzone):
         file1 = '{0}_1_{1}.png'.format(path.join(self.BASEDIR, 'img', 'tmp'), rotate)
         file2 = '{0}_2_{1}.png'.format(path.join(self.BASEDIR, 'img', 'tmp'), rotate)
-        _picture = _c128image(text, int(width), int(height), quietzone)
-        _picture.save(file1, 'JPEG')
-        _picture = Image.open(file1)
-        if rotate:
-            _picture = self._rotatePicture(_picture, rotate)
+        _c128image(text, int(width), int(height), quietzone).save(file1, 'JPEG')
+        _picture = self._rotatePicture(Image.open(file1), rotate)
         dib = ImageWin.Dib(_picture)
         dib.draw(self.DEVICE_CONTEXT_HANDLE, (x, y, x + _picture.size[0], y + _picture.size[1]))
 
