@@ -126,12 +126,16 @@ if 'fiscalData' in PLP_JSON_DATA:
     try:
         doFiscal()
     except Exception as e:
-        print("Unexpected error: {0}".format(e), sys.exc_info())
+        print("Unexpected fiscal error: {0}".format(e), sys.exc_info())
         bye()
 
 
 if 'ticketData' in PLP_JSON_DATA:
-    with PSPrint(feedback, bye, PLP_JSON_DATA) as ps:
-        ps.printTickets()
+    try:
+        with PSPrint(feedback, bye, PLP_JSON_DATA) as ps:
+            ps.printTickets()
+    except Exception as e:
+        print("Unexpected printer error: {0}".format(e), sys.exc_info())
+        bye()
 
 bye()
