@@ -1,20 +1,6 @@
 # coding: utf-8
 
 ---
-ticketBarCode:
-  type: code128
-  common:
-    thickness: 10
-    width: 500
-    height: 60
-    orientation: 270
-    quietzone: true
-  instances:
-  - x: 960
-    y: 50
-  - x: 55
-    y: 85
-    width: 400
 salesPoint:
   type: text
   instances:
@@ -30,7 +16,7 @@ imageLeft:
   common:
     orientation: 270
   instances:
-  - x: 100
+  - x: 50
     y: 132
 imageTop:
   type: image
@@ -41,7 +27,7 @@ imageBottom:
   type: image
   instances:
   - x: 325
-    y: 501
+    y: 510
 eventName1:
   type: text
   instances:
@@ -265,3 +251,14 @@ infoText5:
     font_weight: 500
     x: 325
     y: 355
+ticketBarCode:
+  type: code128
+  common:
+    thickness: 10
+    width: 530
+    height: 60
+    orientation: 270
+    quietzone: true
+  instances:
+  - x: 960
+    y: 60
