@@ -12,9 +12,9 @@ from json         import dumps         as dumpsJSON
 from time         import                  sleep
 
 class ShtrihM:
-    def __init__(self, feedback, bye, plp_json_data, password=None):
+    def __init__(self, feedback, bye_function, plp_json_data, password=None):
         self.feedback      = feedback
-        self.bye           = bye
+        self.bye_function  = bye_function
         self.PLP_JSON_DATA = plp_json_data
         self.USER_SADM     = plp_json_data['fiscalData']['printerData']['sysAdminPw'] or 0
         self.USER_ADM      = plp_json_data['fiscalData']['printerData']['adminPw']    or 0
@@ -46,7 +46,13 @@ class ShtrihM:
         # del self.v
 
 
-    def ecr_mode_string(self, k):
+    def bye(self):
+        self.v.Password = self.USER_SADM
+        self.v.SysAdminCancelCheck()
+        self.bye_function()
+
+
+    def _ecr_mode_string(self, k):
         return str(k) + ":" + self.ECRMODE_TABLE[k]['name']
 
 
@@ -123,7 +129,7 @@ class ShtrihM:
                     timecount = 0
                     print("sysAdminCancelCheck")
                     self.sysAdminCancelCheck()
-            print("ECRMode " + self.ecr_mode_string(self.v.ECRMode))
+            print("ECRMode " + self._ecr_mode_string(self.v.ECRMode))
 
         self._insist(self.v.ResetECR)
 
@@ -135,7 +141,7 @@ class ShtrihM:
                 sleep(self.RETRY_SEC)
 
         if self.v.ECRMode not in [2,3,4]:
-            self.feedback({'code': 1, 'message': "Can't go on with ECRMode: " + self.ecr_mode_string(self.v.ECRMode)})
+            self.feedback({'code': 1, 'message': "Can't go on with ECRMode: " + self._ecr_mode_string(self.v.ECRMode)})
             self.bye()
 
         if self.v.ECRMode == 3:
@@ -272,15 +278,6 @@ class ShtrihM:
                 print('doesnot match          | !=')
                 print('sum of payment costs   | {0}'.format(payment_method_total[ix]))
                 print('------------------------------------')
-                self.printLine('------------------------------------')
-                self.printLine('     !!! FISCAL DATA ERROR !!!')
-                self.printLine('         In payment type {0}'.format(ix))
-                self.printLine('Sum of component costs | {0}'.format(payment_method_total_validate[ix]))
-                self.printLine('doesnot match          | !=')
-                self.printLine('sum of payment costs   | {0}'.format(payment_method_total[ix]))
-                self.printLine('------------------------------------')
-                for i in range(0, 3):
-                    self.printLine()
 
                 self.feedback({'code': '1', 'message': 'Fiscal data error: Sum of component costs ({0}) doesnot match sum of payment costs ({1})'.format(payment_method_total_validate[ix], payment_method_total[ix])}, False)
                 self.bye()
