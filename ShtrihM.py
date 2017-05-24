@@ -284,9 +284,11 @@ class ShtrihM:
                     _transactionRequest,
                     {
                         'TransactionID'  : self.PLP_JSON_DATA['fiscalData'][_transactionIdField],
-                        'Amount'         : 1, #int(round(card_payment_amount * 100)),
+                        # 'Amount'         : 1,
+                        # 'Amount'         : int(round(card_payment_amount * 100)),
+                        'Amount'         : int(round(card_payment_amount)),
                         'CurrencyName'   : 'EUR',
-                        'PrintReceipt'   : 2,
+                        'PrintReceipt'   : 1,
                         'ReturnReceipts' : 64,
                         'Timeout'        : 100,
                     }
