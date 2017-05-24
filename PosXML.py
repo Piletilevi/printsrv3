@@ -26,6 +26,7 @@ class PosXML:
         with open(posxml_responses_fn, 'r') as posxml_responses_file:
             self.PXRESPONSES = loadYAML(posxml_responses_file)
         self.log_fn   = path.join(self.BASEDIR, 'posxml.log')
+        self.receipts_fn   = path.join(self.BASEDIR, 'receipts.log')
 
 
     def __enter__(self):
@@ -80,8 +81,12 @@ class PosXML:
             f.write('Response: \n{0}\n'.format(_response_txt))
 
             if _MerchReceipt:
+                with open(self.receipts_fn, 'a') as fr:
+                    fr.write('MerchReceipt: \n{0}\n\n'.format(_MerchReceipt))
                 f.write('MerchReceipt: \n{0}\n'.format(_MerchReceipt))
             if _CustReceipt:
+                with open(self.receipts_fn, 'a') as fr:
+                    fr.write('CustReceipt: \n{0}\n\n'.format(_CustReceipt))
                 f.write('CustReceipt: \n{0}\n'.format(_CustReceipt))
             f.write('\n')
 
