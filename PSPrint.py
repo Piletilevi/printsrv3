@@ -206,11 +206,11 @@ class PSPrint:
 
     def printTicket(self, ticket):
         for layout_key in self.PS_LAYOUT.keys():
-            print('layout_key : {0}'.format(layout_key))
+            # print('layout_key : {0}'.format(layout_key))
             field = self.PS_LAYOUT[layout_key]
             value = ticket.get(layout_key, self.PLP_JSON_DATA.get(layout_key, ''))
             if value == '':
-                print('skip {0}'.format(layout_key))
+                # print('skip layout_key {0}'.format(layout_key))
                 continue
 
             if field['type'] == 'text':

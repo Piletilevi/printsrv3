@@ -22,7 +22,6 @@ from json import load  as loadJSON
 from json import loads as loadsJSON
 from sys  import path  as sysPath
 from yaml import load  as loadYAML
-from yaml import dump  as dumpYAML
 
 import                    win_unicode_console
 win_unicode_console.enable()
@@ -59,7 +58,7 @@ def feedback(feedback, success=True, reverse=None):
     FEEDBACK_TEMPLATE['feedBackMessage'] = feedback.get('message')
 
     _fburl = PLP_JSON_DATA.get('feedbackUrl', PLP_JSON_DATA.get('feedBackurl'))
-    print('Sending "{0}" to "{1}"'.format(dumpsJSON(FEEDBACK_TEMPLATE, indent=4), _fburl))
+    # print('Sending "{0}" to "{1}"'.format(dumpsJSON(FEEDBACK_TEMPLATE, indent=4), _fburl))
     headers = {'Content-type': 'application/json'}
     r = requests.post(_fburl, allow_redirects=True, timeout=30, json=FEEDBACK_TEMPLATE)
 
@@ -71,7 +70,7 @@ def feedback(feedback, success=True, reverse=None):
 
     try:
         response_json = r.json()
-        print('BO response: {0}'.format(dumpsJSON(response_json, indent=4)))
+        # print('BO response: {0}'.format(dumpsJSON(response_json, indent=4)))
     except Exception as e:
         import ctypes
         ctypes.windll.user32.MessageBoxW(0, "Feedback failed", "Reversing operation", 0)

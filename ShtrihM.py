@@ -67,18 +67,8 @@ class ShtrihM:
 
     def _insist(self, method, password=None):
         self.v.Password = password if password else self.password
-        print('Method: {0}'.format(method))
         method()
         self.prc()
-        # if self.v.ResultCode:
-        #     self.feedback({'code': str(self.v.ResultCode), 'message': self.v.ResultCodeDescription}, False)
-        #
-        #     while self.v.ResultCode:
-        #         print(str(self.v.ResultCode) + ':' + self.v.ResultCodeDescription)
-        #         print('Method: {0}'.format(method))
-        #         print("ENTER to retry")
-        #         input("Press Enter to continue...")
-        #         method()
         self.v.Password = 0
 
 
@@ -271,14 +261,6 @@ class ShtrihM:
 
         for ix in payment_method_total:
             if round(payment_method_total[ix], 2) != round(payment_method_total_validate[ix], 2):
-                print('------------------------------------')
-                print('     !!! FISCAL DATA ERROR !!!')
-                print('        In payment type {0}'.format(ix))
-                print('Sum of component costs | {0}'.format(payment_method_total_validate[ix]))
-                print('doesnot match          | !=')
-                print('sum of payment costs   | {0}'.format(payment_method_total[ix]))
-                print('------------------------------------')
-
                 self.feedback({'code': '1', 'message': 'Fiscal data error: Sum of component costs ({0}) doesnot match sum of payment costs ({1})'.format(payment_method_total_validate[ix], payment_method_total[ix])}, False)
                 self.bye()
 
@@ -308,7 +290,7 @@ class ShtrihM:
                         'Timeout'      : 100,
                     }
                 )
-                print(response)
+                # print('response', response)
                 if response['ReturnCode'] != '0':
                     self.feedback({'code': response['ReturnCode'], 'message': 'Card payment failed: {0}'.format(response['Reason'])}, False)
                     self.bye()
