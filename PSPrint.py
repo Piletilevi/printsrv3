@@ -58,7 +58,7 @@ class PSPrint:
 
         printjobs = win32print.EnumJobs(hprinter, 0, 999)
         while len(printjobs) != 0:
-            ret = windll.user32.MessageBoxW(0, 'Printer has old jobs in queue'.decode(), 'Check printer!'.decode(), 0x40 | 0x0) #OK only
+            windll.user32.MessageBoxW(0, 'Printer has old jobs in queue', 'Check printer!', 0)
             printjobs = win32print.EnumJobs(hprinter, 0, 999)
 
         try:
