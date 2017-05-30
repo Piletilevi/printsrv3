@@ -22,8 +22,8 @@ setup(
         }
     },
     zipfile = None, #'printsrv-lib.zip',
-    # windows = OPTIONS,
-    console = OPTIONS,
+    windows = OPTIONS,
+    # console = OPTIONS,
     data_files = [
         ( 'config', [ 'config\\layout.yaml'
                     , 'config\\posxml_responses.yaml'

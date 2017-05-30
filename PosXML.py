@@ -30,18 +30,19 @@ class PosXML:
 
 
     def __enter__(self):
-        print('Enter PosXML')
+        # print('Enter PosXML')
         return self
 
 
     def __exit__(self, exc_type, exc_value, traceback):
-        print('Exit PosXML')
+        None
+        # print('Exit PosXML')
 
 
     def _extractReceipt(self, responseMessage, label):
         if label in responseMessage:
             _value = responseMessage[label]
-            print('extracting', label)
+            # print('extracting', label)
             del responseMessage[label]
             return _value
 
@@ -121,8 +122,8 @@ class PosXML:
     def waitForRemoveCardFromTerminal(self):
         response = self.post('GetTerminalStatusRequest', '')
         CardStatus = response['CardStatus']
-        if CardStatus != '0':
-            print('Remove card from terminal')
+        # if CardStatus != '0':
+            # print('Remove card from terminal')
             # message(2,'Remove card from terminal')
         while CardStatus != '0':
             self.beep()

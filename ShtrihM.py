@@ -37,12 +37,13 @@ class ShtrihM:
 
 
     def __enter__(self):
-        print('Enter ShtrihM')
+        # print('Enter ShtrihM')
         return self
 
 
     def __exit__(self, exc_type, exc_value, traceback):
-        print('Exit ShtrihM')
+        None
+        # print('Exit ShtrihM')
         # del self.v
 
 
@@ -59,7 +60,6 @@ class ShtrihM:
     def prc(self):
         # print('self.v.ResultCodeDescription: {0}'.format(self.v.ResultCodeDescription))
         if self.v.ResultCode:
-            print(str(self.v.ResultCode) + ':' + self.v.ResultCodeDescription)
             self.feedback({'code': str(self.v.ResultCode), 'message': self.v.ResultCodeDescription}, False)
             # input("Press Enter to continue...")
             self.bye()
@@ -109,23 +109,23 @@ class ShtrihM:
 
         if self.v.ECRMode == 8:
             self._insist(self.v.Beep)
-            print("Waiting for mode change")
-            print("self.v.ECRMode8Status " + str(self.v.ECRMode8Status))
+            # print("Waiting for mode change")
+            # print("self.v.ECRMode8Status " + str(self.v.ECRMode8Status))
             while self.v.ECRMode == 8:
                 self._insist(self.v.GetShortECRStatus)
                 sleep(self.RETRY_SEC)
                 timecount = timecount + self.RETRY_SEC
                 if timecount > self.TIMEOUT_SEC:
                     timecount = 0
-                    print("sysAdminCancelCheck")
+                    # print("sysAdminCancelCheck")
                     self.sysAdminCancelCheck()
-            print("ECRMode " + self._ecr_mode_string(self.v.ECRMode))
+            # print("ECRMode " + self._ecr_mode_string(self.v.ECRMode))
 
         self._insist(self.v.ResetECR)
 
         if self.v.ECRMode == 0:
             self._insist(self.v.Beep)
-            print("Waiting for mode change")
+            # print("Waiting for mode change")
             while self.v.ECRMode == 0:
                 self._insist(self.v.GetShortECRStatus)
                 sleep(self.RETRY_SEC)
@@ -182,7 +182,7 @@ class ShtrihM:
             setattr(self.v, 'UseJournalRibbon', False)
             # setattr(self.v, 'StringForPrinting', 'Сервисный сбор')
             setattr(self.v, 'StringForPrinting', string)
-            print('Printing on receipt: "{0}"'.format(string))
+            # print('Printing on receipt: "{0}"'.format(string))
             self._insist(self.v.PrintString)
 
 
@@ -203,7 +203,7 @@ class ShtrihM:
 
 
     def insertCash(self):
-        print('insertCash')
+        # print('insertCash')
         setattr(self.v, 'Summ1', self.PLP_JSON_DATA['fiscalData']['cashAmount'])
         self._insist(self.v.CashIncome)
         return self.PLP_JSON_DATA['fiscalData']['cashAmount']

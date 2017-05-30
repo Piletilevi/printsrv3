@@ -73,10 +73,9 @@ def feedback(feedback, success=True, reverse=None):
     r = requests.post(_fburl, allow_redirects=True, timeout=30, json=FEEDBACK_TEMPLATE)
 
     if r.status_code != requests.codes.ok:
-        print('{0}; status_code={1}'.format(r.headers['content-type'], r.status_code))
         if reverse:
             reverse()
-        bye()
+        bye('{0}; status_code={1}'.format(r.headers['content-type'], r.status_code))
 
     try:
         response_json = r.json()

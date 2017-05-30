@@ -79,12 +79,13 @@ class PSPrint:
 
 
     def __enter__(self):
-        print('Enter PSPrint')
+        # print('Enter PSPrint')
         return self
 
 
     def __exit__(self, exc_type, exc_value, traceback):
-        print('Exit PSPrint')
+        # print('Exit PSPrint')
+        None
 
 
     def _setFont(self, font_name, w=None, h=None, weight=None, orientation=0):
@@ -132,26 +133,26 @@ class PSPrint:
                 r = requests.get(url, verify=False)
                 r.raise_for_status()
             except requests.exceptions.HTTPError as err:
-                print('1', err)
+                # print('1', err)
                 return
             except requests.exceptions.Timeout as err:
-                print('2', err)
+                # print('2', err)
                 return
             except requests.exceptions.TooManyRedirects as err:
-                print('3', err)
+                # print('3', err)
                 return
             except requests.exceptions.RequestException as err:
                 # catastrophic error. bail.
-                print('4', err)
+                # print('4', err)
                 return
 
             with open(_picture_fn, 'wb') as fd:
-                print('with ', _picture_fn)
+                # print('with ', _picture_fn)
                 for chunk in r.iter_content(chunk_size=128):
                     fd.write(chunk)
             _picture = self._rotatePicture(Image.open(_picture_fn), rotate)
 
-            print('save')
+            # print('save')
             _picture.save(_picture_fn, 'PNG')
 
         _picture = Image.open(_picture_fn)
@@ -199,8 +200,8 @@ class PSPrint:
             return instance.get(key)
         if key in field.get('common', []):
             return field.get('common').get(key)
-        if mandatory:
-            print('Text without {0} - {1}'.format(key, field))
+        # if mandatory:
+        #     print('Text without {0} - {1}'.format(key, field))
         return None
 
 
