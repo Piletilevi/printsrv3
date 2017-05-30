@@ -273,6 +273,8 @@ class ShtrihM:
             if payment['type'] == '4':
                 card_payment_amount += payment['cost']
 
+        (sales_options, payment_options, sum_of_payments) = self.prepareSale()
+
         if card_payment_amount > 0:
             posxmlIP = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitIp']
             posxmlPort = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitPort']
@@ -296,6 +298,5 @@ class ShtrihM:
                     self.feedback({'code': response['ReturnCode'], 'message': 'Card payment failed: {0}'.format(response['Reason'])}, False)
                     self.bye()
 
-        (sales_options, payment_options, sum_of_payments) = self.prepareSale()
         self.sale(sales_options, payment_options)
         return sum_of_payments
