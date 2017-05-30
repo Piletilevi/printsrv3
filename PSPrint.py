@@ -90,7 +90,7 @@ class PSPrint:
             sleep(2)
             printjobs = win32print.EnumJobs(self.hprinter, 0, 999)
         while len(printjobs) != 0:
-            windll.user32.MessageBoxW(0, 'Printer has old jobs in queue', 'Check printer!', 0)
+            windll.user32.MessageBoxW(0, '- Включен ли принтер?\n- Подключен ли принтер к компьютеру?\n- Правильно ли вставлены билетные бланки в принтер?', 'Проверь принтер!', 0)
             printjobs = win32print.EnumJobs(self.hprinter, 0, 999)
 
 
