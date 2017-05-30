@@ -43,36 +43,33 @@ class PSPrint:
             self.hprinter = win32print.OpenPrinter(printer)
         except Exception as e:
             self.feedback({'code': '', 'message': e.__str__()}, False)
-            self.bye()
+            self.bye('Can not open "{0}"'.format(printer))
 
         try:
             devmode = win32print.GetPrinter(self.hprinter, 2)['pDevMode']
         except Exception as e:
             self.feedback({'code': '', 'message': e.__str__()}, False)
-            self.bye()
+            self.bye('Can not register "{0}"'.format(printer))
 
         try:
             devmode.Orientation = 2
         except Exception as e:
             self.feedback({'code': '', 'message': e.__str__()}, False)
-            self.bye()
+            self.bye('Can not set orientation for "{0}"'.format(printer))
 
-        printjobs = win32print.EnumJobs(self.hprinter, 0, 999)
-        while len(printjobs) != 0:
-            windll.user32.MessageBoxW(0, 'Printer has old jobs in queue', 'Check printer!', 0)
-            printjobs = win32print.EnumJobs(self.hprinter, 0, 999)
+        self._waitForSpooler(1, 'Printer has old jobs in queue', 'Проверь принтер!')
 
         try:
             self.DEVICE_CONTEXT_HANDLE = win32gui.CreateDC('WINSPOOL', printer, devmode)
         except Exception as e:
             self.feedback({'code': '', 'message': e.__str__()}, False)
-            self.bye()
+            self.bye('Failed DCH "{0}"'.format(printer))
 
         try:
             self.DEVICE_CONTEXT = win32ui.CreateDCFromHandle(self.DEVICE_CONTEXT_HANDLE)
         except Exception as e:
             self.feedback({'code': '', 'message': e.__str__()}, False)
-            self.bye()
+            self.bye('Failed DC "{0}"'.format(printer))
 
         layout_fn = path.join(self.BASEDIR, 'config', 'layout.yaml')
         with open(layout_fn, 'r', encoding='utf-8') as layout_file:
@@ -84,14 +81,20 @@ class PSPrint:
         return self
 
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def _waitForSpooler(self, sleep_sec, message, title):
         printjobs = win32print.EnumJobs(self.hprinter, 0, 999)
         if len(printjobs) != 0:
-            sleep(2)
+            sleep(sleep_sec)
             printjobs = win32print.EnumJobs(self.hprinter, 0, 999)
-        while len(printjobs) != 0:
-            windll.user32.MessageBoxW(0, '- Включен ли принтер?\n- Подключен ли принтер к компьютеру?\n- Правильно ли вставлены билетные бланки в принтер?', 'Проверь принтер!', 0)
-            printjobs = win32print.EnumJobs(self.hprinter, 0, 999)
+            i = 3
+            while len(printjobs) != 0 and i > 0:
+                i -= 1
+                windll.user32.MessageBoxW(0, message, title, 0)
+                printjobs = win32print.EnumJobs(self.hprinter, 0, 999)
+
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self._waitForSpooler(2, '- Включен ли принтер?\n- Подключен ли принтер к компьютеру?\n- Правильно ли вставлены билетные бланки в принтер?', 'Проверь принтер!')
 
 
     def _setFont(self, font_name, w=None, h=None, weight=None, orientation=0):

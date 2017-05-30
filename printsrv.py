@@ -6,15 +6,16 @@ start_time = time()
 from os import kill
 from os import getpid
 import signal
-def bye(message = ''):
+def bye(title = ''):
     # input("Press Enter to continue...")
-    if message:
+    if title:
         import ctypes
         (a,b,c) = sys.exc_info()
         if a:
-            ctypes.windll.user32.MessageBoxW(0, message, "{0}\n{1}\n{2}".format(a,b,c), 0)
+            ctypes.windll.user32.MessageBoxW(0, "{0}\n-----\n{1}".format(title,b), title, 0)
+            # ctypes.windll.user32.MessageBoxW(0, "{0}\n{1}\n{2}".format(a,b,c), title, 0)
         else:
-            ctypes.windll.user32.MessageBoxW(0, "Exiting", message, 0)
+            ctypes.windll.user32.MessageBoxW(0, "{0}\n-----\nExiting".format(title), title, 0)
     kill(getpid(), signal.SIGTERM)
 
 import                    fileinput
