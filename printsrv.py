@@ -6,7 +6,7 @@ start_time = time()
 from os import kill
 from os import getpid
 import signal
-def bye(message):
+def bye(message = ''):
     # input("Press Enter to continue...")
     if message:
         import ctypes
@@ -127,8 +127,9 @@ def doFiscal():
     else:
         reply_message = FISCAL_REPLY[operation]['exactReply'].format(_amount)
 
-    print('reply_message: {0}'.format(reply_message))
+    # print('reply_message: {0}'.format(reply_message))
     feedback({'code': '0', 'message': reply_message}, success=True, reverse=operations_a[operation].get('reverse', None))
+    # print('reply_message: {0}'.format(reply_message))
 
 
 if 'fiscalData' in PLP_JSON_DATA:
