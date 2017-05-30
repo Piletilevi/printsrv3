@@ -7,7 +7,7 @@ from os import kill
 from os import getpid
 import signal
 def bye():
-    input("Press Enter to continue...")
+    # input("Press Enter to continue...")
     kill(getpid(), signal.SIGTERM)
 
 import                    fileinput
@@ -23,8 +23,11 @@ from json import loads as loadsJSON
 from sys  import path  as sysPath
 from yaml import load  as loadYAML
 
-import                    win_unicode_console
-win_unicode_console.enable()
+if hasattr(sys, "frozen"):
+    pass
+else:
+    import win_unicode_console
+    win_unicode_console.enable()
 
 from ShtrihM import ShtrihM
 from PSPrint import PSPrint
