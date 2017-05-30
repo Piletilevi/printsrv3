@@ -6,8 +6,15 @@ start_time = time()
 from os import kill
 from os import getpid
 import signal
-def bye():
+def bye(message):
     # input("Press Enter to continue...")
+    if message:
+        import ctypes
+        (a,b,c) = sys.exc_info()
+        if a:
+            ctypes.windll.user32.MessageBoxW(0, message, "{0}\n{1}\n{2}".format(a,b,c), 0)
+        else:
+            ctypes.windll.user32.MessageBoxW(0, "Exiting", message, 0)
     kill(getpid(), signal.SIGTERM)
 
 import                    fileinput
@@ -128,8 +135,8 @@ if 'fiscalData' in PLP_JSON_DATA:
     try:
         doFiscal()
     except Exception as e:
-        print("Unexpected fiscal error: {0}".format(e), sys.exc_info())
-        bye()
+        # print("Unexpected fiscal error: {0}".format(e), sys.exc_info())
+        bye("Unexpected fiscal error: {0}".format(e))
 
 
 if 'ticketData' in PLP_JSON_DATA:
@@ -137,7 +144,7 @@ if 'ticketData' in PLP_JSON_DATA:
         with PSPrint(feedback, bye, PLP_JSON_DATA) as ps:
             ps.printTickets()
     except Exception as e:
-        print("Unexpected printer error: {0}".format(e), sys.exc_info())
-        bye()
+        # print("Unexpected printer error: {0}".format(e), sys.exc_info())
+        bye("Unexpected printer error: {0}".format(e))
 
 bye()
