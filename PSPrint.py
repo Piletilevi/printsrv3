@@ -15,6 +15,7 @@ from ctypes       import                  windll
 from code128image import code128_image as _c128image
 from PIL          import                  ImageWin
 from PIL          import                  Image
+from time         import                  sleep
 
 
 def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=OrderedDict):
@@ -39,13 +40,13 @@ class PSPrint:
 
         printer = self.PLP_JSON_DATA['ticketData']['printerData']['printerName']
         try:
-            hprinter = win32print.OpenPrinter(printer)
+            self.hprinter = win32print.OpenPrinter(printer)
         except Exception as e:
             self.feedback({'code': '', 'message': e.__str__()}, False)
             self.bye()
 
         try:
-            devmode = win32print.GetPrinter(hprinter, 2)['pDevMode']
+            devmode = win32print.GetPrinter(self.hprinter, 2)['pDevMode']
         except Exception as e:
             self.feedback({'code': '', 'message': e.__str__()}, False)
             self.bye()
@@ -56,10 +57,10 @@ class PSPrint:
             self.feedback({'code': '', 'message': e.__str__()}, False)
             self.bye()
 
-        printjobs = win32print.EnumJobs(hprinter, 0, 999)
+        printjobs = win32print.EnumJobs(self.hprinter, 0, 999)
         while len(printjobs) != 0:
             windll.user32.MessageBoxW(0, 'Printer has old jobs in queue', 'Check printer!', 0)
-            printjobs = win32print.EnumJobs(hprinter, 0, 999)
+            printjobs = win32print.EnumJobs(self.hprinter, 0, 999)
 
         try:
             self.DEVICE_CONTEXT_HANDLE = win32gui.CreateDC('WINSPOOL', printer, devmode)
@@ -84,8 +85,13 @@ class PSPrint:
 
 
     def __exit__(self, exc_type, exc_value, traceback):
-        # print('Exit PSPrint')
-        None
+        printjobs = win32print.EnumJobs(self.hprinter, 0, 999)
+        if len(printjobs) != 0:
+            sleep(2)
+            printjobs = win32print.EnumJobs(self.hprinter, 0, 999)
+        while len(printjobs) != 0:
+            windll.user32.MessageBoxW(0, 'Printer has old jobs in queue', 'Check printer!', 0)
+            printjobs = win32print.EnumJobs(self.hprinter, 0, 999)
 
 
     def _setFont(self, font_name, w=None, h=None, weight=None, orientation=0):

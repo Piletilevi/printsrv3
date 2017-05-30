@@ -23,7 +23,6 @@ import                    sys
 from os   import          path
 from os   import          chdir
 from sys  import          argv
-from time import          sleep
 from json import dumps as dumpsJSON
 from json import load  as loadJSON
 from json import loads as loadsJSON
