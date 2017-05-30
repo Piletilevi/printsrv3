@@ -278,15 +278,13 @@ class ShtrihM:
             posxmlPort = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitPort']
             with PosXML(self.feedback, self.bye, {'url': 'http://{0}:{1}'.format(posxmlIP,posxmlPort)}) as posxml:
                 posxml.post('CancelAllOperationsRequest', '')
-                _transactionRequest = 'TransactionRequest' if (self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale') else 'RefundTransactionRequest'
+                _transactionRequest = 'TransactionRequest' if (self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale') else 'ReverseTransactionRequest'
                 _transactionIdField = 'businessTransactionId' if (self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale') else 'saleTransactionId'
                 response = posxml.post(
                     _transactionRequest,
                     {
                         'TransactionID'  : self.PLP_JSON_DATA['fiscalData'][_transactionIdField],
-                        # 'Amount'         : 1,
-                        # 'Amount'         : int(round(card_payment_amount * 100)),
-                        'Amount'         : int(round(card_payment_amount)),
+                        'Amount'         : int(round(card_payment_amount * 100)),
                         'CurrencyName'   : 'EUR',
                         'PrintReceipt'   : 1,
                         'ReturnReceipts' : 64,
