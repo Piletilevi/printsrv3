@@ -2,7 +2,6 @@
 
 # ShtrihM module
 import                                    win32com.client
-from PosXML       import                  PosXML
 import                                    sys
 from os           import                  chdir
 from os           import path          as path
@@ -275,28 +274,31 @@ class ShtrihM:
 
         (sales_options, payment_options, sum_of_payments) = self.prepareSale()
 
+
         if card_payment_amount > 0:
-            posxmlIP = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitIp']
-            posxmlPort = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitPort']
-            with PosXML(self.feedback, self.bye, {'url': 'http://{0}:{1}'.format(posxmlIP,posxmlPort)}) as posxml:
-                posxml.post('CancelAllOperationsRequest', '')
-                _transactionRequest = 'TransactionRequest' if (self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale') else 'ReverseTransactionRequest'
-                _transactionIdField = 'businessTransactionId' if (self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale') else 'saleTransactionId'
-                response = posxml.post(
-                    _transactionRequest,
-                    {
-                        'TransactionID'  : self.PLP_JSON_DATA['fiscalData'][_transactionIdField],
-                        'Amount'         : int(round(card_payment_amount * 100)),
-                        'CurrencyName'   : 'EUR',
-                        'PrintReceipt'   : 1,
-                        'ReturnReceipts' : 64,
-                        'Timeout'        : 100,
-                    }
-                )
-                # print('response', response)
-                if response['ReturnCode'] != '0':
-                    self.feedback({'code': response['ReturnCode'], 'message': 'Card payment failed: {0}'.format(response['Reason'])}, False)
-                    self.bye()
+            if self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitXml'] == 'PosXML 7.2.0':
+                from PosXML import PosXML
+                posxmlIP = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitIp']
+                posxmlPort = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitPort']
+                with PosXML(self.feedback, self.bye, {'url': 'http://{0}:{1}'.format(posxmlIP,posxmlPort)}) as posxml:
+                    posxml.post('CancelAllOperationsRequest', '')
+                    _transactionRequest = 'TransactionRequest' if (self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale') else 'ReverseTransactionRequest'
+                    _transactionIdField = 'businessTransactionId' if (self.PLP_JSON_DATA['fiscalData']['operation'] == 'sale') else 'saleTransactionId'
+                    response = posxml.post(
+                        _transactionRequest,
+                        {
+                            'TransactionID'  : self.PLP_JSON_DATA['fiscalData'][_transactionIdField],
+                            'Amount'         : int(round(card_payment_amount * 100)),
+                            'CurrencyName'   : 'EUR',
+                            'PrintReceipt'   : 1,
+                            'ReturnReceipts' : 64,
+                            'Timeout'        : 100,
+                        }
+                    )
+                    # print('response', response)
+                    if response['ReturnCode'] != '0':
+                        self.feedback({'code': response['ReturnCode'], 'message': 'Card payment failed: {0}'.format(response['Reason'])}, False)
+                        self.bye()
 
         self.sale(sales_options, payment_options)
         return sum_of_payments
