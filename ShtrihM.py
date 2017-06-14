@@ -276,7 +276,7 @@ class ShtrihM:
 
 
         if card_payment_amount > 0:
-            if self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitXml'] == 'PosXML 7.2.0':
+            if self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitXml'] == 'PosXML 7.2.0' and False:
                 from PosXML import PosXML
                 posxmlIP = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitIp']
                 posxmlPort = self.PLP_JSON_DATA['fiscalData']['cardPaymentUnitSettings']['cardPaymentUnitPort']
