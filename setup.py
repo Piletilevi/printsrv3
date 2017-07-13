@@ -33,6 +33,13 @@ setup(
                     , 'config\\feedbackTemplate.json'
                     ]
         ),
+        ( '.',    [ 'lib\\win32u.dll'
+                  , 'lib\\msvcr100.dll'
+                  , 'lib\\mfc100u.dll'
+                  , 'lib\\IEShims.dll'
+                  , 'lib\\dcomp.dll'
+                  ]
+        ),
         ( '.',      ['package.json'] ),
         ( 'img',    [] )
     ],
