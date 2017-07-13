@@ -15,6 +15,7 @@ setup(
     options = {
         'py2exe': {
             'bundle_files': 3,
+            'dist_dir': "c:\\plevi",
             'includes': ['requests', 'xmltodict', 'json', 'yaml', 'time'
                         , 'urllib3', 'win32com', 'PosXML', 'win32ui', 'win32gui'
                         , 'win32print', 'ctypes', 'queue'],
