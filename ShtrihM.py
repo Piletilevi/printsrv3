@@ -8,7 +8,16 @@ from os           import path          as path
 from yaml         import load          as loadYAML
 from json         import load          as loadJSON
 from json         import dumps         as dumpsJSON
+from datetime     import datetime
 from time         import                  sleep
+
+
+BASEDIR  = path.dirname(sys.executable) if hasattr(sys, "frozen") else path.dirname(__file__)
+smlog_fn = path.join(BASEDIR, 'shtrihm.log')
+def sm2log(line):
+    with open(smlog_fn, 'a', encoding='utf-8') as shtrihm_log_file:
+        shtrihm_log_file.write(datetime.now().isoformat() + ' ' + str(line) + '\n')
+
 
 class ShtrihM:
     def __init__(self, feedback, bye_function, plp_json_data, password=None):
@@ -59,6 +68,8 @@ class ShtrihM:
     def prc(self):
         # print('self.v.ResultCodeDescription: {0}'.format(self.v.ResultCodeDescription))
         if self.v.ResultCode:
+            sm2log(self.v.ResultCode)
+            sm2log(self.v.ResultCodeDescription)
             self.feedback({'code': str(self.v.ResultCode), 'message': self.v.ResultCodeDescription}, False)
             # input("Press Enter to continue...")
             self.bye()
@@ -77,7 +88,9 @@ class ShtrihM:
             _baud_rates = {2400: 0, 4800: 1, 9600: 2, 19200: 3, 38400: 4, 57600: 5, 115200: 6}
             _baud_rate = _baud_rates[_baud_rate] if _baud_rate in _baud_rates else -1
         if _baud_rate < 0:
-            raise ValueError('Unsupported baud rate for fiscal register. {0} not in {1}.'.format(self.PLP_JSON_DATA['fiscalData']['printerData']['comPortBaudRate'], _baud_rates))
+            msg = 'Unsupported baud rate for fiscal register. {0} not in {1}.'.format(self.PLP_JSON_DATA['fiscalData']['printerData']['comPortBaudRate'], _baud_rates)
+            sm2log(msg)
+            raise ValueError(msg)
         setattr(self.v, 'ComNumber', self.PLP_JSON_DATA['fiscalData']['printerData']['comPortNumber'])
         setattr(self.v, 'BaudRate', _baud_rate)
         # setattr(self.v, 'Timeout ', 100)
