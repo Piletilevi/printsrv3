@@ -41,7 +41,6 @@ class ShtrihM:
 
         self.connect()
         setattr(self.v, 'CodePage', 1) # Russian
-        self.setMode2()
 
 
     def __enter__(self):
@@ -114,43 +113,6 @@ class ShtrihM:
 
     def sysAdminCancelCheck(self):
         self._insist(self.v.SysAdminCancelCheck, self.USER_SADM)
-
-
-    def setMode2(self):
-        timecount = 0
-
-        if self.v.ECRMode == 8:
-            self._insist(self.v.Beep)
-            # print("Waiting for mode change")
-            # print("self.v.ECRMode8Status " + str(self.v.ECRMode8Status))
-            while self.v.ECRMode == 8:
-                self._insist(self.v.GetShortECRStatus)
-                sleep(self.RETRY_SEC)
-                timecount = timecount + self.RETRY_SEC
-                if timecount > self.TIMEOUT_SEC:
-                    timecount = 0
-                    # print("sysAdminCancelCheck")
-                    self.sysAdminCancelCheck()
-            # print("ECRMode " + self._ecr_mode_string(self.v.ECRMode))
-
-        self._insist(self.v.ResetECR)
-
-        if self.v.ECRMode == 0:
-            self._insist(self.v.Beep)
-            # print("Waiting for mode change")
-            while self.v.ECRMode == 0:
-                self._insist(self.v.GetShortECRStatus)
-                sleep(self.RETRY_SEC)
-
-        if self.v.ECRMode not in [2,3,4]:
-            self.feedback({'code': 1, 'message': "Can't go on with ECRMode: " + self._ecr_mode_string(self.v.ECRMode)})
-            self.bye()
-
-        if self.v.ECRMode == 3:
-            self.closeShift()
-
-        if self.v.ECRMode == 4:
-            self.openShift()
 
 
     def sale(self, sales_options, payment_options):
