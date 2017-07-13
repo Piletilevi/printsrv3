@@ -131,12 +131,15 @@ def doFiscal():
     # print('reply_message: {0}'.format(reply_message))
 
 
-if 'fiscalData' in PLP_JSON_DATA:
-    try:
-        doFiscal()
-    except Exception as e:
-        # print("Unexpected fiscal error: {0}".format(e), sys.exc_info())
-        bye("Unexpected fiscal error: {0}".format(e))
+if ( 'fiscalData' in PLP_JSON_DATA
+    and 'printerData' in PLP_JSON_DATA['fiscalData']
+    and 'type' in PLP_JSON_DATA['fiscalData']['printerData']
+    and PLP_JSON_DATA['fiscalData']['printerData']['type'] != '' ):
+        try:
+            doFiscal()
+        except Exception as e:
+            # print("Unexpected fiscal error: {0}".format(e), sys.exc_info())
+            bye("Unexpected fiscal error: {0}".format(e))
 
 
 if 'ticketData' in PLP_JSON_DATA:
