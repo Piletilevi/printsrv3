@@ -11,7 +11,7 @@ def bye(title = ''):
     if title:
         import ctypes
         (a,b,c) = sys.exc_info()
-        if a:
+        if b:
             ctypes.windll.user32.MessageBoxW(0, "{0}\n-----\n{1}".format(title,b), title, 0)
             # ctypes.windll.user32.MessageBoxW(0, "{0}\n{1}\n{2}".format(a,b,c), title, 0)
         else:
