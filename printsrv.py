@@ -18,17 +18,18 @@ def bye(title = ''):
             ctypes.windll.user32.MessageBoxW(0, "{0}\n-----\nExiting".format(title), title, 0)
     kill(getpid(), signal.SIGTERM)
 
-import                    fileinput
-import                    requests
-import                    sys
-from os   import          path
-from os   import          chdir
-from sys  import          argv
-from json import dumps as dumpsJSON
-from json import load  as loadJSON
-from json import loads as loadsJSON
-from sys  import path  as sysPath
-from yaml import load  as loadYAML
+import                        fileinput
+import                        requests
+import                        sys
+from os       import          path
+from os       import          chdir
+from sys      import          argv
+from json     import dumps as dumpsJSON
+from json     import load  as loadJSON
+from json     import loads as loadsJSON
+from sys      import path  as sysPath
+from yaml     import load  as loadYAML
+from datetime import datetime
 
 if hasattr(sys, "frozen"):
     pass
@@ -63,16 +64,24 @@ with open(fbtmpl_fn, 'r', encoding='utf-8') as feedback_template_file:
     FEEDBACK_TEMPLATE['operation'] = PLP_JSON_DATA.get('fiscalData').get('operation')
 
 
+fblog_fn = path.join(BASEDIR, 'feedback.log')
+def fb2log(line):
+    with open(fblog_fn, 'a', encoding='utf-8') as feedback_log_file:
+        feedback_log_file.write(datetime.now().isoformat() + ' ' + str(line) + '\n')
+
+
 def feedback(feedback, success=True, reverse=None):
     FEEDBACK_TEMPLATE['status'] = success
     FEEDBACK_TEMPLATE['feedBackMessage'] = feedback.get('message')
 
     _fburl = PLP_JSON_DATA.get('feedbackUrl', PLP_JSON_DATA.get('feedBackurl'))
     # print('Sending "{0}" to "{1}"'.format(dumpsJSON(FEEDBACK_TEMPLATE, indent=4), _fburl))
+    fb2log('' + feedback.get('message'))
     headers = {'Content-type': 'application/json'}
     r = requests.post(_fburl, allow_redirects=True, timeout=30, json=FEEDBACK_TEMPLATE)
 
     if r.status_code != requests.codes.ok:
+        fb2log('Not Ok - (' + r.status_code + ')')
         if reverse:
             reverse()
         bye('{0}; status_code={1}'.format(r.headers['content-type'], r.status_code))
@@ -81,6 +90,7 @@ def feedback(feedback, success=True, reverse=None):
         response_json = r.json()
         # print('BO response: {0}'.format(dumpsJSON(response_json, indent=4)))
     except Exception as e:
+        fb2log('Not Ok - Feedback failed, reversing operation')
         import ctypes
         ctypes.windll.user32.MessageBoxW(0, "Feedback failed", "Reversing operation", 0)
         # print(e)
@@ -88,6 +98,8 @@ def feedback(feedback, success=True, reverse=None):
         if reverse:
             reverse()
         bye()
+
+    fb2log('Ok')
 
 
 def noop():
