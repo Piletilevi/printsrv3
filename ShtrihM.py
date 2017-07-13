@@ -40,7 +40,8 @@ class ShtrihM:
             self.ECRMODE_TABLE = loadYAML(ecrmode_table_file)['ECRMode']
 
         self.connect()
-        setattr(self.v, 'CodePage', 1) # Russian
+        setattr(self.v, 'CodePage', 1) # 0 – По умолчанию; 1 – Русская кодовая страница; 2 - Армянская кодовая страница (юникод); 3 - Армянская кодовая страница (ANSI)
+        setattr(self.v, 'UCodePage', 0) # Кодовая страница, используемая устройством (0 – русский язык; 1 – английский язык; 2 – эстонский язык; 3 – грузинский язык)
 
 
     def __enter__(self):
