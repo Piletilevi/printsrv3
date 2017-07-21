@@ -42,19 +42,19 @@ class PSPrint:
         try:
             self.hprinter = win32print.OpenPrinter(printer)
         except Exception as e:
-            self.feedback({'code': '', 'message': e.__str__()}, False)
+            # self.feedback({'code': '', 'message': e.__str__()}, False)
             self.bye('Can not open "{0}"'.format(printer))
 
         try:
             devmode = win32print.GetPrinter(self.hprinter, 2)['pDevMode']
         except Exception as e:
-            self.feedback({'code': '', 'message': e.__str__()}, False)
+            # self.feedback({'code': '', 'message': e.__str__()}, False)
             self.bye('Can not register "{0}"'.format(printer))
 
         try:
             devmode.Orientation = 2
         except Exception as e:
-            self.feedback({'code': '', 'message': e.__str__()}, False)
+            # self.feedback({'code': '', 'message': e.__str__()}, False)
             self.bye('Can not set orientation for "{0}"'.format(printer))
 
         self._waitForSpooler(1, 'Printer has old jobs in queue', 'Проверь принтер!')
@@ -62,13 +62,13 @@ class PSPrint:
         try:
             self.DEVICE_CONTEXT_HANDLE = win32gui.CreateDC('WINSPOOL', printer, devmode)
         except Exception as e:
-            self.feedback({'code': '', 'message': e.__str__()}, False)
+            # self.feedback({'code': '', 'message': e.__str__()}, False)
             self.bye('Failed DCH "{0}"'.format(printer))
 
         try:
             self.DEVICE_CONTEXT = win32ui.CreateDCFromHandle(self.DEVICE_CONTEXT_HANDLE)
         except Exception as e:
-            self.feedback({'code': '', 'message': e.__str__()}, False)
+            # self.feedback({'code': '', 'message': e.__str__()}, False)
             self.bye('Failed DC "{0}"'.format(printer))
 
         layout_fn = path.join(self.BASEDIR, 'config', 'layout.yaml')
