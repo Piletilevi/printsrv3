@@ -79,6 +79,7 @@ def feedback(feedback, success=True, reverse=None):
     fb2log('' + feedback.get('message'))
     headers = {'Content-type': 'application/json'}
     r = requests.post(_fburl, allow_redirects=True, timeout=30, json=FEEDBACK_TEMPLATE)
+    fb2log('sent ok.')
 
     if r.status_code != requests.codes.ok:
         fb2log('Not Ok - (' + r.status_code + ')')
@@ -129,7 +130,7 @@ def doFiscal():
         _amount = operations_a[operation]['operation']() or 0
 
     fiscal_reply_fn = path.join(BASEDIR, 'config', 'fiscal_reply.yaml')
-    fiscal_reply_ofn = path.join(BASEDIR, 'tmp.txt')
+    # fiscal_reply_ofn = path.join(BASEDIR, 'tmp.txt')
     with open(fiscal_reply_fn, 'r', encoding='utf-8') as fiscal_reply_file:
         FISCAL_REPLY = loadYAML(fiscal_reply_file)
 
