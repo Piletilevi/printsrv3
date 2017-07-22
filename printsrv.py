@@ -76,10 +76,10 @@ def feedback(feedback, success=True, reverse=None):
 
     _fburl = PLP_JSON_DATA.get('feedbackUrl', PLP_JSON_DATA.get('feedBackurl'))
     # print('Sending "{0}" to "{1}"'.format(dumpsJSON(FEEDBACK_TEMPLATE, indent=4), _fburl))
-    fb2log('' + feedback.get('message'))
+    fb2log('Sending ' + feedback.get('message'))
     headers = {'Content-type': 'application/json'}
-    r = requests.post(_fburl, allow_redirects=True, timeout=30, json=FEEDBACK_TEMPLATE)
-    fb2log('sent ok.')
+    r = requests.post(_fburl, allow_redirects=True, timeout=30, json=FEEDBACK_TEMPLATE, verify=False)
+    fb2log('\\_ sent ok.')
 
     if r.status_code != requests.codes.ok:
         fb2log('Not Ok - (' + r.status_code + ')')
