@@ -91,3 +91,4 @@ drivers/raso 01fb/winservice.log
 
 img/
 *.log
+cacert.pem
